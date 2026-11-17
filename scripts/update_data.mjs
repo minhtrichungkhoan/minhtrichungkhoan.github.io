@@ -363,6 +363,23 @@ async function main() {
       } catch (e) { errors[ix] = String(e.message || e).slice(0, 200); }
     }
 
+    // 2b) khối ngoại toàn thị trường từ đầu năm (1 lượt gọi)
+    try {
+      const yStart = new Date().getFullYear() + '-01-01';
+      const raw = await retry(() => vn.market.foreign({ range: { from: yStart }, exchange: 'ALL' })).catch(() => retry(() => vn.market.foreign({ range: 'ytd', exchange: 'ALL' })));
+      debug.marketForeignSample = clip(Array.isArray(raw) ? raw.slice(-2) : raw);
+      const recs = findRecords(raw) || [];
+      if (recs.length) {
+        const ks = Object.keys(recs[0]); const nk = Object.fromEntries(ks.map((x) => [norm(x), x]));
+        const dK = nk.time || nk.date || nk['trading date'] || ks.find((x) => /date|time/i.test(x));
+        const vK = nk['net value'] || nk['net buy value'] || ks.find((x) => /net.*val/i.test(x)) || ks.find((x) => /net/i.test(x));
+        if (dK && vK) {
+          const rows = recs.map((r) => [String(r[dK]).slice(0, 10), isNum(r[vK]) ? Math.round(Number(r[vK])) : 0]).filter((x) => x[0] >= yStart).sort((a, b) => (a[0] < b[0] ? -1 : 1));
+          fs.writeFileSync(path.join(root, 'foreign.json'), JSON.stringify({ from: rows[0]?.[0], rows }));
+        }
+      }
+    } catch (e) { errors.marketForeign = String(e.message || e).slice(0, 200); }
+
     // 3) giá + BCTC
     const day = Math.floor(Date.now() / 86400e3);
     const core = new Set(TICKERS);
@@ -379,18 +396,6 @@ async function main() {
         let bars = toBars(raw); if (fresh) bars = mergeBars(old.bars, bars);
         if (bars.length) { rec.bars = compactBars(bars); pxCount++; }
       } catch (e) { errors[t] = 'giá: ' + String(e.message || e).slice(0, 150); }
-      // khối ngoại 1 tháng gần nhất (cho dòng tiền ngành)
-      try {
-        const fr = await retry(() => st.foreign('1mo'), 2);
-        if (k < 2) debug[t + '_foreign'] = clip(Array.isArray(fr) ? fr.slice(-2) : fr);
-        const recs = findRecords(fr) || [];
-        if (recs.length) {
-          const ks = Object.keys(recs[0]); const nk = Object.fromEntries(ks.map((x) => [norm(x), x]));
-          const dK = nk.time || nk.date || nk['trading date'] || ks.find((x) => /date|time/i.test(x));
-          const vK = nk['net value'] || nk['net buy value'] || ks.find((x) => /net.*val/i.test(x)) || ks.find((x) => /net/i.test(x));
-          if (dK && vK) rec.fr = recs.map((r) => [String(r[dK]).slice(0, 10), isNum(r[vK]) ? Math.round(Number(r[vK])) : 0]).sort((a, b) => (a[0] < b[0] ? -1 : 1)).slice(-25);
-        }
-      } catch (e) { /* bỏ qua nếu không có */ }
       // BCTC: mã cốt lõi mỗi ngày, các mã khác xoay vòng 7 ngày (hoặc tất cả khi --mode=full)
       const doFin = MODE === 'full' || ONLY.length || core.has(t) || (k % ROTATE_DAYS) === (day % ROTATE_DAYS) || !old.fin;
       if (doFin && Date.now() - T0 < TIME_BUDGET_MS) {
@@ -426,7 +431,7 @@ async function main() {
     for (const t of TICKERS) { const d = readJ(path.join(pxDir, t + '.json'), null); if (!d?.bars?.length) continue; seen++; for (const b of d.bars.slice(-30)) cnt.set(b[0], (cnt.get(b[0]) || 0) + 1); }
     const dates = [...cnt.entries()].filter(([, c]) => c >= Math.max(1, seen / 2)).map(([t]) => t).sort().slice(-21);
     if (dates.length >= 6) {
-      const D = dates.length - 1, sec = {};
+      const D = dates.length - 1, sec = {}; let frFromMin = null;
       for (const fn of fs.readdirSync(pxDir)) {
         const d = readJ(path.join(pxDir, fn), null);
         if (!d || !d.s || !d.bars || d.s.length !== 3) continue;
@@ -439,7 +444,7 @@ async function main() {
         if (avg <= 0 && val[D] <= 0) continue;
         const ret = (k) => (cl[D - k] ? cl[D] / cl[D - k] - 1 : null);
         const fm = new Map((d.fr || []).map((x) => [x[0], x[1]]));
-        const S = (sec[ind] ||= { name: ind, n: 0, val: Array(dates.length).fill(0), w: 0, r1: 0, r5: 0, r20: 0, w5: 0, w20: 0, f1: 0, f5: 0, f20: 0, top: [] });
+        const S = (sec[ind] ||= { name: ind, n: 0, val: Array(dates.length).fill(0), w: 0, r1: 0, r5: 0, r20: 0, w5: 0, w20: 0, f1: 0, f5: 0, f20: 0, rY: 0, wY: 0, fY: 0, top: [] });
         S.n++; val.forEach((v, i) => (S.val[i] += v));
         const w = Math.max(avg, 1);
         if (ret(1) != null) { S.r1 += ret(1) * w; S.w += w; }
@@ -448,19 +453,26 @@ async function main() {
         S.f1 += fm.get(dates[D]) || 0;
         S.f5 += dates.slice(-5).reduce((x, t) => x + (fm.get(t) || 0), 0);
         S.f20 += dates.reduce((x, t) => x + (fm.get(t) || 0), 0);
+        const yS = dates[D].slice(0, 4) + '-01-01';
+        const prevY = [...d.bars].reverse().find((b) => b[0] < yS);
+        if (prevY && prevY[4]) { S.rY += (cl[D] / prevY[4] - 1) * w; S.wY += w; }
         S.top.push({ s: d.s, v: val[D], c: ret(1) != null ? ret(1) * 100 : null });
       }
       const B = 1e9, tot = Object.values(sec).reduce((x, S) => x + S.val[D], 0) || 1;
-      const out = Object.values(sec).filter((S) => S.n >= 3).map((S) => {
+      const out = Object.values(sec).filter((S) => S.n >= 1).map((S) => {
         const avg = S.val.slice(0, D).reduce((x, y) => x + y, 0) / D;
         return {
           name: S.name, n: S.n, v: S.val[D] / B, avg: avg / B, ratio: avg ? S.val[D] / avg : null, share: (S.val[D] / tot) * 100,
           c1: S.w ? (S.r1 / S.w) * 100 : null, c5: S.w5 ? (S.r5 / S.w5) * 100 : null, c20: S.w20 ? (S.r20 / S.w20) * 100 : null,
-          f1: S.f1 / B, f5: S.f5 / B, f20: S.f20 / B, spark: S.val.map((v) => Math.round(v / B)),
+          f1: S.f1 / B, f5: S.f5 / B, f20: S.f20 / B, cY: S.wY ? (S.rY / S.wY) * 100 : null, fY: S.fY / B, spark: S.val.map((v) => Math.round(v / B)),
           top: S.top.sort((a, b) => b.v - a.v).slice(0, 5).map((x) => ({ s: x.s, v: Math.round(x.v / B * 10) / 10, c: x.c != null ? Math.round(x.c * 100) / 100 : null })),
         };
       }).sort((a, b) => b.v - a.v);
-      fs.writeFileSync(path.join(root, 'sectors.json'), JSON.stringify({ updated, date: dates[D], dates, total: tot / B, hasForeign: out.some((x) => x.f20), sectors: out }));
+      fs.writeFileSync(path.join(root, 'sectors.json'), JSON.stringify({ updated, date: dates[D], dates, total: tot / B, mkt: (() => {
+        const fj = readJ(path.join(root, 'foreign.json'), null); if (!fj?.rows?.length) return null;
+        const r = fj.rows, sum = (k) => r.slice(-k).reduce((a, x) => a + x[1], 0) / B;
+        return { date: r.at(-1)[0], from: fj.from, f1: r.at(-1)[1] / B, f5: sum(5), f20: sum(20), fY: sum(r.length), spark: r.slice(-20).map((x) => Math.round(x[1] / B)) };
+      })(), sectors: out }));
       debug.sectors = out.length;
     }
   } catch (e) { debug.sectorErr = String(e.stack || e).slice(0, 500); }
