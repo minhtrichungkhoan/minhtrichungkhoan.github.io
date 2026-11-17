@@ -379,6 +379,18 @@ async function main() {
         let bars = toBars(raw); if (fresh) bars = mergeBars(old.bars, bars);
         if (bars.length) { rec.bars = compactBars(bars); pxCount++; }
       } catch (e) { errors[t] = 'giá: ' + String(e.message || e).slice(0, 150); }
+      // khối ngoại 1 tháng gần nhất (cho dòng tiền ngành)
+      try {
+        const fr = await retry(() => st.foreign('1mo'), 2);
+        if (k < 2) debug[t + '_foreign'] = clip(Array.isArray(fr) ? fr.slice(-2) : fr);
+        const recs = findRecords(fr) || [];
+        if (recs.length) {
+          const ks = Object.keys(recs[0]); const nk = Object.fromEntries(ks.map((x) => [norm(x), x]));
+          const dK = nk.time || nk.date || nk['trading date'] || ks.find((x) => /date|time/i.test(x));
+          const vK = nk['net value'] || nk['net buy value'] || ks.find((x) => /net.*val/i.test(x)) || ks.find((x) => /net/i.test(x));
+          if (dK && vK) rec.fr = recs.map((r) => [String(r[dK]).slice(0, 10), isNum(r[vK]) ? Math.round(Number(r[vK])) : 0]).sort((a, b) => (a[0] < b[0] ? -1 : 1)).slice(-25);
+        }
+      } catch (e) { /* bỏ qua nếu không có */ }
       // BCTC: mã cốt lõi mỗi ngày, các mã khác xoay vòng 7 ngày (hoặc tất cả khi --mode=full)
       const doFin = MODE === 'full' || ONLY.length || core.has(t) || (k % ROTATE_DAYS) === (day % ROTATE_DAYS) || !old.fin;
       if (doFin && Date.now() - T0 < TIME_BUDGET_MS) {
@@ -407,6 +419,51 @@ async function main() {
     if (!d.ratios) continue;
     for (const g of new Set([d.g || 'other', d.ind].filter(Boolean))) (grp[g] ||= []).push(d.ratios);
   }
+  // dòng tiền theo ngành: giá trị giao dịch (giá đóng cửa × khối lượng), biến động giá, khối ngoại ròng
+  try {
+    // lấy 21 phiên gần nhất: các ngày xuất hiện ở đa số mã cốt lõi (tránh lệch ngày giữa chỉ số và cổ phiếu)
+    const cnt = new Map(); let seen = 0;
+    for (const t of TICKERS) { const d = readJ(path.join(pxDir, t + '.json'), null); if (!d?.bars?.length) continue; seen++; for (const b of d.bars.slice(-30)) cnt.set(b[0], (cnt.get(b[0]) || 0) + 1); }
+    const dates = [...cnt.entries()].filter(([, c]) => c >= Math.max(1, seen / 2)).map(([t]) => t).sort().slice(-21);
+    if (dates.length >= 6) {
+      const D = dates.length - 1, sec = {};
+      for (const fn of fs.readdirSync(pxDir)) {
+        const d = readJ(path.join(pxDir, fn), null);
+        if (!d || !d.s || !d.bars || d.s.length !== 3) continue;
+        const ind = d.ind || ({ bank: 'Ngân hàng', sec: 'Chứng khoán' })[d.g]; if (!ind) continue;
+        const bm = new Map(d.bars.slice(-40).map((b) => [b[0], b]));
+        const val = dates.map((t) => { const b = bm.get(t); return b ? b[4] * b[5] : 0; });
+        const cl = dates.map((t) => bm.get(t)?.[4] ?? null);
+        if (!cl[D]) continue;
+        const avg = val.slice(0, D).reduce((x, y) => x + y, 0) / D;
+        if (avg <= 0 && val[D] <= 0) continue;
+        const ret = (k) => (cl[D - k] ? cl[D] / cl[D - k] - 1 : null);
+        const fm = new Map((d.fr || []).map((x) => [x[0], x[1]]));
+        const S = (sec[ind] ||= { name: ind, n: 0, val: Array(dates.length).fill(0), w: 0, r1: 0, r5: 0, r20: 0, w5: 0, w20: 0, f1: 0, f5: 0, f20: 0, top: [] });
+        S.n++; val.forEach((v, i) => (S.val[i] += v));
+        const w = Math.max(avg, 1);
+        if (ret(1) != null) { S.r1 += ret(1) * w; S.w += w; }
+        if (ret(5) != null) { S.r5 += ret(5) * w; S.w5 += w; }
+        if (ret(20) != null) { S.r20 += ret(20) * w; S.w20 += w; }
+        S.f1 += fm.get(dates[D]) || 0;
+        S.f5 += dates.slice(-5).reduce((x, t) => x + (fm.get(t) || 0), 0);
+        S.f20 += dates.reduce((x, t) => x + (fm.get(t) || 0), 0);
+        S.top.push({ s: d.s, v: val[D], c: ret(1) != null ? ret(1) * 100 : null });
+      }
+      const B = 1e9, tot = Object.values(sec).reduce((x, S) => x + S.val[D], 0) || 1;
+      const out = Object.values(sec).filter((S) => S.n >= 3).map((S) => {
+        const avg = S.val.slice(0, D).reduce((x, y) => x + y, 0) / D;
+        return {
+          name: S.name, n: S.n, v: S.val[D] / B, avg: avg / B, ratio: avg ? S.val[D] / avg : null, share: (S.val[D] / tot) * 100,
+          c1: S.w ? (S.r1 / S.w) * 100 : null, c5: S.w5 ? (S.r5 / S.w5) * 100 : null, c20: S.w20 ? (S.r20 / S.w20) * 100 : null,
+          f1: S.f1 / B, f5: S.f5 / B, f20: S.f20 / B, spark: S.val.map((v) => Math.round(v / B)),
+          top: S.top.sort((a, b) => b.v - a.v).slice(0, 5).map((x) => ({ s: x.s, v: Math.round(x.v / B * 10) / 10, c: x.c != null ? Math.round(x.c * 100) / 100 : null })),
+        };
+      }).sort((a, b) => b.v - a.v);
+      fs.writeFileSync(path.join(root, 'sectors.json'), JSON.stringify({ updated, date: dates[D], dates, total: tot / B, hasForeign: out.some((x) => x.f20), sectors: out }));
+      debug.sectors = out.length;
+    }
+  } catch (e) { debug.sectorErr = String(e.stack || e).slice(0, 500); }
   summary.groups = Object.fromEntries(Object.entries(grp).filter(([, rs]) => rs.length >= 3).map(([g, rs]) => [g, { n: rs.length, pe: med(rs.map((r) => r.pe).filter((v) => v > 0 && v < 200)), pb: med(rs.map((r) => r.pb).filter((v) => v > 0)), roe: med(rs.map((r) => r.roe)) }]));
   summary.updated = updated;
   fs.writeFileSync(path.join(root, 'summary.json'), JSON.stringify(summary));
