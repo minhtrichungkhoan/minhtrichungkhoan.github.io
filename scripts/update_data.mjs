@@ -16,6 +16,10 @@ export const TICKERS = [
   'SAB', 'VJC', 'GVR', 'BCM', 'BVH', 'DGC', 'REE', 'PNJ', 'FRT',
 ];
 const N_Q = 5;
+export const GROUP = Object.fromEntries([
+  ...['VCB', 'BID', 'CTG', 'TCB', 'MBB', 'ACB', 'VPB', 'HDB', 'STB', 'SHB', 'TPB', 'VIB', 'LPB', 'SSB', 'MSB', 'OCB', 'EIB', 'NAB'].map((t) => [t, 'bank']),
+  ...['SSI', 'VND', 'HCM', 'VCI', 'FTS', 'SHS', 'MBS', 'VIX'].map((t) => [t, 'sec']),
+]);
 const PAUSE_MS = 1500;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -57,6 +61,29 @@ function findRecords(obj, depth = 0) {
 // Đưa về dạng: Map "năm-quý" -> {tênkhoảnmục: giá trị}
 // Bản 2.0: rows có thể là [{period/year/quarter, values:{...}}] hoặc [{name, values:[...]}] + mảng kỳ riêng
 function flatten(raw) {
+  // Dạng vnstock-js 2.0: {fields:[{field,titleVi,titleEn}], rows:[{period:'2026-Q3', values:{isb27: ...}}]}
+  if (raw && Array.isArray(raw.rows) && raw.rows.length && raw.rows[0] && typeof raw.rows[0].values === 'object' && !Array.isArray(raw.rows[0].values)) {
+    const names = {};
+    for (const f of raw.fields || []) {
+      if (!f || !f.field) continue;
+      names[f.field] = [f.titleVi, f.titleEn].filter(Boolean);
+    }
+    return raw.rows.map((r) => {
+      const v = r.values || {};
+      const row = {};
+      for (const [k, val] of Object.entries(v)) {
+        const ns = names[k];
+        if (ns && ns.length) { for (const n of ns) if (!(n in row)) row[n] = val; }
+        else row[k] = val;
+      }
+      // kỳ báo cáo: "2026-Q3"; với chỉ số có thể là "2018-Qundefined" -> lấy quý trong values
+      let per = String(r.period || '');
+      const y = (per.match(/(\d{4})/) || [])[1] || v.year || v.yearReport;
+      const q = (per.match(/Q([1-4])/i) || [])[1] || v.quarter || v.lengthReport;
+      row.period = y && q >= 1 && q <= 4 ? `${y}-Q${q}` : per;
+      return row;
+    });
+  }
   const recs = findRecords(raw);
   if (!recs || !recs.length) return raw;
   const r0 = recs[0];
@@ -152,10 +179,10 @@ const pick = (map, key, ids) => {
   return raw.map((v) => (isNum(v) ? Math.round(Number(v) * sc * 10) / 10 : null));
 };
 
-const REV = ['doanh thu thuan', 'net revenue', 'net sales', 'doanh thu ban hang va cung cap dich vu', 'revenue', 'doanh thu', 'sales'];
+const REV = ['doanh thu thuan', 'net revenue', 'net sales', 'cong doanh thu hoat dong', 'doanh thu hoat dong', 'total operating revenue', 'doanh thu ban hang va cung cap dich vu', 'revenue', 'doanh thu', 'sales'];
 const BANK_REV = ['tong thu nhap hoat dong', 'total operating income', 'toi', 'thu nhap lai thuan', 'net interest income'];
 const NP = ['loi nhuan sau thue cua co dong cong ty me', 'co dong cua cong ty me', 'cong ty me', 'attributable to parent',
-  'attribute to parent', 'parent company', 'share holder income', 'loi nhuan sau thue', 'net profit', 'profit after tax', 'net income'];
+  'attribute to parent', 'parent company', 'share holder income', 'loi nhuan sau thue', 'loi nhuan ke toan sau thue', 'net profit', 'profit after tax', 'net income', 'sau thue'];
 const LIAB = ['tong no phai tra', 'no phai tra', 'total liabilities', 'liabilities', 'liability'];
 const EQ = ['von chu so huu', 'owners equity', 'owner equity', 'owner s equity', 'total equity', 'equity'];
 
@@ -168,7 +195,7 @@ export function build(incRaw, bsRaw) {
   let revLabel = 'Doanh thu thuần';
   const bankK = findKey(incRows, BANK_REV, ['growth', 'yoy']);
   if (bankK && !revK) { revK = bankK; revLabel = /tong thu nhap|total operating|toi/.test(norm(bankK)) ? 'Tổng thu nhập hoạt động' : 'Thu nhập lãi thuần'; }
-  const npK = findKey(incRows, NP, ['truoc thue', 'before tax', 'khong kiem soat', 'thieu so', 'minority', 'growth', 'yoy', 'margin']);
+  const npK = findKey(incRows, NP, ['truoc thue', 'before tax', 'chi phi thue', 'tax expense', 'khong kiem soat', 'thieu so', 'minority', 'growth', 'yoy', 'margin']);
   const liabK = findKey(bsRows, LIAB, ['ngan han', 'dai han', 'khac', 'short', 'long', 'va von', 'nguon von', 'and equity', 'other']);
   const eqK = findKey(bsRows, EQ, ['tong cong nguon von', 'no phai tra va', 'liabilities and', 'khac', 'other', 'minority', 'growth', 'return']);
   const rev = pick(inc, revK, ids), np = pick(inc, npK, ids);
@@ -198,7 +225,7 @@ export function toBars(raw) {
     t = String(t).slice(0, 10);
     const c = toNum(r[cK]);
     return [t, toNum(r[oK]) ?? c, toNum(r[hK]) ?? c, toNum(r[lK]) ?? c, c, toNum(r[vK]) ?? 0];
-  }).filter((b) => b[4] != null).sort((a, b) => (a[0] < b[0] ? -1 : 1)).slice(-260);
+  }).filter((b) => b[4] != null).sort((a, b) => (a[0] < b[0] ? -1 : 1)).slice(-1300);
 }
 
 const RATIO_KEYS = {
@@ -220,8 +247,18 @@ export function ratiosLatest(raw) {
     const recs = findRecords(flatten(raw)); row = recs ? recs[recs.length - 1] : (raw && typeof raw === 'object' ? raw : null);
   }
   if (!row) return null;
+  const pickKey = (r, prefs) => { const ks = Object.keys(r).map((k) => [k, norm(k)]); for (const p of prefs) { const h = ks.find(([, nk]) => nk === p) || ks.find(([, nk]) => nk.startsWith(p + ' ') && !/growth|yoy|change/.test(nk)); if (h) return h[0]; } return null; };
   const keys = Object.keys(row).map((k) => [k, norm(k)]);
   const out = { q: label };
+  if (map.size) {
+    const ids = [...map.keys()].sort((a, b) => { const [ya, qa] = a.split('-').map(Number), [yb, qb] = b.split('-').map(Number); return ya - yb || qa - qb; }).slice(-12);
+    const hist = { q: ids.map((i) => { const [y, q] = i.split('-'); return `Q${q}/${y.slice(2)}`; }) };
+    for (const name of ['pe', 'pb', 'roe', 'roa', 'nm', 'gm', 'de', 'eps']) {
+      const vals = ids.map((i) => { const r = map.get(i); const k = pickKey(r, RATIO_KEYS[name]); return k && isNum(r[k]) ? Number(r[k]) : null; });
+      if (vals.some((v) => v != null)) hist[name] = vals;
+    }
+    out.hist = hist;
+  }
   for (const [name, prefs] of Object.entries(RATIO_KEYS)) {
     let hit = null;
     for (const p of prefs) { hit = keys.find(([, nk]) => nk === p) || keys.find(([, nk]) => nk.startsWith(p + ' ') && !/growth|yoy|change/.test(nk)); if (hit) break; }
@@ -269,14 +306,14 @@ async function fetchOne({ mod, lib }, sym) {
 
 async function fetchPrice({ mod, lib }, sym, pxDir, summary, debug, keep) {
   const vn = mod.vn || lib.vn; const st = vn.stock(sym);
-  const hist = await st.history('1y'); await sleep(PAUSE_MS);
+  let hist; try { hist = await st.history('5y'); } catch { hist = await st.history('1y'); } await sleep(PAUSE_MS);
   let rat = null; try { rat = await st.financials('ratios', { period: 'quarter' }); } catch (e) { debug['ratioErr_' + sym] = e.message; }
   await sleep(PAUSE_MS);
   if (keep) { debug[sym + '_hist'] = clip(Array.isArray(hist) ? hist.slice(-3) : hist); debug[sym + '_ratios'] = clip(rat); }
   const bars = toBars(hist);
   if (!bars.length) throw new Error('không đọc được lịch sử giá');
   const ratios = rat ? ratiosLatest(rat) : null;
-  fs.writeFileSync(path.join(pxDir, sym + '.json'), JSON.stringify({ s: sym, bars, ratios }));
+  fs.writeFileSync(path.join(pxDir, sym + '.json'), JSON.stringify({ s: sym, g: GROUP[sym] || 'other', bars, ratios }));
   const L = bars.at(-1), P = bars.at(-2) || L;
   summary.items[sym] = { c: L[4], chp: P[4] ? (L[4] / P[4] - 1) * 100 : 0, v: L[5], t: L[0] };
 }
@@ -311,12 +348,13 @@ async function main() {
     for (const ix of ['VNINDEX', 'VN30', 'HNXINDEX']) {
       try {
         const vn = ctx.mod.vn || ctx.lib.vn;
-        const raw = await vn.index(ix).history('1y');
+        let raw; try { raw = await vn.index(ix).history('5y'); } catch { raw = await vn.index(ix).history('1y'); }
         const bars = toBars(raw);
         if (bars.length) {
           fs.writeFileSync(path.join(pxDir, ix + '.json'), JSON.stringify({ s: ix, bars }));
           const L = bars.at(-1), P = bars.at(-2) || L;
           summary.idx[ix] = { c: L[4], chp: P[4] ? (L[4] / P[4] - 1) * 100 : 0, t: L[0], spark: bars.slice(-60).map((b) => b[4]) };
+          if (bars.length > 260) fs.writeFileSync(path.join(pxDir, ix + '.json'), JSON.stringify({ s: ix, bars }));
         }
         if (ix === 'VNINDEX') debug.indexSample = clip(raw);
       } catch (e) { pxErrors[ix] = String(e.message || e).slice(0, 300); }
@@ -337,6 +375,13 @@ async function main() {
   }
   const updated = new Date(Date.now() + 7 * 3600e3).toISOString().replace('T', ' ').slice(0, 16);
   fs.writeFileSync(file, JSON.stringify({ updated, tickers: result, errors }, null, 1));
+  // trung vị chỉ số theo nhóm ngành
+  const med = (a) => { const b = a.filter((x) => x != null && Number.isFinite(x)).sort((x, y) => x - y); if (!b.length) return null; const m = b.length >> 1; return b.length % 2 ? b[m] : (b[m - 1] + b[m]) / 2; };
+  const grp = {};
+  for (const f of fs.readdirSync(pxDir)) {
+    try { const d = JSON.parse(fs.readFileSync(path.join(pxDir, f), 'utf8')); if (!d.ratios) continue; const g = GROUP[d.s] || 'other'; (grp[g] ||= []).push(d.ratios); } catch {}
+  }
+  summary.groups = Object.fromEntries(Object.entries(grp).map(([g, rs]) => [g, { n: rs.length, pe: med(rs.map((r) => r.pe).filter((v) => v > 0 && v < 200)), pb: med(rs.map((r) => r.pb).filter((v) => v > 0)), roe: med(rs.map((r) => r.roe)) }]));
   summary.updated = updated;
   fs.writeFileSync(path.join(root, 'summary.json'), JSON.stringify(summary));
   debug.pxErrors = pxErrors;
