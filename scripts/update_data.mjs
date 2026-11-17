@@ -55,7 +55,41 @@ function findRecords(obj, depth = 0) {
 }
 
 // Đưa về dạng: Map "năm-quý" -> {tênkhoảnmục: giá trị}
-export function toPeriodMap(raw) {
+// Bản 2.0: rows có thể là [{period/year/quarter, values:{...}}] hoặc [{name, values:[...]}] + mảng kỳ riêng
+function flatten(raw) {
+  const recs = findRecords(raw);
+  if (!recs || !recs.length) return raw;
+  const r0 = recs[0];
+  if (r0 && r0.values && typeof r0.values === 'object' && !Array.isArray(r0.values)) {
+    return recs.map((r) => ({ ...r, ...r.values, values: undefined }));
+  }
+  if (r0 && Array.isArray(r0.values)) {
+    // tìm mảng nhãn kỳ cùng độ dài
+    const n = r0.values.length;
+    let periods = null;
+    const scan = (o, d = 0) => {
+      if (!o || d > 3 || periods) return;
+      if (Array.isArray(o) && o.length === n && o.every((x) => typeof x !== 'object' || x === null || parsePeriod(JSON.stringify(x)))) {
+        if (o.filter((x) => parsePeriod(typeof x === 'object' ? JSON.stringify(x) : x)).length >= Math.min(2, n)) periods = o;
+        return;
+      }
+      if (typeof o === 'object') for (const v of Object.values(o)) scan(v, d + 1);
+    };
+    scan(raw);
+    if (periods) {
+      const nameK = Object.keys(r0).find((k) => k !== 'values' && typeof r0[k] === 'string') || 'name';
+      return periods.map((p, i) => {
+        const row = { period: typeof p === 'object' ? JSON.stringify(p) : p };
+        for (const r of recs) row[String(r[nameK])] = r.values[i];
+        return row;
+      });
+    }
+  }
+  return raw;
+}
+
+export function toPeriodMap(raw0) {
+  const raw = flatten(raw0);
   const recs = findRecords(raw);
   const out = new Map();
   if (!recs) return out;
@@ -164,15 +198,19 @@ async function tryCalls(calls) {
   throw new Error(errs.join(' | '));
 }
 async function fetchOne({ mod, lib }, sym) {
+  const vn = mod.vn || lib.vn;
+  const v2 = vn && typeof vn.stock === 'function' ? vn.stock(sym) : null;
   const f = lib?.stock?.financials;
   const legacy = mod.Vnstock ? new mod.Vnstock().stock : null;
   const inc = await tryCalls([
+    ['vn.stock().financials(income)', () => v2?.financials?.('income', { period: 'quarter' })],
     ['stock.financials.incomeStatement', () => f?.incomeStatement?.({ symbol: sym, period: 'quarter' })],
     ['stock.financials(income)', () => (typeof f === 'function' ? f({ ticker: sym, period: 'quarter', type: 'income' }) : null)],
     ['legacy.financials', () => legacy?.financials?.({ ticker: sym, period: 'quarter' })],
   ]);
   await sleep(PAUSE_MS);
   const bs = await tryCalls([
+    ['vn.stock().financials(balance)', () => v2?.financials?.('balance', { period: 'quarter' })],
     ['stock.financials.balanceSheet', () => f?.balanceSheet?.({ symbol: sym, period: 'quarter' })],
     ['stock.financials(balance)', () => (typeof f === 'function' ? f({ ticker: sym, period: 'quarter', type: 'balance' }) : null)],
     ['dùng chung kết quả', () => inc.r],
@@ -197,6 +235,7 @@ async function main() {
     debug.exports = Object.keys(ctx.mod);
     debug.libKeys = Object.keys(ctx.lib || {});
     debug.stockKeys = Object.keys(ctx.lib?.stock || {});
+    debug.vnKeys = Object.keys(ctx.mod.vn || {});
     debug.financialsType = typeof ctx.lib?.stock?.financials;
     debug.financialsKeys = Object.keys(ctx.lib?.stock?.financials || {});
   } catch (e) {
