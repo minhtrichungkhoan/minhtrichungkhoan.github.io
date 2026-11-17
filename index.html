@@ -201,6 +201,30 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;height:6
 .dd-menu .dd-all svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
 @media(max-width:640px){.dd-menu{position:fixed;left:12px;right:12px;top:64px;width:auto}}
 
+
+/* TRA CỨU TỰ VẼ */
+.pxc{position:absolute;inset:0;z-index:1}
+.wt-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.wt-row .wt{margin:0}
+.rng{display:flex;gap:6px}.rng button{background:rgba(255,255,255,.05);border:1px solid var(--line);color:#cfc8d0;border-radius:8px;padding:5px 12px;font:600 13px inherit;font-family:inherit;cursor:pointer;min-height:32px}
+.rng button.on{background:var(--gold);border-color:var(--gold);color:#17120a}
+.qinfo{display:flex;flex-wrap:wrap;align-items:center;gap:18px 34px;padding:20px 24px;border-radius:20px;margin-bottom:20px;min-height:96px}
+.qinfo .sym{font-size:30px;font-weight:900;letter-spacing:.02em}.qinfo .sym small{display:block;font-size:13px;font-weight:500;color:var(--muted);letter-spacing:0}
+.qinfo .px{font-size:30px;font-weight:800;white-space:nowrap}.qinfo .px em{font-style:normal;font-size:16px;font-weight:700;margin-left:10px}
+.qinfo .kv small{display:block;color:var(--muted);font-size:12.5px}.qinfo .kv b{font-size:16px;white-space:nowrap}
+.qinfo .ext{margin-left:auto;color:var(--gold2);font-weight:600;font-size:14px}
+.ratios{border-radius:20px;padding:18px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;min-height:520px;align-content:start}
+.ratios .r{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.ratios .r small{display:block;color:var(--muted);font-size:12.5px}.ratios .r b{font-size:21px;font-weight:800;white-space:nowrap}
+.ratios .note{grid-column:1/-1;color:var(--muted);font-size:13px;margin-top:4px}
+.ratios .empty,.qinfo .empty{grid-column:1/-1;color:var(--muted);text-align:center;padding:30px 10px;width:100%}
+.empty a{color:var(--gold2);font-weight:600}
+.idx{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.idx .ic2{padding:18px 20px;border-radius:18px}
+.idx .ic2 small{color:var(--muted);font-size:13px}.idx .ic2 b{display:block;font-size:26px;font-weight:800;margin:4px 0}
+.idx b em{font-style:normal;font-size:16px;margin-left:6px}
+.idx svg{display:block;width:100%;height:56px;margin-top:8px}
+@media(max-width:760px){.idx{grid-template-columns:1fr}.qinfo .ext{margin-left:0}.ratios{min-height:0}}
+
 /* TICKER */
 .ticker{overflow:hidden;padding:22px 0;border-bottom:1px solid var(--line);-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
 .track-row{display:flex;gap:14px;width:max-content;animation:run 34s linear infinite}
@@ -334,6 +358,7 @@ section.band[data-n]>.wrap>*{position:relative;z-index:1}
 .js .rv.in{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.js .rv{opacity:1;transform:none}.hero-bg .ln{stroke-dashoffset:0}.hero-bg .ar,.hero-bg .cd rect,.hero-bg .dot{opacity:1}}
 </style>
+<script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
 </head>
 <body>
 
@@ -401,7 +426,7 @@ section.band[data-n]>.wrap>*{position:relative;z-index:1}
 </div>
 
 
-<div class="tape" data-ph="Bảng giá chạy sẽ hiển thị khi trang được đăng lên web"><div class="tradingview-widget-container" id="tvTape"></div></div>
+<div class="ticker" id="tapeBox" hidden><div class="track-row" id="tape"></div></div>
 
 <section class="band" id="ve-toi" data-n="01">
   <div class="wrap about">
@@ -466,15 +491,15 @@ section.band[data-n]>.wrap>*{position:relative;z-index:1}
       <button class="btn btn-gold" type="submit"><span data-i="sBtn">Tra cứu</span></button>
     </form>
     <div class="quick" id="quick"></div>
-    <div class="wbox" data-ph="Thông tin mã sẽ hiển thị khi trang được đăng lên web" style="min-height:190px;margin-bottom:20px"><div class="tradingview-widget-container" id="tvInfo"></div></div>
+    <div class="qinfo card" id="qinfo"></div>
     <div class="mk">
       <div>
-        <h3 class="wt" data-i="wChart">Đồ thị giá</h3>
-        <div class="wbox" data-ph="Đồ thị giá sẽ hiển thị khi trang được đăng lên web" style="height:560px"><div class="tradingview-widget-container" id="tvChart" style="height:100%"></div></div>
+        <div class="wt-row"><h3 class="wt" data-i="wChart">Đồ thị giá</h3><div class="rng" id="rng"><button type="button" data-r="66">3T</button><button type="button" data-r="130" class="on">6T</button><button type="button" data-r="260">1N</button></div></div>
+        <div class="wbox" data-ph="Đang tải đồ thị…" style="height:520px"><div id="pxChart" class="pxc"></div></div>
       </div>
       <div>
         <h3 class="wt" data-i="wFin">Chỉ số tài chính &amp; định giá</h3>
-        <div class="wbox" data-ph="Chỉ số tài chính sẽ hiển thị khi trang được đăng lên web" style="height:560px"><div class="tradingview-widget-container" id="tvFin" style="height:100%"></div></div>
+        <div class="ratios card" id="ratios"></div>
       </div>
     </div>
     <div class="qp" id="qp"></div>
@@ -484,8 +509,8 @@ section.band[data-n]>.wrap>*{position:relative;z-index:1}
       <a class="btn btn-zalo" href="https://zalo.me/0833703936" target="_blank" rel="noopener"><svg><use href="#i-chat"/></svg><span data-i="askB">Hỏi anh Trí qua Zalo</span></a>
     </div>
     <h3 class="wt" style="margin-top:48px" data-i="wOv">Tổng quan thị trường</h3>
-    <div class="wbox" data-ph="Tổng quan thị trường sẽ hiển thị khi trang được đăng lên web" style="min-height:460px"><div class="tradingview-widget-container" id="tvOverview"></div></div>
-    <p class="src"><span data-i="src">Dữ liệu do</span> <a href="https://vn.tradingview.com/" target="_blank" rel="noopener">TradingView</a> <span data-i="src2">cung cấp, có thể có độ trễ. Thông tin chỉ để tham khảo, không phải khuyến nghị đầu tư.</span></p>
+    <div class="idx" id="idxCards"></div>
+    <p class="src"><span data-i="src">Dữ liệu giá và báo cáo tài chính: VietCap (qua thư viện vnstock-js), tự cập nhật lúc 18:00 mỗi ngày. Biểu đồ vẽ bằng</span> <a href="https://www.tradingview.com/lightweight-charts/" target="_blank" rel="noopener">TradingView Lightweight Charts</a>. <span data-i="src2">Thông tin chỉ để tham khảo, không phải khuyến nghị đầu tư.</span></p>
   </div>
 </section>
 
@@ -607,13 +632,6 @@ let saved='vi';try{saved=localStorage.getItem('lmt-lang')||'vi'}catch(e){}
 setLang(saved);
 
 
-const tv=(id,file,cfg)=>{const box=document.getElementById(id);if(!box)return;box.innerHTML='<div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>';const sc=document.createElement('script');sc.src='https://s3.tradingview.com/external-embedding/embed-widget-'+file+'.js';sc.async=true;sc.type='text/javascript';sc.text=JSON.stringify(cfg);box.appendChild(sc)};
-const S=x=>({s:x,d:x.split(':')[1]});
-tv('tvTape','ticker-tape',{symbols:["HOSE:VNINDEX","HOSE:VN30","HNX:HNXINDEX","HOSE:VCB","HOSE:TCB","HOSE:MBB","HOSE:ACB","HOSE:SSI","HOSE:VND","HOSE:HCM","HOSE:FTS","HOSE:FPT","HOSE:HPG"].map(x=>({proName:x,title:x.split(':')[1]})),showSymbolLogo:false,isTransparent:true,displayMode:"adaptive",colorTheme:"dark",locale:"vi_VN"});
-tv('tvOverview','market-overview',{colorTheme:"dark",dateRange:"1M",showChart:true,locale:"vi_VN",width:"100%",height:460,isTransparent:true,showSymbolLogo:false,showFloatingTooltip:true,plotLineColorGrowing:"#d4ae5e",plotLineColorFalling:"#d4ae5e",gridLineColor:"rgba(255,255,255,0.06)",scaleFontColor:"#a19aa3",belowLineFillColorGrowing:"rgba(212,174,94,0.12)",belowLineFillColorFalling:"rgba(212,174,94,0.12)",belowLineFillColorGrowingBottom:"rgba(212,174,94,0)",belowLineFillColorFallingBottom:"rgba(212,174,94,0)",symbolActiveColor:"rgba(212,174,94,0.12)",
- tabs:[{title:"Chỉ số",symbols:["HOSE:VNINDEX","HOSE:VN30","HNX:HNXINDEX"].map(S)},
-       {title:"Ngân hàng",symbols:["HOSE:VCB","HOSE:TCB","HOSE:MBB","HOSE:ACB","HOSE:CTG","HOSE:BID"].map(S)},
-       {title:"Chứng khoán",symbols:["HOSE:SSI","HOSE:VND","HOSE:HCM","HOSE:FTS","HOSE:VCI"].map(S)}]});
 
 /* ===== SỐ LIỆU QUÝ =====
  Đơn vị: tỷ đồng. Mỗi mảng gồm 5 quý, quý CŨ NHẤT trước, quý MỚI NHẤT sau cùng
@@ -642,12 +660,47 @@ const quarter=code=>{
   ${d.src?`<p class="src" style="margin-top:12px">${en?'Source':'Nguồn'}: ${d.src}${FIN_UPDATED?` · ${en?'updated':'cập nhật'} ${FIN_UPDATED}`:''}</p>`:''}`;
 };
 
-const chart=sym=>{
-  tv('tvInfo','symbol-info',{symbol:sym,width:"100%",locale:"vi_VN",colorTheme:"dark",isTransparent:true});
-  tv('tvChart','advanced-chart',{autosize:true,symbol:sym,interval:"D",timezone:"Asia/Ho_Chi_Minh",theme:"dark",style:"1",locale:"vi_VN",backgroundColor:"rgba(24,22,26,1)",gridColor:"rgba(255,255,255,0.05)",allow_symbol_change:false,hide_side_toolbar:true,calendar:false,support_host:"https://www.tradingview.com"});
-  tv('tvFin','financials',{isTransparent:true,largeChartUrl:"",displayMode:"regular",width:"100%",height:"100%",colorTheme:"dark",symbol:sym,locale:"vi_VN"});
-  document.getElementById('askCode').textContent=sym.split(':')[1];
-  window.curCode=sym.split(':')[1];quarter(window.curCode);
+/* ===== dữ liệu giá tự lưu (data/px, data/summary.json) ===== */
+const fmtP=v=>v==null?'–':Math.round(v).toLocaleString('vi-VN');
+const fmtI=v=>v==null?'–':v.toLocaleString('vi-VN',{maximumFractionDigits:2});
+const fmtBig=v=>{if(v==null)return'–';const a=Math.abs(v);return a>=1e12?(v/1e12).toLocaleString('vi-VN',{maximumFractionDigits:1})+' nghìn tỷ':a>=1e9?(v/1e9).toLocaleString('vi-VN',{maximumFractionDigits:1})+' tỷ':a>=1e6?(v/1e6).toLocaleString('vi-VN',{maximumFractionDigits:1})+' tr':fmtP(v)};
+const pctTxt=v=>v==null?'':`<em class="${v>=0?'up':'dn'}">${v>=0?'▲':'▼'} ${Math.abs(v).toFixed(2)}%</em>`;
+const extLink=c=>`https://finance.vietstock.vn/${c}-.htm`;
+let SUM=null,lwc=null,cs=null,vs=null,curBars=[],curRange=130;
+const spark=(arr,up)=>{if(!arr||arr.length<2)return'';const mn=Math.min(...arr),mx=Math.max(...arr),W=300,H=56;const pts=arr.map((v,i)=>`${(i/(arr.length-1)*W).toFixed(1)},${(H-4-(mx>mn?(v-mn)/(mx-mn):.5)*(H-8)).toFixed(1)}`).join(' ');const c=up?'#7fd1a0':'#ef8a7a';return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="${c}" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>`};
+fetch('data/summary.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(!j)return;SUM=j;
+  const it=Object.entries(j.items||{});
+  if(it.length){const h=it.map(([k,v])=>`<span class="chip">${k} <b>${fmtP(v.c)}</b> <span class="${v.chp>=0?'up':'dn'}">${v.chp>=0?'▲':'▼'}${Math.abs(v.chp).toFixed(1)}%</span></span>`).join('');document.getElementById('tape').innerHTML=h+h;document.getElementById('tapeBox').hidden=false}
+  const names={VNINDEX:'VN-Index',VN30:'VN30',HNXINDEX:'HNX-Index'};
+  document.getElementById('idxCards').innerHTML=Object.entries(j.idx||{}).map(([k,v])=>`<div class="ic2 card"><small>${names[k]||k} · ${v.t||''}</small><b>${fmtI(v.c)} ${pctTxt(v.chp)}</b>${spark(v.spark,v.chp>=0)}</div>`).join('');
+}).catch(()=>{});
+const drawChart=()=>{const el=document.getElementById('pxChart');if(!el)return;if(!window.LightweightCharts){el.parentElement.dataset.ph='Không tải được thư viện biểu đồ, vui lòng tải lại trang';return}el.parentElement.dataset.ph='';
+  if(!lwc){lwc=LightweightCharts.createChart(el,{autoSize:true,layout:{background:{type:'solid',color:'transparent'},textColor:'#a19aa3',fontFamily:'Be Vietnam Pro'},grid:{vertLines:{color:'rgba(255,255,255,.04)'},horzLines:{color:'rgba(255,255,255,.05)'}},rightPriceScale:{borderColor:'rgba(255,255,255,.08)'},timeScale:{borderColor:'rgba(255,255,255,.08)'},localization:{priceFormatter:p=>Math.round(p).toLocaleString('vi-VN')}});
+    cs=lwc.addCandlestickSeries({upColor:'#7fd1a0',downColor:'#ef8a7a',borderVisible:false,wickUpColor:'#7fd1a0',wickDownColor:'#ef8a7a'});
+    vs=lwc.addHistogramSeries({priceScaleId:'',priceFormat:{type:'volume'},color:'rgba(212,174,94,.35)'});vs.priceScale().applyOptions({scaleMargins:{top:.8,bottom:0}});}
+  const b=curBars.slice(-curRange);
+  cs.setData(b.map(x=>({time:x[0],open:x[1],high:x[2],low:x[3],close:x[4]})));
+  vs.setData(b.map(x=>({time:x[0],value:x[5],color:x[4]>=x[1]?'rgba(127,209,160,.35)':'rgba(239,138,122,.35)'})));
+  lwc.timeScale().fitContent()};
+document.getElementById('rng').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;curRange=+b.dataset.r;document.querySelectorAll('#rng button').forEach(x=>x.classList.toggle('on',x===b));if(curBars.length)drawChart()});
+const RL={pe:['P/E','x'],pb:['P/B','x'],roe:['ROE','%'],roa:['ROA','%'],eps:['EPS','đ'],bvps:['BVPS (giá trị sổ sách/cp)','đ'],cap:['Vốn hoá',''],gm:['Biên lợi nhuận gộp','%'],nm:['Biên lợi nhuận ròng','%'],de:['Nợ / Vốn chủ','x'],dy:['Tỷ suất cổ tức','%']};
+const rv=(k,v)=>{const u=RL[k][1];if(u==='%')return (Math.abs(v)<=1.5?v*100:v).toFixed(1)+'%';if(u==='x')return v.toFixed(2)+'x';if(u==='đ')return fmtP(v)+' đ';return fmtBig(v)};
+const chart=sym=>{const code=sym.split(':')[1]||sym;
+  document.getElementById('askCode').textContent=code;window.curCode=code;quarter(code);
+  const qi=document.getElementById('qinfo'),ra=document.getElementById('ratios');
+  qi.innerHTML=`<div class="sym">${code}</div><div class="empty">Đang tải…</div>`;
+  fetch(`data/px/${code}.json`,{cache:'no-cache'}).then(r=>{if(!r.ok)throw 0;return r.json()}).then(d=>{
+    curBars=d.bars||[];const L=curBars.at(-1),P=curBars.at(-2)||L;const y=curBars.slice(-250);
+    const hi=Math.max(...y.map(b=>b[2])),lo=Math.min(...y.map(b=>b[3])),chp=P?(L[4]/P[4]-1)*100:0;
+    qi.innerHTML=`<div class="sym">${code}<small>${sym.split(':')[0]||''} · ${L[0]}</small></div><div class="px">${fmtP(L[4])}${pctTxt(chp)}</div>
+      <div class="kv"><small>Khối lượng</small><b>${fmtP(L[5])}</b></div><div class="kv"><small>Cao nhất 52 tuần</small><b>${fmtP(hi)}</b></div><div class="kv"><small>Thấp nhất 52 tuần</small><b>${fmtP(lo)}</b></div>
+      <a class="ext" href="${extLink(code)}" target="_blank" rel="noopener">Xem chi tiết ↗</a>`;
+    drawChart();
+    const r=d.ratios||{};const ks=Object.keys(RL).filter(k=>r[k]!=null);
+    ra.innerHTML=ks.length?ks.map(k=>`<div class="r"><small>${RL[k][0]}</small><b>${rv(k,r[k])}</b></div>`).join('')+`<p class="note">Theo báo cáo ${r.q||'gần nhất'} · nguồn VietCap</p>`:`<div class="empty">Chưa có chỉ số định giá cho mã ${code}.</div>`;
+  }).catch(()=>{curBars=[];if(cs){cs.setData([]);vs.setData([])}document.getElementById('pxChart').parentElement.dataset.ph='Chưa có đồ thị cho mã '+code;
+    const msg=`Mã <b>${code}</b> chưa có trong danh sách theo dõi tự động. <a href="${extLink(code)}" target="_blank" rel="noopener">Xem ${code} trên Vietstock ↗</a> hoặc <a href="https://zalo.me/0833703936" target="_blank" rel="noopener">nhắn Zalo</a>.`;
+    qi.innerHTML=`<div class="empty">${msg}</div>`;ra.innerHTML=`<div class="empty">Chưa có chỉ số định giá cho mã ${code}.</div>`;});
 };
 chart('HOSE:FPT');
 const quick=[["FPT","HOSE"],["VCB","HOSE"],["HPG","HOSE"],["MWG","HOSE"],["SSI","HOSE"],["FTS","HOSE"],["SHS","HNX"]];
