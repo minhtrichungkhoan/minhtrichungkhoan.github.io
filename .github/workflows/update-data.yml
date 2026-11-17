@@ -2,38 +2,70 @@ name: Cap nhat so lieu tai chinh
 
 on:
   schedule:
-    - cron: "0 11 * * *"   # 18:00 giờ Việt Nam mỗi ngày
+    - cron: "0 11 * * *"
+  push:
+    branches: [main]
   workflow_dispatch:
+    inputs:
+      mode:
+        description: "daily = hằng ngày | full = lấy lại toàn bộ | none = chỉ đăng trang"
+        type: choice
+        options: [daily, full, none]
+        default: daily
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 concurrency:
-  group: update-data
+  group: pages
   cancel-in-progress: false
 
 jobs:
-  update:
+  build:
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 330
     steps:
       - uses: actions/checkout@v5
         with:
           persist-credentials: false
+      - name: Khoi phuc so lieu lan truoc
+        uses: actions/cache/restore@v4
+        with:
+          path: data
+          key: data-${{ github.run_id }}
+          restore-keys: data-
       - uses: actions/setup-node@v5
         with:
           node-version: "22"
       - name: Cai thu vien
+        if: github.event_name != 'push'
         run: npm install --no-save --ignore-scripts vnstock-js
       - name: Lay so lieu
-        run: node scripts/update_data.mjs
-      - name: Luu ket qua
-        env:
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: github.event_name != 'push'
+        run: node scripts/update_data.mjs --mode=${{ inputs.mode || 'daily' }}
+      - name: Luu so lieu cho lan sau
+        if: github.event_name != 'push'
+        uses: actions/cache/save@v4
+        with:
+          path: data
+          key: data-${{ github.run_id }}
+      - name: Dong goi trang
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git remote set-url origin "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git add data
-          git diff --cached --quiet || git commit -m "Cap nhat so lieu tai chinh"
-          git push
+          mkdir -p _site
+          rsync -a --exclude '.git' --exclude '.github' --exclude 'node_modules' --exclude 'scripts' --exclude '_site' --exclude 'package*.json' ./ _site/
+          touch _site/.nojekyll
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.d.outputs.page_url }}
+    steps:
+      - id: d
+        uses: actions/deploy-pages@v4
