@@ -293,6 +293,37 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;height:6
 .tt-embed blockquote{position:relative;z-index:1;margin:0!important;max-width:100%!important;min-width:0!important}
 @media(max-width:860px){.tt-wrap{grid-template-columns:1fr}}
 
+
+/* DÒNG TIỀN NGÀNH */
+.sf-top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:16px}
+.sf-chips{display:flex;flex-wrap:wrap;gap:10px}
+.sf-chip.card{padding:10px 16px;border-radius:14px;min-width:150px}
+.sf-tbl.card{padding:0}
+@media(max-width:600px){.sf-chips{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;gap:8px}.sf-chip.card{min-width:0;padding:8px 10px}.sf-chip b{font-size:14px;white-space:normal}.sf-r .num::before{content:attr(data-l) " ";color:var(--muted);font-weight:500;font-size:12px}.sf-chip small{font-size:11px}.seg2 button{padding:8px 9px}}
+.sf-chip small{display:block;color:var(--muted);font-size:12.5px}.sf-chip b{font-size:20px;white-space:nowrap}
+.sf-ctl{display:flex;flex-wrap:wrap;gap:8px}
+.seg2{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg2 button{background:none;border:0;color:#cfc8d0;font:600 13px inherit;font-family:inherit;padding:8px 12px;cursor:pointer;min-height:36px}
+.seg2 button.on{background:var(--gold);color:#17120a}
+.sf-tbl{border-radius:20px;overflow:hidden}
+.sf-h,.sf-r{display:grid;grid-template-columns:minmax(150px,1.3fr) minmax(170px,1.6fr) 110px 90px 110px 120px;gap:14px;align-items:center;padding:12px 18px}
+.sf-h{font-size:12px;color:var(--muted);border-bottom:1px solid var(--line)}
+.sf-h span:nth-child(n+3){text-align:right}
+.sf-r{border-bottom:1px solid var(--line);cursor:pointer;transition:background .2s}
+.sf-r:hover{background:rgba(212,174,94,.05)}
+.sf-r .nm b{display:block;font-size:15px}.sf-r .nm small{color:var(--muted);font-size:12px}
+.sf-bar{display:flex;align-items:center;gap:8px}.sf-bar i{display:block;height:10px;border-radius:5px;background:linear-gradient(90deg,#a9823a,var(--gold2));min-width:3px}
+.sf-bar span{font-size:13px;white-space:nowrap;color:#d9d2c6}
+.sf-r .num{text-align:right;font-weight:700;font-size:14px;white-space:nowrap}
+.sf-r .rt{text-align:right}.sf-r .rt em{font-style:normal;font-size:12px;font-weight:700;padding:3px 8px;border-radius:999px;white-space:nowrap}
+.rt-hi{background:rgba(127,209,160,.14);color:#7fd1a0}.rt-lo{background:rgba(239,138,122,.14);color:#ef8a7a}.rt-mid{background:rgba(255,255,255,.06);color:var(--muted)}
+.sf-sp{display:flex;align-items:flex-end;gap:2px;height:28px;justify-content:flex-end}.sf-sp i{display:block;width:4px;border-radius:1px;background:rgba(212,174,94,.45)}.sf-sp i:last-child{background:var(--gold2)}
+.sf-x{display:none;grid-column:1/-1;padding:4px 0 6px}.sf-r.open .sf-x{display:flex;flex-wrap:wrap;gap:8px}
+.sf-x button{background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:7px 12px;font:600 13px inherit;font-family:inherit;cursor:pointer}
+.sf-x button span{margin-left:6px;font-weight:500}
+.sf-note{color:var(--muted);font-size:12.5px;margin-top:12px}
+@media(max-width:900px){.sf-h{display:none}.sf-r{grid-template-columns:1fr auto;gap:6px 12px}.sf-r .sf-bar{grid-column:1/-1}.sf-r .sf-sp{display:none}.sf-r .num,.sf-r .rt{text-align:left}}
+
 /* TICKER */
 .ticker{overflow:hidden;padding:22px 0;border-bottom:1px solid var(--line);-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
 .track-row{display:flex;gap:14px;width:max-content;animation:run 34s linear infinite}
@@ -442,6 +473,7 @@ section.band[data-n]>.wrap>*{position:relative;z-index:1}
   <div class="wrap">
     <a href="#top" class="brand">Lê Minh <b>Trí</b></a>
     <div class="nav-r">
+      <a href="#dong-tien" class="hide-m">Dòng tiền</a>
       <a href="#thi-truong" class="hide-m">Tra cứu cổ phiếu</a>
       <a href="#goc-nhin" class="hide-m">Góc nhìn</a>
       <div class="dd" id="dd">
@@ -540,9 +572,27 @@ section.band[data-n]>.wrap>*{position:relative;z-index:1}
   </div>
 </section>
 
-<section class="band" id="thi-truong" data-n="03">
+
+<section class="band" id="dong-tien" data-n="03" hidden>
   <div class="wrap">
-    <div class="label">03<i>/</i><span data-i="mLabel">Tra cứu cổ phiếu</span></div>
+    <div class="label">03<i>/</i><span>Dòng tiền ngành</span></div>
+    <h2 class="sec-h rv">Dòng tiền đang chảy vào đâu?</h2>
+    <p class="sec-p rv" id="sfSub">Giá trị giao dịch, biến động giá và giao dịch khối ngoại theo từng nhóm ngành, cập nhật sau mỗi phiên.</p>
+    <div class="sf-top">
+      <div class="sf-chips" id="sfChips"></div>
+      <div class="sf-ctl">
+        <div class="seg2" id="sfSort"><button type="button" data-k="v" class="on">Giá trị GD</button><button type="button" data-k="ratio">Đột biến</button><button type="button" data-k="c">% Giá</button><button type="button" data-k="f">Khối ngoại</button></div>
+        <div class="seg2" id="sfPer"><button type="button" data-p="1" class="on">1 phiên</button><button type="button" data-p="5">5 phiên</button><button type="button" data-p="20">20 phiên</button></div>
+      </div>
+    </div>
+    <div class="sf-tbl card rv"><div class="sf-h"><span>Ngành</span><span>Giá trị giao dịch (tỷ đồng)</span><span>So với TB 20 phiên</span><span id="sfHc">% giá 1 phiên</span><span id="sfHf">Khối ngoại ròng</span><span>GTGD 20 phiên</span></div><div id="sfBody"></div></div>
+    <p class="sf-note">Giá trị giao dịch tính bằng giá đóng cửa × khối lượng khớp. % giá là bình quân gia quyền theo giá trị giao dịch. Bấm vào từng ngành để xem các mã giao dịch nhiều nhất. Nguồn: VietCap qua vnstock-js.</p>
+  </div>
+</section>
+
+<section class="band" id="thi-truong" data-n="04">
+  <div class="wrap">
+    <div class="label">04<i>/</i><span data-i="mLabel">Tra cứu cổ phiếu</span></div>
     <h2 class="sec-h rv" data-i="mH">Nhập mã, xem ngay giá và định giá</h2>
     <p class="sec-p" data-i="mP">Gần 1.600 mã trên HOSE, HNX, UPCoM: đồ thị giá từ khi niêm yết, chỉ số tài chính, định giá và kết quả kinh doanh quý.</p>
     <div class="term-bar rv"><i></i><i></i><i></i><span data-i="termT">Bảng tra cứu cổ phiếu</span><em data-i="termL">Trực tuyến</em></div>
@@ -576,10 +626,10 @@ section.band[data-n]>.wrap>*{position:relative;z-index:1}
 </section>
 
 
-<section class="band" id="goc-nhin" data-n="04">
+<section class="band" id="goc-nhin" data-n="05">
   <div class="wrap tt-wrap">
     <div>
-      <div class="label">04<i>/</i><span>Góc nhìn thị trường</span></div>
+      <div class="label">05<i>/</i><span>Góc nhìn thị trường</span></div>
       <h2 class="sec-h rv">Cập nhật thị trường mỗi ngày trên TikTok</h2>
       <p class="sec-p rv" style="margin-bottom:0">Video ngắn về diễn biến thị trường, cách đọc báo cáo tài chính và kinh nghiệm đầu tư, dễ hiểu cho cả người mới.</p>
       <div class="tt-list rv">
@@ -801,6 +851,35 @@ if('IntersectionObserver' in window){
 
 /* nhúng TikTok khi cuộn tới */
 {const box=document.querySelector('.tt-embed');if(box&&'IntersectionObserver' in window){const o=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){o.disconnect();const sc=document.createElement('script');sc.src='https://www.tiktok.com/embed.js';sc.async=true;document.body.appendChild(sc)}},{rootMargin:'400px'});o.observe(box)}}
+
+
+/* ===== dòng tiền ngành ===== */
+{let SF=null,sk='v',per=1;
+ const fT=v=>v==null?'–':(Math.abs(v)>=1000?(v/1000).toLocaleString('vi-VN',{maximumFractionDigits:1})+' nghìn tỷ':v.toLocaleString('vi-VN',{maximumFractionDigits:0})+' tỷ');
+ const pc=v=>v==null?'<span class="nt">–</span>':`<span class="${v>=0?'up':'dn'}">${v>=0?'+':''}${v.toFixed(2)}%</span>`;
+ const fv=v=>v==null||!SF.hasForeign?'<span class="nt">–</span>':`<span class="${v>=0?'up':'dn'}">${v>=0?'+':''}${Math.abs(v)>=1?v.toLocaleString('vi-VN',{maximumFractionDigits:0}):v.toFixed(1)} tỷ</span>`;
+ const ck=x=>x['c'+per],fk=x=>x['f'+per];
+ const draw=()=>{const L=[...SF.sectors];const key={v:x=>x.v,ratio:x=>x.ratio||0,c:x=>ck(x)??-1e9,f:x=>fk(x)??-1e9}[sk];L.sort((a,b)=>key(b)-key(a));
+   const mx=Math.max(...L.map(x=>x.v))||1;
+   document.getElementById('sfHc').textContent=`% giá ${per} phiên`;document.getElementById('sfHf').textContent=`Khối ngoại ${per} phiên`;
+   document.getElementById('sfBody').innerHTML=L.map(x=>{const r=x.ratio;const cls=r==null?'rt-mid':r>=1.2?'rt-hi':r<=0.8?'rt-lo':'rt-mid';const lbl=r==null?'–':(r>=1.2?'▲ ':r<=0.8?'▼ ':'')+(r*100).toFixed(0)+'%';
+     const sp=x.spark||[];const sm=Math.max(...sp)||1;
+     return `<div class="sf-r"><div class="nm"><b>${x.name}</b><small>${x.n} mã · ${x.share.toFixed(1)}% toàn thị trường</small></div>
+      <div class="sf-bar"><i style="width:${Math.max(2,x.v/mx*100*.72)}%"></i><span>${fT(x.v)}</span></div>
+      <div class="rt"><em class="${cls}" title="GTGD phiên gần nhất so với trung bình 20 phiên trước">${lbl}</em></div>
+      <div class="num" data-l="Giá ${per}P">${pc(ck(x))}</div><div class="num" data-l="Ngoại ${per}P">${fv(fk(x))}</div>
+      <div class="sf-sp">${sp.map(v=>`<i style="height:${Math.max(2,v/sm*28)}px"></i>`).join('')}</div>
+      <div class="sf-x">${(x.top||[]).map(t=>`<button type="button" data-s="${t.s}">${t.s}<span>${fT(t.v)} · ${t.c==null?'':(t.c>=0?'+':'')+t.c.toFixed(1)+'%'}</span></button>`).join('')}</div></div>`}).join('');
+ };
+ fetch('data/sectors.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.sectors||!j.sectors.length)return;SF=j;
+   document.getElementById('dong-tien').hidden=false;
+   const f1=j.sectors.reduce((a,x)=>a+(x.f1||0),0),up=j.sectors.filter(x=>(x.ratio||0)>=1.2).length;
+   document.getElementById('sfChips').innerHTML=`<div class="sf-chip card"><small>Phiên ${j.date}</small><b>${fT(j.total)}</b></div>`+(j.hasForeign?`<div class="sf-chip card"><small>Khối ngoại ròng</small><b>${fv(f1)}</b></div>`:'')+`<div class="sf-chip card"><small>Ngành dòng tiền tăng mạnh</small><b>${up}/${j.sectors.length}</b></div>`;
+   draw();
+   document.getElementById('sfSort').onclick=e=>{const b=e.target.closest('button');if(!b)return;sk=b.dataset.k;document.querySelectorAll('#sfSort button').forEach(x=>x.classList.toggle('on',x===b));draw()};
+   document.getElementById('sfPer').onclick=e=>{const b=e.target.closest('button');if(!b)return;per=+b.dataset.p;document.querySelectorAll('#sfPer button').forEach(x=>x.classList.toggle('on',x===b));draw()};
+   document.getElementById('sfBody').onclick=e=>{const t=e.target.closest('.sf-x button');if(t){chart(t.dataset.s);document.getElementById('thi-truong').scrollIntoView({behavior:'smooth'});return}const r=e.target.closest('.sf-r');if(r)r.classList.toggle('open')};
+ }).catch(()=>{});}
 
 document.getElementById('aboutImg').src=document.getElementById('heroImg').src;
 
