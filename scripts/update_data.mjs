@@ -24,7 +24,7 @@ export const norm = (s) => String(s)
   .replace(/([a-z])([A-Z])/g, '$1 $2')
   .replace(/đ/g, 'd').replace(/Đ/g, 'D')
   .normalize('NFD').replace(/[̀-ͯ]/g, '')
-  .toLowerCase().replace(/[_\-]+/g, ' ').replace(/\s+/g, ' ').trim();
+  .toLowerCase().replace(/[_\-\/]+/g, ' ').replace(/\s+/g, ' ').trim();
 
 export function parsePeriod(x) {
   const s = String(x);
@@ -183,6 +183,53 @@ export function build(incRaw, bsRaw) {
   };
 }
 
+
+// ---------- giá & chỉ số định giá ----------
+export function toBars(raw) {
+  const recs = findRecords(raw) || [];
+  if (!recs.length) return [];
+  const ks = Object.keys(recs[0]); const nk = Object.fromEntries(ks.map((k) => [norm(k), k]));
+  const g = (...names) => names.map((n) => nk[n]).find(Boolean);
+  const tK = g('time', 'date', 'trading date', 't'), oK = g('open', 'o'), hK = g('high', 'h'), lK = g('low', 'l'), cK = g('close', 'c', 'price'), vK = g('volume', 'v', 'vol');
+  if (!tK || !cK) return [];
+  const toNum = (x) => (isNum(x) ? Number(x) : null);
+  return recs.map((r) => {
+    let t = r[tK]; if (typeof t === 'number') t = new Date(t > 1e12 ? t : t * 1000).toISOString().slice(0, 10);
+    t = String(t).slice(0, 10);
+    const c = toNum(r[cK]);
+    return [t, toNum(r[oK]) ?? c, toNum(r[hK]) ?? c, toNum(r[lK]) ?? c, c, toNum(r[vK]) ?? 0];
+  }).filter((b) => b[4] != null).sort((a, b) => (a[0] < b[0] ? -1 : 1)).slice(-260);
+}
+
+const RATIO_KEYS = {
+  pe: ['pe', 'p e', 'price to earning', 'price to earnings'],
+  pb: ['pb', 'p b', 'price to book'],
+  roe: ['roe', 'return on equity'], roa: ['roa', 'return on assets'],
+  eps: ['eps', 'earning per share', 'earnings per share'], bvps: ['bvps', 'book value per share'],
+  cap: ['market cap', 'market capitalization', 'von hoa'],
+  gm: ['gross margin', 'gross profit margin', 'bien loi nhuan gop'], nm: ['net margin', 'net profit margin', 'bien loi nhuan rong'],
+  de: ['debt to equity', 'de', 'd e', 'liabilities to equity'], dy: ['dividend yield'],
+};
+export function ratiosLatest(raw) {
+  let row = null, label = null;
+  const map = toPeriodMap(raw);
+  if (map.size) {
+    const id = [...map.keys()].sort((a, b) => { const [ya, qa] = a.split('-').map(Number), [yb, qb] = b.split('-').map(Number); return ya - yb || qa - qb; }).pop();
+    row = map.get(id); const [y, q] = id.split('-'); label = `Q${q}/${y.slice(2)}`;
+  } else {
+    const recs = findRecords(flatten(raw)); row = recs ? recs[recs.length - 1] : (raw && typeof raw === 'object' ? raw : null);
+  }
+  if (!row) return null;
+  const keys = Object.keys(row).map((k) => [k, norm(k)]);
+  const out = { q: label };
+  for (const [name, prefs] of Object.entries(RATIO_KEYS)) {
+    let hit = null;
+    for (const p of prefs) { hit = keys.find(([, nk]) => nk === p) || keys.find(([, nk]) => nk.startsWith(p + ' ') && !/growth|yoy|change/.test(nk)); if (hit) break; }
+    if (hit && isNum(row[hit[0]])) out[name] = Number(row[hit[0]]);
+  }
+  return out;
+}
+
 // ---------- gọi thư viện (thử nhiều cách gọi vì tài liệu chưa đầy đủ) ----------
 async function loadLib() {
   const mod = await import('vnstock-js');
@@ -219,6 +266,21 @@ async function fetchOne({ mod, lib }, sym) {
   return { inc, bs };
 }
 
+
+async function fetchPrice({ mod, lib }, sym, pxDir, summary, debug, keep) {
+  const vn = mod.vn || lib.vn; const st = vn.stock(sym);
+  const hist = await st.history('1y'); await sleep(PAUSE_MS);
+  let rat = null; try { rat = await st.financials('ratios', { period: 'quarter' }); } catch (e) { debug['ratioErr_' + sym] = e.message; }
+  await sleep(PAUSE_MS);
+  if (keep) { debug[sym + '_hist'] = clip(Array.isArray(hist) ? hist.slice(-3) : hist); debug[sym + '_ratios'] = clip(rat); }
+  const bars = toBars(hist);
+  if (!bars.length) throw new Error('không đọc được lịch sử giá');
+  const ratios = rat ? ratiosLatest(rat) : null;
+  fs.writeFileSync(path.join(pxDir, sym + '.json'), JSON.stringify({ s: sym, bars, ratios }));
+  const L = bars.at(-1), P = bars.at(-2) || L;
+  summary.items[sym] = { c: L[4], chp: P[4] ? (L[4] / P[4] - 1) * 100 : 0, v: L[5], t: L[0] };
+}
+
 const clip = (o) => { try { const s = JSON.stringify(o, null, 1); return s.length > 6000 ? s.slice(0, 6000) + '…' : JSON.parse(s); } catch { return String(o).slice(0, 2000); } };
 
 async function main() {
@@ -241,7 +303,25 @@ async function main() {
   } catch (e) {
     debug.loadError = String(e.stack || e);
   }
+  const pxDir = path.join(root, 'px'); fs.mkdirSync(pxDir, { recursive: true });
+  let summary = { items: {}, idx: {} }; try { summary = JSON.parse(fs.readFileSync(path.join(root, 'summary.json'), 'utf8')); } catch {}
+  summary.items ||= {}; summary.idx ||= {};
+  const pxErrors = {};
   if (ctx) {
+    for (const ix of ['VNINDEX', 'VN30', 'HNXINDEX']) {
+      try {
+        const vn = ctx.mod.vn || ctx.lib.vn;
+        const raw = await vn.index(ix).history('1y');
+        const bars = toBars(raw);
+        if (bars.length) {
+          fs.writeFileSync(path.join(pxDir, ix + '.json'), JSON.stringify({ s: ix, bars }));
+          const L = bars.at(-1), P = bars.at(-2) || L;
+          summary.idx[ix] = { c: L[4], chp: P[4] ? (L[4] / P[4] - 1) * 100 : 0, t: L[0], spark: bars.slice(-60).map((b) => b[4]) };
+        }
+        if (ix === 'VNINDEX') debug.indexSample = clip(raw);
+      } catch (e) { pxErrors[ix] = String(e.message || e).slice(0, 300); }
+      await sleep(PAUSE_MS);
+    }
     for (const [i, t] of tickers.entries()) {
       console.log(`[${i + 1}/${tickers.length}] ${t}`);
       try {
@@ -252,10 +332,14 @@ async function main() {
         errors[t] = String(e.message || e).slice(0, 500);
         console.log(`  LỖI ${t}: ${errors[t]}`);
       }
+      try { await fetchPrice(ctx, t, pxDir, summary, debug, i < 2); } catch (e) { pxErrors[t] = String(e.message || e).slice(0, 300); console.log(`  LỖI giá ${t}: ${pxErrors[t]}`); }
     }
   }
   const updated = new Date(Date.now() + 7 * 3600e3).toISOString().replace('T', ' ').slice(0, 16);
   fs.writeFileSync(file, JSON.stringify({ updated, tickers: result, errors }, null, 1));
+  summary.updated = updated;
+  fs.writeFileSync(path.join(root, 'summary.json'), JSON.stringify(summary));
+  debug.pxErrors = pxErrors;
   fs.writeFileSync(path.join(root, 'debug.json'), JSON.stringify(debug, null, 1));
   console.log(`Xong: ${Object.keys(result).length} mã có số liệu, ${Object.keys(errors).length} mã lỗi`);
 }
