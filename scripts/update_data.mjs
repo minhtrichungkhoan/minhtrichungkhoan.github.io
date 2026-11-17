@@ -219,13 +219,13 @@ export function toBars(raw) {
   const g = (...names) => names.map((n) => nk[n]).find(Boolean);
   const tK = g('time', 'date', 'trading date', 't'), oK = g('open', 'o'), hK = g('high', 'h'), lK = g('low', 'l'), cK = g('close', 'c', 'price'), vK = g('volume', 'v', 'vol');
   if (!tK || !cK) return [];
-  const toNum = (x) => (isNum(x) ? Number(x) : null);
+  const toNum = (x) => (isNum(x) ? Math.round(Number(x) * 100) / 100 : null);
   return recs.map((r) => {
     let t = r[tK]; if (typeof t === 'number') t = new Date(t > 1e12 ? t : t * 1000).toISOString().slice(0, 10);
     t = String(t).slice(0, 10);
     const c = toNum(r[cK]);
     return [t, toNum(r[oK]) ?? c, toNum(r[hK]) ?? c, toNum(r[lK]) ?? c, c, toNum(r[vK]) ?? 0];
-  }).filter((b) => b[4] != null).sort((a, b) => (a[0] < b[0] ? -1 : 1)).slice(-1300);
+  }).filter((b) => b[4] != null).sort((a, b) => (a[0] < b[0] ? -1 : 1));
 }
 
 const RATIO_KEYS = {
@@ -267,126 +267,154 @@ export function ratiosLatest(raw) {
   return out;
 }
 
-// ---------- gọi thư viện (thử nhiều cách gọi vì tài liệu chưa đầy đủ) ----------
-async function loadLib() {
-  const mod = await import('vnstock-js');
-  const lib = mod.default ?? mod;
-  try { if (typeof lib.init === 'function') await lib.init(); } catch (e) { console.log('init lỗi (bỏ qua):', e.message); }
-  return { mod, lib };
-}
-async function tryCalls(calls) {
-  const errs = [];
-  for (const [name, fn] of calls) {
-    try { const r = await fn(); if (r) return { name, r }; errs.push(`${name}: rỗng`); } catch (e) { errs.push(`${name}: ${e.message}`); }
+// ---------- điều phối: toàn bộ mã, giá đầy đủ, BCTC xoay vòng ----------
+const argv = process.argv.slice(2);
+const MODE = (argv.find((a) => a.startsWith('--mode=')) || '--mode=daily').split('=')[1]; // daily | full | none
+const ONLY = argv.filter((a) => !a.startsWith('--'));
+const WORKERS = 3, CALL_GAP = 350, TIME_BUDGET_MS = 4.5 * 3600e3, ROTATE_DAYS = 7;
+const T0 = Date.now();
+const clip = (o) => { try { const s = JSON.stringify(o, null, 1); return s.length > 4000 ? s.slice(0, 4000) + '…' : JSON.parse(s); } catch { return String(o).slice(0, 2000); } };
+
+async function retry(fn, tries = 3) {
+  let err;
+  for (let i = 0; i < tries; i++) {
+    try { const r = await fn(); await sleep(CALL_GAP); return r; } catch (e) { err = e; await sleep(1500 * (i + 1) * (/rate|429/i.test(String(e.message)) ? 4 : 1)); }
   }
-  throw new Error(errs.join(' | '));
+  throw err;
 }
-async function fetchOne({ mod, lib }, sym) {
-  const vn = mod.vn || lib.vn;
-  const v2 = vn && typeof vn.stock === 'function' ? vn.stock(sym) : null;
-  const f = lib?.stock?.financials;
-  const legacy = mod.Vnstock ? new mod.Vnstock().stock : null;
-  const inc = await tryCalls([
-    ['vn.stock().financials(income)', () => v2?.financials?.('income', { period: 'quarter' })],
-    ['stock.financials.incomeStatement', () => f?.incomeStatement?.({ symbol: sym, period: 'quarter' })],
-    ['stock.financials(income)', () => (typeof f === 'function' ? f({ ticker: sym, period: 'quarter', type: 'income' }) : null)],
-    ['legacy.financials', () => legacy?.financials?.({ ticker: sym, period: 'quarter' })],
-  ]);
-  await sleep(PAUSE_MS);
-  const bs = await tryCalls([
-    ['vn.stock().financials(balance)', () => v2?.financials?.('balance', { period: 'quarter' })],
-    ['stock.financials.balanceSheet', () => f?.balanceSheet?.({ symbol: sym, period: 'quarter' })],
-    ['stock.financials(balance)', () => (typeof f === 'function' ? f({ ticker: sym, period: 'quarter', type: 'balance' }) : null)],
-    ['dùng chung kết quả', () => inc.r],
-  ]);
-  await sleep(PAUSE_MS);
-  return { inc, bs };
+async function pool(items, n, fn) {
+  let i = 0; const run = async () => { while (i < items.length) { const k = i++; await fn(items[k], k); } };
+  await Promise.all(Array.from({ length: n }, run));
 }
 
-
-async function fetchPrice({ mod, lib }, sym, pxDir, summary, debug, keep) {
-  const vn = mod.vn || lib.vn; const st = vn.stock(sym);
-  let hist; try { hist = await st.history('5y'); } catch { hist = await st.history('1y'); } await sleep(PAUSE_MS);
-  let rat = null; try { rat = await st.financials('ratios', { period: 'quarter' }); } catch (e) { debug['ratioErr_' + sym] = e.message; }
-  await sleep(PAUSE_MS);
-  if (keep) { debug[sym + '_hist'] = clip(Array.isArray(hist) ? hist.slice(-3) : hist); debug[sym + '_ratios'] = clip(rat); }
-  const bars = toBars(hist);
-  if (!bars.length) throw new Error('không đọc được lịch sử giá');
-  const ratios = rat ? ratiosLatest(rat) : null;
-  fs.writeFileSync(path.join(pxDir, sym + '.json'), JSON.stringify({ s: sym, g: GROUP[sym] || 'other', bars, ratios }));
-  const L = bars.at(-1), P = bars.at(-2) || L;
-  summary.items[sym] = { c: L[4], chp: P[4] ? (L[4] / P[4] - 1) * 100 : 0, v: L[5], t: L[0] };
+// Giữ nến ngày cho 3 năm gần nhất, gộp nến tuần cho giai đoạn cũ hơn (giảm dung lượng)
+export function compactBars(bars) {
+  if (bars.length < 800) return bars;
+  const cut = bars.length - 780, old = bars.slice(0, cut), recent = bars.slice(cut), wk = [];
+  const weekKey = (t) => { const d = new Date(t + 'T00:00:00Z'); const day = (d.getUTCDay() + 6) % 7; d.setUTCDate(d.getUTCDate() - day); return d.toISOString().slice(0, 10); };
+  for (const b of old) {
+    const k = weekKey(b[0]); const w = wk.at(-1);
+    if (w && w._k === k) { w[2] = Math.max(w[2], b[2]); w[3] = Math.min(w[3], b[3]); w[4] = b[4]; w[5] += b[5]; }
+    else { const nb = [b[0], b[1], b[2], b[3], b[4], b[5]]; nb._k = k; wk.push(nb); }
+  }
+  return [...wk.map((w) => [w[0], w[1], w[2], w[3], w[4], w[5]]), ...recent];
 }
+const mergeBars = (oldB, newB) => { const m = new Map(oldB.map((b) => [b[0], b])); for (const b of newB) m.set(b[0], b); return [...m.values()].sort((x, y) => (x[0] < y[0] ? -1 : 1)); };
 
-const clip = (o) => { try { const s = JSON.stringify(o, null, 1); return s.length > 6000 ? s.slice(0, 6000) + '…' : JSON.parse(s); } catch { return String(o).slice(0, 2000); } };
+// Danh sách mã của 3 sàn + tên + ngành
+async function universe(vn, debug) {
+  const out = {};
+  for (const ex of ['HOSE', 'HNX', 'UPCOM']) {
+    try {
+      const raw = await retry(() => vn.symbols({ exchange: ex }));
+      const recs = findRecords(raw) || (Array.isArray(raw) ? raw.map((x) => (typeof x === 'string' ? { symbol: x } : x)) : []);
+      if (ex === 'HOSE') debug.symbolsSample = clip(recs.slice(0, 3));
+      const ks = recs.length ? Object.keys(recs[0]) : [];
+      const nk = Object.fromEntries(ks.map((k) => [norm(k), k]));
+      const codeK = nk.symbol || nk.ticker || nk.code || nk['ma'] || ks[0];
+      const nameK = nk['organ name'] || nk['company name'] || nk.name || nk['organ short name'] || nk['short name'] || ks.find((k) => /name|ten/i.test(k));
+      const indK = ks.find((k) => /industry|icb|sector|nganh/i.test(norm(k)) && typeof recs[0][k] === 'string');
+      const typeK = ks.find((k) => /^(type|kind|loai|security type|product grp id)$/i.test(norm(k)));
+      for (const r of recs) {
+        const c = String(r[codeK] || '').toUpperCase();
+        if (!/^[A-Z0-9]{3}$/.test(c)) continue;
+        if (typeK && r[typeK] && /(cw|warrant|bond|fund|etf|chung quyen|trai phieu)/i.test(norm(r[typeK])) && !/stock|co phieu/i.test(norm(r[typeK]))) continue;
+        out[c] = { n: nameK ? r[nameK] : undefined, ex, ind: indK ? r[indK] : undefined };
+      }
+    } catch (e) { debug['symbolsErr_' + ex] = String(e.message || e); }
+  }
+  return out;
+}
 
 async function main() {
   const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'data');
-  fs.mkdirSync(root, { recursive: true });
-  const file = path.join(root, 'fin.json');
-  let old = {}; try { old = JSON.parse(fs.readFileSync(file, 'utf8')).tickers || {}; } catch {}
-  const debug = { node: process.version, time: new Date().toISOString() };
-  const tickers = process.argv.slice(2).length ? process.argv.slice(2) : TICKERS;
-  const result = { ...old }, errors = {};
-  let ctx;
-  try {
-    ctx = await loadLib();
-    debug.exports = Object.keys(ctx.mod);
-    debug.libKeys = Object.keys(ctx.lib || {});
-    debug.stockKeys = Object.keys(ctx.lib?.stock || {});
-    debug.vnKeys = Object.keys(ctx.mod.vn || {});
-    debug.financialsType = typeof ctx.lib?.stock?.financials;
-    debug.financialsKeys = Object.keys(ctx.lib?.stock?.financials || {});
-  } catch (e) {
-    debug.loadError = String(e.stack || e);
-  }
-  const pxDir = path.join(root, 'px'); fs.mkdirSync(pxDir, { recursive: true });
-  let summary = { items: {}, idx: {} }; try { summary = JSON.parse(fs.readFileSync(path.join(root, 'summary.json'), 'utf8')); } catch {}
-  summary.items ||= {}; summary.idx ||= {};
-  const pxErrors = {};
-  if (ctx) {
-    for (const ix of ['VNINDEX', 'VN30', 'HNXINDEX']) {
+  const pxDir = path.join(root, 'px');
+  fs.mkdirSync(pxDir, { recursive: true });
+  const debug = { node: process.version, time: new Date().toISOString(), mode: MODE };
+  const readJ = (f, d) => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch { return d; } };
+  let summary = readJ(path.join(root, 'summary.json'), {}); summary.items ||= {}; summary.idx ||= {};
+  let symbols = readJ(path.join(root, 'symbols.json'), {});
+  const errors = {};
+  const updated = new Date(Date.now() + 7 * 3600e3).toISOString().replace('T', ' ').slice(0, 16);
+
+  if (MODE !== 'none') {
+    const { vn } = await import('vnstock-js');
+    // 1) danh sách mã
+    const uni = await universe(vn, debug);
+    if (Object.keys(uni).length > 300) symbols = uni;
+    for (const t of TICKERS) symbols[t] ||= { ex: 'HOSE' };
+    fs.writeFileSync(path.join(root, 'symbols.json'), JSON.stringify(symbols));
+    let codes = ONLY.length ? ONLY : Object.keys(symbols).sort();
+    debug.universe = codes.length;
+
+    // 2) chỉ số thị trường
+    for (const ix of ['VNINDEX', 'VN30', 'HNXINDEX', 'UPCOMINDEX']) {
       try {
-        const vn = ctx.mod.vn || ctx.lib.vn;
-        let raw; try { raw = await vn.index(ix).history('5y'); } catch { raw = await vn.index(ix).history('1y'); }
-        const bars = toBars(raw);
+        const f = path.join(pxDir, ix + '.json'); const old = readJ(f, null);
+        const fresh = old?.bars?.length > 50;
+        const raw = await retry(() => vn.index(ix).history(fresh ? '1mo' : 'max')).catch(() => retry(() => vn.index(ix).history('5y')));
+        let bars = toBars(raw); if (fresh) bars = mergeBars(old.bars, bars);
+        bars = compactBars(bars);
         if (bars.length) {
-          fs.writeFileSync(path.join(pxDir, ix + '.json'), JSON.stringify({ s: ix, bars }));
+          fs.writeFileSync(f, JSON.stringify({ s: ix, bars }));
           const L = bars.at(-1), P = bars.at(-2) || L;
           summary.idx[ix] = { c: L[4], chp: P[4] ? (L[4] / P[4] - 1) * 100 : 0, t: L[0], spark: bars.slice(-60).map((b) => b[4]) };
-          if (bars.length > 260) fs.writeFileSync(path.join(pxDir, ix + '.json'), JSON.stringify({ s: ix, bars }));
         }
-        if (ix === 'VNINDEX') debug.indexSample = clip(raw);
-      } catch (e) { pxErrors[ix] = String(e.message || e).slice(0, 300); }
-      await sleep(PAUSE_MS);
+      } catch (e) { errors[ix] = String(e.message || e).slice(0, 200); }
     }
-    for (const [i, t] of tickers.entries()) {
-      console.log(`[${i + 1}/${tickers.length}] ${t}`);
+
+    // 3) giá + BCTC
+    const day = Math.floor(Date.now() / 86400e3);
+    const core = new Set(TICKERS);
+    let finCount = 0, pxCount = 0;
+    await pool(codes, WORKERS, async (t, k) => {
+      if (Date.now() - T0 > TIME_BUDGET_MS) { errors[t] = 'hết thời gian, để lần sau'; return; }
+      const f = path.join(pxDir, t + '.json'); const old = readJ(f, {}) || {};
+      const rec = { ...old, s: t, n: symbols[t]?.n || old.n, ex: symbols[t]?.ex || old.ex, ind: symbols[t]?.ind || old.ind, g: GROUP[t] || old.g || 'other' };
+      const st = vn.stock(t);
       try {
-        const { inc, bs } = await fetchOne(ctx, t);
-        if (i < 2) debug[t] = { incCall: inc.name, bsCall: bs.name, inc: clip(inc.r), bs: clip(bs.r) };
-        result[t] = build(inc.r, bs.r);
-      } catch (e) {
-        errors[t] = String(e.message || e).slice(0, 500);
-        console.log(`  LỖI ${t}: ${errors[t]}`);
+        const fresh = old.bars?.length > 50 && (Date.now() - new Date(old.bars.at(-1)[0]).getTime()) < 25 * 86400e3;
+        let raw; try { raw = await retry(() => st.history(fresh ? '1mo' : 'max')); } catch { raw = await retry(() => st.history('5y')); }
+        if (k < 2) debug[t + '_hist'] = clip(Array.isArray(raw) ? raw.slice(-2) : raw);
+        let bars = toBars(raw); if (fresh) bars = mergeBars(old.bars, bars);
+        if (bars.length) { rec.bars = compactBars(bars); pxCount++; }
+      } catch (e) { errors[t] = 'giá: ' + String(e.message || e).slice(0, 150); }
+      // BCTC: mã cốt lõi mỗi ngày, các mã khác xoay vòng 7 ngày (hoặc tất cả khi --mode=full)
+      const doFin = MODE === 'full' || ONLY.length || core.has(t) || (k % ROTATE_DAYS) === (day % ROTATE_DAYS) || !old.fin;
+      if (doFin && Date.now() - T0 < TIME_BUDGET_MS) {
+        try {
+          const inc = await retry(() => st.financials('income', { period: 'quarter' }));
+          const bs = await retry(() => st.financials('balance', { period: 'quarter' }));
+          rec.fin = build(inc, bs); finCount++;
+        } catch (e) { errors[t] = ((errors[t] || '') + ' bctc: ' + String(e.message || e)).slice(0, 300); }
+        try { const rat = await retry(() => st.financials('ratios', { period: 'quarter' })); rec.ratios = ratiosLatest(rat); } catch {}
       }
-      try { await fetchPrice(ctx, t, pxDir, summary, debug, i < 2); } catch (e) { pxErrors[t] = String(e.message || e).slice(0, 300); console.log(`  LỖI giá ${t}: ${pxErrors[t]}`); }
-    }
+      if (rec.bars?.length) {
+        fs.writeFileSync(f, JSON.stringify(rec));
+        if (core.has(t)) { const L = rec.bars.at(-1), P = rec.bars.at(-2) || L; summary.items[t] = { c: L[4], chp: P[4] ? (L[4] / P[4] - 1) * 100 : 0, v: L[5], t: L[0] }; }
+      }
+      if (k % 100 === 0) console.log(`[${k}/${codes.length}] ${t} · ${Math.round((Date.now() - T0) / 60000)} phút`);
+    });
+    debug.pxCount = pxCount; debug.finCount = finCount;
   }
-  const updated = new Date(Date.now() + 7 * 3600e3).toISOString().replace('T', ' ').slice(0, 16);
-  fs.writeFileSync(file, JSON.stringify({ updated, tickers: result, errors }, null, 1));
-  // trung vị chỉ số theo nhóm ngành
+
+  // 4) trung vị theo ngành + file tổng hợp số liệu quý
   const med = (a) => { const b = a.filter((x) => x != null && Number.isFinite(x)).sort((x, y) => x - y); if (!b.length) return null; const m = b.length >> 1; return b.length % 2 ? b[m] : (b[m - 1] + b[m]) / 2; };
-  const grp = {};
-  for (const f of fs.readdirSync(pxDir)) {
-    try { const d = JSON.parse(fs.readFileSync(path.join(pxDir, f), 'utf8')); if (!d.ratios) continue; const g = GROUP[d.s] || 'other'; (grp[g] ||= []).push(d.ratios); } catch {}
+  const grp = {}, finAll = {};
+  for (const fn of fs.readdirSync(pxDir)) {
+    const d = readJ(path.join(pxDir, fn), null); if (!d || !d.s) continue;
+    if (d.fin) finAll[d.s] = d.fin;
+    if (!d.ratios) continue;
+    for (const g of new Set([d.g || 'other', d.ind].filter(Boolean))) (grp[g] ||= []).push(d.ratios);
   }
-  summary.groups = Object.fromEntries(Object.entries(grp).map(([g, rs]) => [g, { n: rs.length, pe: med(rs.map((r) => r.pe).filter((v) => v > 0 && v < 200)), pb: med(rs.map((r) => r.pb).filter((v) => v > 0)), roe: med(rs.map((r) => r.roe)) }]));
+  summary.groups = Object.fromEntries(Object.entries(grp).filter(([, rs]) => rs.length >= 3).map(([g, rs]) => [g, { n: rs.length, pe: med(rs.map((r) => r.pe).filter((v) => v > 0 && v < 200)), pb: med(rs.map((r) => r.pb).filter((v) => v > 0)), roe: med(rs.map((r) => r.roe)) }]));
   summary.updated = updated;
   fs.writeFileSync(path.join(root, 'summary.json'), JSON.stringify(summary));
-  debug.pxErrors = pxErrors;
+  fs.writeFileSync(path.join(root, 'fin.json'), JSON.stringify({ updated, tickers: Object.fromEntries(TICKERS.filter((t) => finAll[t]).map((t) => [t, finAll[t]])), errors: Object.fromEntries(Object.entries(errors).slice(0, 300)) }));
+  debug.errorCount = Object.keys(errors).length; debug.errorsSample = Object.fromEntries(Object.entries(errors).slice(0, 40));
+  debug.minutes = Math.round((Date.now() - T0) / 60000);
   fs.writeFileSync(path.join(root, 'debug.json'), JSON.stringify(debug, null, 1));
-  console.log(`Xong: ${Object.keys(result).length} mã có số liệu, ${Object.keys(errors).length} mã lỗi`);
+  console.log(`Xong sau ${debug.minutes} phút · lỗi: ${debug.errorCount}`);
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) main();
