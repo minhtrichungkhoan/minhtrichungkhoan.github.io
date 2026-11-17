@@ -28,7 +28,7 @@ LAYOUT: nav – hero 2 cột – dải số liệu – băng chữ chạy – ch
 */
 :root{
   --bg:#0a090b;--bg2:#141215;--card:#18161a;--line:rgba(255,255,255,.09);
-  --ink:#f3efe8;--muted:#a19aa3;--gold:#d4ae5e;--gold2:#f0d595;
+  --ink:#f3efe8;--muted:#b3acb5;--gold:#d4ae5e;--gold2:#f0d595;
 }
 *{box-sizing:border-box;margin:0;padding:0;min-width:0}
 html{scroll-behavior:smooth;scroll-padding-top:72px}
@@ -227,7 +227,7 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;height:6
 .ratios .note{grid-column:1/-1;color:var(--muted);font-size:13px;margin-top:4px}
 .ratios .empty,.qinfo .empty{grid-column:1/-1;color:var(--muted);text-align:center;padding:30px 10px;width:100%}
 .empty a{color:var(--gold2);font-weight:600}
-.idx{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.idx{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
 .idx .ic2{padding:18px 20px;border-radius:18px}
 .idx .ic2 small{color:var(--muted);font-size:13px}.idx .ic2 b{display:block;font-size:26px;font-weight:800;margin:4px 0}
 .idx b em{font-style:normal;font-size:16px;margin-left:6px}
@@ -334,6 +334,24 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;height:6
 .fbv-scr .fb-video span,.fbv-scr .fb-video iframe{width:100%!important}
 .fbv-snd{background:rgba(212,174,94,.12);border:1px solid rgba(240,213,149,.35);color:var(--gold2);font:600 14px inherit;font-family:inherit;border-radius:999px;padding:8px 16px;cursor:pointer;min-height:40px}
 
+
+/* ===== ĐÁNH BÓNG GIAO DIỆN ===== */
+.fab{opacity:0;pointer-events:none;transform:translateY(16px);transition:.3s}
+.fab.show{opacity:1;pointer-events:auto;transform:none}
+@media(max-width:900px){.idx{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){
+  .stats .grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  .stat{padding:18px 8px!important;border-right:1px solid var(--line)!important;border-bottom:0!important;text-align:center}
+  .stat:last-child{border-right:0!important}
+  .stat b{font-size:28px!important}.stat span{font-size:12px!important;line-height:1.35}
+  .frame{display:none}
+  .chartbox{height:360px!important}
+  .wt-row{flex-wrap:wrap}.rng{width:100%;justify-content:space-between}.rng button{flex:1;padding:5px 0}
+  .search .btn{padding:0 18px}
+  .qinfo .sym,.qinfo .px{font-size:26px}
+  .idx .ic2 b{font-size:20px}
+}
+
 /* TICKER */
 .ticker{overflow:hidden;padding:22px 0;border-bottom:1px solid var(--line);-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
 .track-row{display:flex;gap:14px;width:max-content;animation:run 34s linear infinite}
@@ -344,7 +362,7 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;height:6
 @media(prefers-reduced-motion:reduce){.track-row{animation:none;flex-wrap:wrap;width:auto}}
 
 /* SECTIONS */
-section.band{padding:clamp(56px,8vw,104px) 0}
+section.band{padding:clamp(48px,6vw,88px) 0}
 .sec-h{font-size:clamp(28px,4vw,44px);font-weight:800;line-height:1.1;margin:12px 0 14px;text-wrap:balance}
 .sec-p{color:var(--muted);max-width:620px;margin-bottom:40px}
 
@@ -617,7 +635,7 @@ section.band[data-n]>.wrap>*{position:relative;z-index:1}
     <div class="mk">
       <div>
         <div class="wt-row"><h3 class="wt" data-i="wChart">Đồ thị giá</h3><div class="rng" id="rng"><button type="button" data-r="66">3T</button><button type="button" data-r="130">6T</button><button type="button" data-r="250" class="on">1N</button><button type="button" data-r="750">3N</button><button type="button" data-r="1300">5N</button><button type="button" data-r="99999">Tất cả</button></div></div>
-        <div class="wbox" data-ph="Đang tải đồ thị…" style="height:520px"><div id="pxChart" class="pxc"></div></div>
+        <div class="wbox chartbox" data-ph="Đang tải đồ thị…" style="height:520px"><div id="pxChart" class="pxc"></div></div>
       </div>
       <div>
         <h3 class="wt" data-i="wFin">Chỉ số tài chính &amp; định giá</h3>
@@ -700,7 +718,7 @@ const setLang=l=>{
   const d=l==='en'?EN:VI;
   document.querySelectorAll('[data-i]').forEach(e=>{const v=d[e.dataset.i];if(v!=null)e.innerHTML=v});
   document.querySelectorAll('.lang button').forEach(b=>b.classList.toggle('on',b.dataset.lang===l));
-  document.documentElement.lang=l;if(window.curCode)quarter(window.curCode);document.getElementById('sCode').placeholder=l==='en'?'Enter a ticker, e.g. FPT':'Nhập mã, VD: FPT';ticker(l);
+  document.documentElement.lang=l;if(window.curCode)quarter(window.curCode);ticker(l);
   try{localStorage.setItem('lmt-lang',l)}catch(e){}
 };
 
@@ -747,7 +765,7 @@ const spark=(arr,up)=>{if(!arr||arr.length<2)return'';const mn=Math.min(...arr),
 fetch('data/summary.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(!j)return;SUM=j;
   const it=Object.entries(j.items||{});
   if(it.length){const h=it.map(([k,v])=>`<span class="chip">${k} <b>${fmtP(v.c)}</b> <span class="${v.chp>=0?'up':'dn'}">${v.chp>=0?'▲':'▼'}${Math.abs(v.chp).toFixed(1)}%</span></span>`).join('');document.getElementById('tape').innerHTML=h+h;document.getElementById('tapeBox').hidden=false}
-  const names={VNINDEX:'VN-Index',VN30:'VN30',HNXINDEX:'HNX-Index'};
+  const names={VNINDEX:'VN-Index',VN30:'VN30',HNXINDEX:'HNX-Index',UPCOMINDEX:'UPCoM-Index'};
   if(Object.keys(j.idx||{}).length)document.getElementById('idxH').hidden=false;document.getElementById('idxCards').innerHTML=Object.entries(j.idx||{}).map(([k,v])=>`<div class="ic2 card"><small>${names[k]||k} · ${v.t||''}</small><b>${fmtI(v.c)} ${pctTxt(v.chp)}</b>${spark(v.spark,v.chp>=0)}</div>`).join('');
 }).catch(()=>{});
 let SYMS=null;
@@ -902,6 +920,12 @@ if('IntersectionObserver' in window){
    document.getElementById('sfPer').onclick=e=>{const b=e.target.closest('button');if(!b)return;per=+b.dataset.p;document.querySelectorAll('#sfPer button').forEach(x=>x.classList.toggle('on',x===b));draw()};
    document.getElementById('sfBody').onclick=e=>{const t=e.target.closest('.sf-x button');if(t){chart(t.dataset.s);document.getElementById('thi-truong').scrollIntoView({behavior:'smooth'});return}const r=e.target.closest('.sf-r');if(r)r.classList.toggle('open')};
  }).catch(()=>{});}
+
+
+/* nút gọi nổi chỉ hiện sau phần đầu trang */
+{const f=document.querySelector('.fab'),h=document.querySelector('.hero');if(f&&h){const t=()=>f.classList.toggle('show',scrollY>h.offsetHeight*0.8);addEventListener('scroll',t,{passive:true});t()}}
+/* ô tìm kiếm: gợi ý ngắn trên điện thoại */
+if(matchMedia('(max-width:600px)').matches){const i=document.getElementById('sCode');if(i)i.placeholder='Mã hoặc tên công ty'}
 
 document.getElementById('aboutImg').src=document.getElementById('heroImg').src;
 
