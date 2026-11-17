@@ -324,6 +324,16 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;height:6
 .sf-note{color:var(--muted);font-size:12.5px;margin-top:12px}
 @media(max-width:900px){.sf-h{display:none}.sf-r{grid-template-columns:1fr auto;gap:6px 12px}.sf-r .sf-bar{grid-column:1/-1}.sf-r .sf-sp{display:none}.sf-r .num,.sf-r .rt{text-align:left}}
 
+
+/* VIDEO FACEBOOK TỰ CHẠY */
+.fbv-wrap{display:flex;flex-direction:column;align-items:center;gap:14px}
+.fbv-phone{width:min(320px,82vw);aspect-ratio:9/16;border-radius:34px;padding:10px;background:linear-gradient(160deg,#3a3236,#141215);box-shadow:0 30px 70px rgba(0,0,0,.55),0 0 0 1px rgba(240,213,149,.35)}
+.fbv-scr{position:relative;width:100%;height:100%;border-radius:26px;overflow:hidden;background:#0a090b;display:flex;align-items:center;justify-content:center}
+.fbv-scr::before{content:attr(data-ph);position:absolute;color:#6f6872;font-size:13px}
+.fbv-scr .fb-video{position:relative;z-index:1;width:100%}
+.fbv-scr .fb-video span,.fbv-scr .fb-video iframe{width:100%!important}
+.fbv-snd{background:rgba(212,174,94,.12);border:1px solid rgba(240,213,149,.35);color:var(--gold2);font:600 14px inherit;font-family:inherit;border-radius:999px;padding:8px 16px;cursor:pointer;min-height:40px}
+
 /* TICKER */
 .ticker{overflow:hidden;padding:22px 0;border-bottom:1px solid var(--line);-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
 .track-row{display:flex;gap:14px;width:max-content;animation:run 34s linear infinite}
@@ -460,6 +470,7 @@ section.band[data-n]>.wrap>*{position:relative;z-index:1}
 <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
 </head>
 <body>
+<div id="fb-root"></div>
 
 <svg width="0" height="0" style="position:absolute"><defs>
   <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></symbol>
@@ -630,7 +641,7 @@ section.band[data-n]>.wrap>*{position:relative;z-index:1}
   <div class="wrap tt-wrap">
     <div>
       <div class="label">05<i>/</i><span>Góc nhìn thị trường</span></div>
-      <h2 class="sec-h rv">Cập nhật thị trường mỗi ngày trên TikTok</h2>
+      <h2 class="sec-h rv">Cập nhật thị trường mỗi ngày</h2>
       <p class="sec-p rv" style="margin-bottom:0">Video ngắn về diễn biến thị trường, cách đọc báo cáo tài chính và kinh nghiệm đầu tư, dễ hiểu cho cả người mới.</p>
       <div class="tt-list rv">
         <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></div><div><b>Nhận định thị trường</b><span>Diễn biến VN-Index, dòng tiền, nhóm ngành nổi bật</span></div></div>
@@ -639,8 +650,11 @@ section.band[data-n]>.wrap>*{position:relative;z-index:1}
       </div>
       <div class="btns rv" style="margin-top:24px"><a data-goatcounter-click="tiktok" class="btn btn-tt" href="https://www.tiktok.com/@minhtrifpts" target="_blank" rel="noopener"><svg><use href="#i-note"/></svg>Theo dõi @minhtrifpts</a></div>
     </div>
-    <div class="tt-embed rv">
-      <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@minhtrifpts" data-unique-id="minhtrifpts" data-embed-type="creator" style="max-width:780px;min-width:288px"><section><a data-goatcounter-click="tiktok" target="_blank" rel="noopener" href="https://www.tiktok.com/@minhtrifpts">@minhtrifpts</a></section></blockquote>
+    <div class="fbv-wrap rv">
+      <div class="fbv-phone"><div class="fbv-scr" id="fbvBox" data-ph="Đang tải video…">
+        <div class="fb-video" data-href="https://www.facebook.com/reel/1412928503881535" data-width="300" data-autoplay="true" data-allowfullscreen="true" data-show-text="false" data-show-captions="true"></div>
+      </div></div>
+      <button type="button" class="fbv-snd" id="fbvSnd" hidden>🔇 Bật tiếng</button>
     </div>
   </div>
 </section>
@@ -849,8 +863,16 @@ if('IntersectionObserver' in window){
  dd.querySelectorAll('.dd-menu a').forEach(a=>a.addEventListener('click',()=>set(false)));}
 
 
-/* nhúng TikTok khi cuộn tới */
-{const box=document.querySelector('.tt-embed');if(box&&'IntersectionObserver' in window){const o=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){o.disconnect();const sc=document.createElement('script');sc.src='https://www.tiktok.com/embed.js';sc.async=true;document.body.appendChild(sc)}},{rootMargin:'400px'});o.observe(box)}}
+/* video Facebook: tải khi cuộn tới, tự chạy ở chế độ tắt tiếng */
+{const box=document.getElementById('fbvBox');let player=null;
+ const load=()=>{if(document.getElementById('facebook-jssdk'))return;
+   window.fbAsyncInit=function(){FB.init({xfbml:true,version:'v21.0'});
+     FB.Event.subscribe('xfbml.ready',m=>{if(m.type!=='video')return;player=m.instance;try{player.mute();player.play()}catch(e){}
+       box.dataset.ph='';const b=document.getElementById('fbvSnd');b.hidden=false;
+       b.onclick=()=>{try{if(player.isMuted()){player.unmute();b.textContent='🔊 Tắt tiếng'}else{player.mute();b.textContent='🔇 Bật tiếng'}}catch(e){}};
+       try{player.subscribe('finishedPlaying',()=>{try{player.seek(0);player.play()}catch(e){}})}catch(e){}});};
+   const sc=document.createElement('script');sc.id='facebook-jssdk';sc.async=true;sc.defer=true;sc.crossOrigin='anonymous';sc.src='https://connect.facebook.net/vi_VN/sdk.js';document.body.appendChild(sc);};
+ if(box){if('IntersectionObserver' in window){const o=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)){o.disconnect();load()}},{rootMargin:'300px'});o.observe(box)}else load()}}
 
 
 /* ===== dòng tiền ngành ===== */
