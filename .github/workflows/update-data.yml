@@ -15,20 +15,25 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-24.04
-    timeout-minutes: 40
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
         with:
-          python-version: "3.11"
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
       - name: Cai thu vien
-        run: pip install -U vnstock pandas
+        run: npm install --no-save --ignore-scripts vnstock-js
       - name: Lay so lieu
-        run: python scripts/update_data.py
+        run: node scripts/update_data.mjs
       - name: Luu ket qua
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git add data
           git diff --cached --quiet || git commit -m "Cap nhat so lieu tai chinh"
           git push
