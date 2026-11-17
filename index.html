@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lê Minh Trí – Tư vấn đầu tư chứng khoán | FPTS</title>
-<meta name="description" content="Lê Minh Trí – Tư vấn đầu tư chứng khoán tại FPTS từ 2016. Chứng chỉ hành nghề Quản lý quỹ số 002059/QLQ. Tra cứu cổ phiếu, báo cáo ngành ngân hàng & chứng khoán. Liên hệ 0833.70.3936.">
+<meta name="description" content="Lê Minh Trí – Tư vấn đầu tư chứng khoán tại FPTS từ 2016. Chứng chỉ hành nghề Môi giới chứng khoán và Quản lý quỹ (số 002059/QLQ). Tra cứu cổ phiếu, báo cáo ngành ngân hàng & chứng khoán. Liên hệ 0833.70.3936.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Lê Minh Trí – Tư vấn chứng khoán">
 <meta property="og:title" content="Lê Minh Trí – Tư vấn đầu tư chứng khoán | FPTS">
@@ -118,7 +118,7 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;height:6
 .wt{font-size:17px;font-weight:700;margin-bottom:12px;color:var(--ink)}
 .search{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
 .search input,.search select{min-height:48px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:600 16px inherit;font-family:inherit;padding:0 16px}
-.search input{flex:1 1 160px;text-transform:uppercase;letter-spacing:.06em}
+.search input{flex:1 1 160px;letter-spacing:.02em}
 .search input:focus,.search select:focus{outline:2px solid var(--gold);outline-offset:1px}
 .quick{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
 .quick button{background:rgba(255,255,255,.05);border:1px solid var(--line);color:#cfc8d0;border-radius:8px;padding:6px 12px;font:600 13px inherit;font-family:inherit;cursor:pointer;min-height:34px}
@@ -466,7 +466,7 @@ section.band[data-n]>.wrap>*{position:relative;z-index:1}
     <div class="hero-text">
       <div class="label">Chứng khoán<i>·</i>Ngân hàng<i>·</i>Quản lý quỹ</div>
       <p class="hello" data-i="hello">Xin chào, tôi là</p>
-      <h1 class="name"><span class="o">LÊ MINH</span><span class="f">TRÍ</span></h1>
+      <h1 class="name" aria-label="Lê Minh Trí"><span class="o">LÊ MINH</span> <span class="f">TRÍ</span></h1>
       <p class="role">Tư vấn đầu tư chứng khoán <span>·</span> FPTS</p>
       <p class="intro" data-i="intro">Làm việc trong lĩnh vực chứng khoán từ năm 2016, giữ chứng chỉ hành nghề Môi giới chứng khoán và Quản lý quỹ. Tôi giúp nhà đầu tư hiểu thị trường và ra quyết định có cơ sở.</p>
       <div class="btns">
@@ -544,21 +544,18 @@ section.band[data-n]>.wrap>*{position:relative;z-index:1}
   <div class="wrap">
     <div class="label">03<i>/</i><span data-i="mLabel">Tra cứu cổ phiếu</span></div>
     <h2 class="sec-h rv" data-i="mH">Nhập mã, xem ngay giá và định giá</h2>
-    <p class="sec-p" data-i="mP">Đồ thị giá, chỉ số tài chính và định giá cơ bản (P/E, P/B, vốn hoá, ROE, biên lợi nhuận…) của các mã trên HOSE, HNX, UPCoM.</p>
+    <p class="sec-p" data-i="mP">Gần 1.600 mã trên HOSE, HNX, UPCoM: đồ thị giá từ khi niêm yết, chỉ số tài chính, định giá và kết quả kinh doanh quý.</p>
     <div class="term-bar rv"><i></i><i></i><i></i><span data-i="termT">Bảng tra cứu cổ phiếu</span><em data-i="termL">Trực tuyến</em></div>
     <div class="term rv">
     <form class="search" id="sForm" autocomplete="off">
-      <input id="sCode" maxlength="10" placeholder="Nhập mã, VD: FPT" aria-label="Mã cổ phiếu">
-      <select id="sEx" aria-label="Sàn">
-        <option value="HOSE">HOSE</option><option value="HNX">HNX</option><option value="UPCOM">UPCoM</option>
-      </select>
+      <input id="sCode" maxlength="40" placeholder="Nhập mã hoặc tên công ty, VD: FPT" aria-label="Mã cổ phiếu" list="symList" autocomplete="off"><datalist id="symList"></datalist>
       <button class="btn btn-gold" type="submit"><span data-i="sBtn">Tra cứu</span></button>
     </form>
     <div class="quick" id="quick"></div>
     <div class="qinfo card" id="qinfo"></div>
     <div class="mk">
       <div>
-        <div class="wt-row"><h3 class="wt" data-i="wChart">Đồ thị giá</h3><div class="rng" id="rng"><button type="button" data-r="66">3T</button><button type="button" data-r="130">6T</button><button type="button" data-r="250" class="on">1N</button><button type="button" data-r="750">3N</button><button type="button" data-r="1300">5N</button></div></div>
+        <div class="wt-row"><h3 class="wt" data-i="wChart">Đồ thị giá</h3><div class="rng" id="rng"><button type="button" data-r="66">3T</button><button type="button" data-r="130">6T</button><button type="button" data-r="250" class="on">1N</button><button type="button" data-r="750">3N</button><button type="button" data-r="1300">5N</button><button type="button" data-r="99999">Tất cả</button></div></div>
         <div class="wbox" data-ph="Đang tải đồ thị…" style="height:520px"><div id="pxChart" class="pxc"></div></div>
       </div>
       <div>
@@ -620,7 +617,7 @@ section.band[data-n]>.wrap>*{position:relative;z-index:1}
   <div class="wrap">
     <p>© 2026 Lê Minh Trí · Tư vấn đầu tư chứng khoán, Công ty Cổ phần Chứng khoán FPT (FPTS) · CCHN Quản lý quỹ 002059/QLQ</p>
     <p>0833.70.3936 · <a data-goatcounter-click="tiktok" href="https://www.tiktok.com/@minhtrifpts" target="_blank" rel="noopener" style="color:var(--gold)">TikTok @minhtrifpts</a></p>
-    <p data-i="disc">Thông tin trên trang mang tính giới thiệu, không phải khuyến nghị mua bán chứng khoán. Đầu tư chứng khoán luôn có rủi ro.</p>
+    <p data-i="disc">Thông tin trên trang mang tính giới thiệu và thể hiện quan điểm cá nhân, không phải khuyến nghị mua bán chứng khoán. Số liệu được tổng hợp từ nguồn công khai, có thể có sai sót hoặc độ trễ. Đầu tư chứng khoán luôn có rủi ro.</p>
   </div>
 </footer>
 
@@ -689,6 +686,11 @@ fetch('data/summary.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j
   const names={VNINDEX:'VN-Index',VN30:'VN30',HNXINDEX:'HNX-Index'};
   if(Object.keys(j.idx||{}).length)document.getElementById('idxH').hidden=false;document.getElementById('idxCards').innerHTML=Object.entries(j.idx||{}).map(([k,v])=>`<div class="ic2 card"><small>${names[k]||k} · ${v.t||''}</small><b>${fmtI(v.c)} ${pctTxt(v.chp)}</b>${spark(v.spark,v.chp>=0)}</div>`).join('');
 }).catch(()=>{});
+let SYMS=null;
+fetch('data/symbols.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(!j)return;SYMS=j;
+  document.getElementById('symList').innerHTML=Object.entries(j).map(([k,v])=>`<option value="${k}">${k} – ${(v.n||'').replace(/"/g,'')}</option>`).join('');
+  const n=Object.keys(j).length;const sp=document.querySelector('#thi-truong .sec-p');if(sp&&n>100)sp.textContent=`${n.toLocaleString('vi-VN')} mã trên HOSE, HNX, UPCoM: đồ thị giá từ khi niêm yết, chỉ số tài chính, định giá và kết quả kinh doanh quý.`;
+}).catch(()=>{});
 const drawChart=()=>{const el=document.getElementById('pxChart');if(!el)return;if(!window.LightweightCharts){el.parentElement.dataset.ph='Không tải được thư viện biểu đồ, vui lòng tải lại trang';return}el.parentElement.dataset.ph='';
   if(!lwc){lwc=LightweightCharts.createChart(el,{autoSize:true,layout:{background:{type:'solid',color:'transparent'},textColor:'#a19aa3',fontFamily:'Be Vietnam Pro'},grid:{vertLines:{color:'rgba(255,255,255,.04)'},horzLines:{color:'rgba(255,255,255,.05)'}},rightPriceScale:{borderColor:'rgba(255,255,255,.08)'},timeScale:{borderColor:'rgba(255,255,255,.08)'},localization:{priceFormatter:p=>Math.round(p).toLocaleString('vi-VN')}});
     cs=lwc.addCandlestickSeries({upColor:'#7fd1a0',downColor:'#ef8a7a',borderVisible:false,wickUpColor:'#7fd1a0',wickDownColor:'#ef8a7a'});
@@ -702,7 +704,7 @@ const RL={pe:['P/E','x'],pb:['P/B','x'],roe:['ROE','%'],roa:['ROA','%'],eps:['EP
 const rv=(k,v)=>{const u=RL[k][1];if(u==='%')return (Math.abs(v)<=1.5?v*100:v).toFixed(1)+'%';if(u==='x')return v.toFixed(2)+'x';if(u==='đ')return fmtP(v)+' đ';return fmtBig(v)};
 
 /* khung chỉ số tài chính & định giá */
-const GN={bank:'ngân hàng',sec:'chứng khoán',other:'doanh nghiệp cùng nhóm'};
+const GN=new Proxy({bank:'ngân hàng',sec:'chứng khoán',other:'doanh nghiệp cùng nhóm'},{get:(o,k)=>o[k]||String(k).toLowerCase()});
 let RT_TAB='val';
 const avgOf=a=>{const b=(a||[]).filter(v=>v!=null&&isFinite(v));return b.length?b.reduce((x,y)=>x+y,0)/b.length:null};
 const cmpB=(v,ref,label,lowGood)=>{if(v==null||ref==null||!ref)return'';const d=(v/ref-1)*100;if(Math.abs(d)<3)return `<span class="bdg bn">≈ ${label}</span>`;const lower=d<0;const good=lowGood?lower:!lower;return `<span class="bdg ${good?'bg':'br'}">${lower?'Thấp':'Cao'} hơn ${label} ${Math.abs(d).toFixed(0)}%</span>`};
@@ -740,27 +742,27 @@ const renderRatios=(code,r,g,price)=>{const ra=document.getElementById('ratios')
   ra.querySelectorAll('.rt-tabs button').forEach(b=>b.onclick=()=>{RT_TAB=b.dataset.t;renderRatios(code,r,g,price)});
 };
 
-const chart=sym=>{const code=sym.split(':')[1]||sym;
+const chart=sym=>{const code=(sym.split(':')[1]||sym).toUpperCase();
   document.getElementById('askCode').textContent=code;window.curCode=code;quarter(code);
   const qi=document.getElementById('qinfo'),ra=document.getElementById('ratios');
   qi.innerHTML=`<div class="sym">${code}</div><div class="empty">Đang tải…</div>`;
   fetch(`data/px/${code}.json`,{cache:'no-cache'}).then(r=>{if(!r.ok)throw 0;return r.json()}).then(d=>{
-    document.querySelector('.mk').hidden=false;curBars=d.bars||[];const L=curBars.at(-1),P=curBars.at(-2)||L;const y=curBars.slice(-250);
+    document.querySelector('.mk').hidden=false;curBars=d.bars||[];if(d.fin){FIN[code]=d.fin;quarter(code)}const L=curBars.at(-1),P=curBars.at(-2)||L;const y=curBars.slice(-250);
     const hi=Math.max(...y.map(b=>b[2])),lo=Math.min(...y.map(b=>b[3])),chp=P?(L[4]/P[4]-1)*100:0;
-    qi.innerHTML=`<div class="sym">${code}<small>${sym.split(':')[0]||''} · ${L[0]}</small></div><div class="px">${fmtP(L[4])}${pctTxt(chp)}</div>
+    qi.innerHTML=`<div class="sym">${code}<small>${d.n?d.n+' · ':''}${d.ex||''} · ${L[0]}</small></div><div class="px">${fmtP(L[4])}${pctTxt(chp)}</div>
       <div class="kv"><small>Khối lượng</small><b>${fmtP(L[5])}</b></div><div class="kv"><small>Cao nhất 52 tuần</small><b>${fmtP(hi)}</b></div><div class="kv"><small>Thấp nhất 52 tuần</small><b>${fmtP(lo)}</b></div>
       <a class="ext" href="${extLink(code)}" target="_blank" rel="noopener">Xem chi tiết ↗</a>`;
     drawChart();
-    renderRatios(code,d.ratios||{},d.g||'other',L[4]);
+    renderRatios(code,d.ratios||{},(d.ind&&SUM&&SUM.groups&&SUM.groups[d.ind])?d.ind:(d.g||'other'),L[4]);
   }).catch(()=>{curBars=[];if(cs){cs.setData([]);vs.setData([])}document.querySelector('.mk').hidden=true;
     const msg=`Mã <b>${code}</b> chưa có trong danh sách theo dõi tự động. <a href="${extLink(code)}" target="_blank" rel="noopener">Xem ${code} trên Vietstock ↗</a> hoặc <a data-goatcounter-click="zalo" href="https://zalo.me/0833703936" target="_blank" rel="noopener">nhắn Zalo</a>.`;
     qi.innerHTML=`<div class="empty">${msg}</div>`;});
 };
-chart('HOSE:FPT');
+chart('FPT');
 const quick=[["FPT","HOSE"],["VCB","HOSE"],["HPG","HOSE"],["MWG","HOSE"],["SSI","HOSE"],["FTS","HOSE"],["SHS","HNX"]];
-document.getElementById('quick').innerHTML=quick.map(([c,e])=>`<button type="button" data-s="${e}:${c}">${c}</button>`).join('');
+document.getElementById('quick').innerHTML=quick.map(([c,e])=>`<button type="button" data-s="${c}">${c}</button>`).join('');
 document.getElementById('quick').addEventListener('click',e=>{const b=e.target.closest('button');if(b)chart(b.dataset.s)});
-document.getElementById('sForm').addEventListener('submit',e=>{e.preventDefault();const c=document.getElementById('sCode').value.trim().toUpperCase().replace(/[^A-Z0-9]/g,'');if(!c)return;chart(document.getElementById('sEx').value+':'+c);document.getElementById('sCode').blur()});
+document.getElementById('sForm').addEventListener('submit',e=>{e.preventDefault();let v=document.getElementById('sCode').value.trim();if(!v)return;let c=v.split(/[\s–-]/)[0].toUpperCase().replace(/[^A-Z0-9]/g,'');if(SYMS&&!SYMS[c]){const q=v.toLowerCase();const hit=Object.entries(SYMS).find(([k,x])=>(x.n||'').toLowerCase().includes(q));if(hit)c=hit[0]}chart(c);document.getElementById('sCode').blur()});
 
 
 /* biểu đồ vàng ở nền đầu trang */
