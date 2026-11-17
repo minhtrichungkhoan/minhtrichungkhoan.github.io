@@ -507,6 +507,16 @@ section.band[data-n]>.wrap>*{position:relative;z-index:1}
 .js .rv{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.7,.2,1)}
 .js .rv.in{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.js .rv{opacity:1;transform:none}.hero-bg .ln{stroke-dashoffset:0}.hero-bg .ar,.hero-bg .cd rect,.hero-bg .dot{opacity:1}}
+
+/* logo mã + ô gợi ý */
+.sbox{position:relative;flex:1 1 160px;display:flex}.sbox input{flex:1;width:100%}
+.sugg{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:30;background:#151317;border:1px solid rgba(212,174,94,.35);border-radius:14px;box-shadow:0 18px 40px rgba(0,0,0,.55);max-height:360px;overflow:auto;padding:6px}
+.sugg button{display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;border-radius:10px;padding:8px 10px;color:var(--ink);font:inherit;text-align:left;cursor:pointer;min-height:48px}
+.sugg button:hover,.sugg button.on{background:rgba(212,174,94,.12)}
+.sugg b{font-weight:800;min-width:46px;letter-spacing:.02em}.sugg span:not(.lg){flex:1;color:var(--muted);font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sugg em{font-style:normal;font-size:11.5px;color:var(--gold2);border:1px solid rgba(212,174,94,.35);border-radius:6px;padding:1px 6px}
+.lg{position:relative;flex:none;width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#e9cd8a,#a9823a);color:#17120a;display:grid;place-items:center;font-weight:800;font-size:10.5px;line-height:1;letter-spacing:0;overflow:hidden}
+.lg img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;padding:3px}
+.qinfo .symw{display:flex;align-items:center;gap:14px}.qinfo .lg{width:56px;height:56px;border-radius:14px;font-size:15px}
 </style>
 <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
 </head>
@@ -668,7 +678,7 @@ section.band[data-n]>.wrap>*{position:relative;z-index:1}
     <div class="term-bar rv"><i></i><i></i><i></i><span data-i="termT">Bảng tra cứu cổ phiếu</span><em data-i="termL">Trực tuyến</em></div>
     <div class="term rv">
     <form class="search" id="sForm" autocomplete="off">
-      <input id="sCode" maxlength="40" placeholder="Nhập mã hoặc tên công ty, VD: FPT" aria-label="Mã cổ phiếu" list="symList" autocomplete="off"><datalist id="symList"></datalist>
+      <div class="sbox"><input id="sCode" maxlength="40" placeholder="Nhập mã hoặc tên công ty, VD: FPT" aria-label="Mã cổ phiếu" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="sugg"><div class="sugg" id="sugg" role="listbox" hidden></div></div>
       <button class="btn btn-gold" type="submit"><span data-i="sBtn">Tra cứu</span></button>
     </form>
     <div class="quick" id="quick"></div>
@@ -811,7 +821,7 @@ fetch('data/summary.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j
 }).catch(()=>{});
 let SYMS=null;
 fetch('data/symbols.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(!j)return;SYMS=j;
-  document.getElementById('symList').innerHTML=Object.entries(j).map(([k,v])=>`<option value="${k}">${k} – ${(v.n||'').replace(/"/g,'')}</option>`).join('');
+  
   const n=Object.keys(j).length;const sp=document.querySelector('#thi-truong .sec-p');if(sp&&n>100)sp.textContent=`${n.toLocaleString('vi-VN')} mã trên HOSE, HNX, UPCoM: đồ thị giá từ khi niêm yết, chỉ số tài chính, định giá và kết quả kinh doanh quý.`;
 }).catch(()=>{});
 const drawChart=()=>{const el=document.getElementById('pxChart');if(!el)return;if(!window.LightweightCharts){el.parentElement.dataset.ph='Không tải được thư viện biểu đồ, vui lòng tải lại trang';return}el.parentElement.dataset.ph='';
@@ -872,7 +882,7 @@ const chart=sym=>{const code=(sym.split(':')[1]||sym).toUpperCase();
   fetch(`data/px/${code}.json`,{cache:'no-cache'}).then(r=>{if(!r.ok)throw 0;return r.json()}).then(d=>{
     document.querySelector('.mk').hidden=false;curBars=d.bars||[];if(d.fin){FIN[code]=d.fin;quarter(code)}const L=curBars.at(-1),P=curBars.at(-2)||L;const y=curBars.slice(-250);
     const hi=Math.max(...y.map(b=>b[2])),lo=Math.min(...y.map(b=>b[3])),chp=P?(L[4]/P[4]-1)*100:0;
-    qi.innerHTML=`<div class="sym">${code}<small>${d.n?d.n+' · ':''}${d.ex||''} · ${L[0]}</small></div><div class="px">${fmtP(L[4])}${pctTxt(chp)}</div>
+    qi.innerHTML=`<div class="symw">${logo(code)}<div class="sym">${code}<small>${d.n?d.n+' · ':''}${d.ex||''} · ${L[0]}</small></div></div><div class="px">${fmtP(L[4])}${pctTxt(chp)}</div>
       <div class="kv"><small>Khối lượng</small><b>${fmtP(L[5])}</b></div><div class="kv"><small>Cao nhất 52 tuần</small><b>${fmtP(hi)}</b></div><div class="kv"><small>Thấp nhất 52 tuần</small><b>${fmtP(lo)}</b></div>
       <a class="ext" href="${extLink(code)}" target="_blank" rel="noopener">Xem chi tiết ↗</a>`;
     drawChart();
@@ -885,7 +895,30 @@ chart('FPT');
 const quick=[["FPT","HOSE"],["VCB","HOSE"],["HPG","HOSE"],["MWG","HOSE"],["SSI","HOSE"],["FTS","HOSE"],["SHS","HNX"]];
 document.getElementById('quick').innerHTML=quick.map(([c,e])=>`<button type="button" data-s="${c}">${c}</button>`).join('');
 document.getElementById('quick').addEventListener('click',e=>{const b=e.target.closest('button');if(b)chart(b.dataset.s)});
-document.getElementById('sForm').addEventListener('submit',e=>{e.preventDefault();let v=document.getElementById('sCode').value.trim();if(!v)return;let c=v.split(/[\s–-]/)[0].toUpperCase().replace(/[^A-Z0-9]/g,'');if(SYMS&&!SYMS[c]){const q=v.toLowerCase();const hit=Object.entries(SYMS).find(([k,x])=>(x.n||'').toLowerCase().includes(q));if(hit)c=hit[0]}chart(c);document.getElementById('sCode').blur()});
+
+/* logo mã: thử 2 nguồn ảnh, nếu không có thì hiện chữ viết tắt trên nền vàng */
+const LOGO_SRC=[c=>`https://cdn.simplize.vn/simplizevn/logo/${c}.jpeg`,c=>`https://finance.vietstock.vn/image/${c}`];
+window.logoErr=img=>{const k=+(img.dataset.k||0)+1;if(LOGO_SRC[k]){img.dataset.k=k;img.src=LOGO_SRC[k](img.dataset.c)}else img.remove()};
+const logo=c=>`<span class="lg">${c.slice(0,3)}<img src="${LOGO_SRC[0](c)}" data-c="${c}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="logoErr(this)"></span>`;
+{const inp=document.getElementById('sCode'),box=document.getElementById('sugg');let items=[],cur=-1;
+ const strip=t=>(t||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d');
+ const close=()=>{box.hidden=true;inp.setAttribute('aria-expanded','false');cur=-1};
+ const show=()=>{const v=inp.value.trim();if(!v||!SYMS){close();return}const q=strip(v),Q=v.toUpperCase();
+   const all=Object.entries(SYMS),a=[],b=[],c=[];
+   for(const [k,x] of all){if(k===Q)a.push([k,x]);else if(k.startsWith(Q))b.push([k,x]);else if(strip(x.n).includes(q))c.push([k,x]);if(a.length+b.length+c.length>60)break}
+   items=[...a,...b,...c].slice(0,8);if(!items.length){close();return}cur=-1;
+   box.innerHTML=items.map(([k,x],i)=>`<button type="button" role="option" data-s="${k}">${logo(k)}<b>${k}</b><span>${x.n||''}</span>${x.ex?`<em>${x.ex==='UPCOM'?'UPCoM':x.ex}</em>`:''}</button>`).join('');
+   box.hidden=false;inp.setAttribute('aria-expanded','true')};
+ const go=k=>{inp.value=k;close();chart(k);inp.blur()};
+ inp.addEventListener('input',show);inp.addEventListener('focus',show);
+ inp.addEventListener('keydown',e=>{if(box.hidden)return;const bs=[...box.children];
+   if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();cur=(cur+(e.key==='ArrowDown'?1:-1)+bs.length)%bs.length;bs.forEach((x,i)=>x.classList.toggle('on',i===cur));bs[cur].scrollIntoView({block:'nearest'})}
+   else if(e.key==='Enter'&&cur>=0){e.preventDefault();go(bs[cur].dataset.s)}else if(e.key==='Escape')close()});
+ box.addEventListener('mousedown',e=>e.preventDefault());
+ box.addEventListener('click',e=>{const b=e.target.closest('button');if(b)go(b.dataset.s)});
+ document.addEventListener('click',e=>{if(!e.target.closest('.sbox'))close()});
+ document.getElementById('sForm').addEventListener('submit',close);}
+document.getElementById('sForm').addEventListener('submit',e=>{e.preventDefault();let v=document.getElementById('sCode').value.trim();if(!v)return;let c=v.split(/[\s–-]/)[0].toUpperCase().replace(/[^A-Z0-9]/g,'');if(SYMS&&!SYMS[c]){const st=t=>(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d');const q=st(v);const hit=Object.entries(SYMS).find(([k,x])=>st(x.n).includes(q));if(hit)c=hit[0]}chart(c);document.getElementById('sCode').blur()});
 
 
 /* biểu đồ vàng ở nền đầu trang */
