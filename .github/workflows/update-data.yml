@@ -66,6 +66,7 @@ jobs:
           console.log("px:",n,"deep:",deep,"co du lieu truoc 2021:",old);
           for(const s of ["FPT","VNM","VCB","HPG","VNINDEX"]){const x=J("data/px/"+s+".json");console.log(s,x?.bars?.length,x?.bars?.[0]?.[0],x?.deep)}
           for(const s of ["FPT","VCB"]){const x=J("data/px/"+s+".json");console.log(s,"last",JSON.stringify(x?.bars?.at(-1)),"ratios",JSON.stringify({...(x?.ratios||{}),hist:undefined}),"fin",JSON.stringify(x?.fin).slice(0,400))}
+          const sm=J("data/summary.json");console.log("groups:",JSON.stringify(Object.fromEntries(Object.entries(sm?.groups||{}).slice(0,40).map(([k,v])=>[k,{n:v.n,roe:v.roe&&+v.roe.toFixed(3),nm:v.nm&&+v.nm.toFixed(3)}]))));
           const ij=J("data/indices.json");console.log("indices dates:",ij?Object.keys(ij.hist||{}).length:null);
           '
       - name: Dong goi trang
