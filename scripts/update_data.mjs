@@ -306,6 +306,8 @@ const T0 = Date.now();
 const clip = (o) => { try { const s = JSON.stringify(o, null, 1); return s.length > 4000 ? s.slice(0, 4000) + '…' : JSON.parse(s); } catch { return String(o).slice(0, 2000); } };
 
 
+// Tạm tắt lấy sự kiện và dòng tiền HĐKD: nguồn VietCap phản hồi rất chậm, làm lần chạy hằng ngày kéo dài. Đổi thành true để bật lại.
+const EXTRA_ON = false;
 // gọi 1 lần, có giới hạn thời gian; tự tắt nếu nguồn lỗi liên tục (tránh kéo dài cả lần chạy)
 const BREAK = {};
 async function once(tag, fn, ms = 12000) {
@@ -496,11 +498,11 @@ async function main() {
           const inc = await retry(() => st.financials('income', { period: 'quarter' }));
           const bs = await retry(() => st.financials('balance', { period: 'quarter' }));
           rec.fin = build(inc, bs); finCount++;
-          try { const cf = await once('cashflow', () => st.financials('cashflow', { period: 'quarter' })); const c = cfoFor(cf, rec.fin.q); if (c) rec.fin.cfo = c; if (k < 2) debug[t + '_cfo'] = c; } catch (e) { if (k < 2) debug[t + '_cfoErr'] = String(e.message || e).slice(0, 150); }
+          if (EXTRA_ON) try { const cf = await once('cashflow', () => st.financials('cashflow', { period: 'quarter' })); const c = cfoFor(cf, rec.fin.q); if (c) rec.fin.cfo = c; if (k < 2) debug[t + '_cfo'] = c; } catch (e) { if (k < 2) debug[t + '_cfoErr'] = String(e.message || e).slice(0, 150); }
         } catch (e) { errors[t] = ((errors[t] || '') + ' bctc: ' + String(e.message || e)).slice(0, 300); }
         try { const rat = await retry(() => st.financials('ratios', { period: 'quarter' })); rec.ratios = ratiosLatest(rat); } catch {}
         const doEv = ONLY.length || core.has(t) || (k % 14) === (day % 14) || !old.ev;
-        if (doEv) try { const evRaw = await once('events', () => st.events()); if (k < 2 || t === 'FPT') debug[t + '_events'] = clip(findRecords(evRaw)?.slice(0, 3) || evRaw); const ev = eventsOf(evRaw); rec.ev = ev; rec.evAt = updated; } catch (e) { if (k < 2) debug[t + '_evErr'] = String(e.message || e).slice(0, 150); }
+        if (doEv && EXTRA_ON) try { const evRaw = await once('events', () => st.events()); if (k < 2 || t === 'FPT') debug[t + '_events'] = clip(findRecords(evRaw)?.slice(0, 3) || evRaw); const ev = eventsOf(evRaw); rec.ev = ev; rec.evAt = updated; } catch (e) { if (k < 2) debug[t + '_evErr'] = String(e.message || e).slice(0, 150); }
       }
       if (rec.bars?.length) {
         fs.writeFileSync(f, JSON.stringify(rec));
