@@ -541,6 +541,24 @@ section.band[data-n]>.wrap>*{position:relative;z-index:1}
 .qinfo .share:hover{background:rgba(212,174,94,.1)}.qinfo .acts{margin-left:auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}.qinfo .acts .ext{margin-left:0}
 @media(max-width:760px){.qinfo .acts{margin-left:0}}
 .disc-b{margin-top:14px;padding:12px 16px;border-left:3px solid var(--gold);background:rgba(255,255,255,.03);border-radius:0 10px 10px 0;color:#9d96a0;font-size:13.5px;line-height:1.6}.disc-b b{color:var(--gold2)}
+
+/* chỉ số sàn + ngành */
+.ix-box{margin:6px 0 28px}
+.ix-main{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.ix-t{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px 10px}
+.ix-t small{color:var(--muted);font-size:13px;font-weight:600}.ix-t b{display:block;font-size:22px;font-weight:800;margin:3px 0 0;white-space:nowrap}
+.ix-t em{font-style:normal;font-size:14px;font-weight:700}.ix-t svg{display:block;width:100%;height:34px;margin-top:6px}
+.up{color:#7fd1a0}.dn{color:#ef8a7a}.fl{color:#e9cd8a}
+.ix-sec{border-radius:18px;padding:18px 20px}
+.ix-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:10px}.ix-h h3{font-size:17px;font-weight:700}.ix-h span{color:var(--muted);font-size:13px}
+.ix-r{display:grid;grid-template-columns:minmax(120px,1.3fr) 90px minmax(120px,2fr) 70px;align-items:center;gap:12px;padding:8px 0;border-top:1px solid var(--line)}
+.ix-r:first-child{border-top:0}.ix-r span{font-weight:600}.ix-r span small{display:block;color:var(--muted);font-size:12px;font-weight:500}
+.ix-r .v{text-align:right;color:#cfc8d0;font-variant-numeric:tabular-nums}.ix-r .p{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+.ix-bar{position:relative;height:10px;background:rgba(255,255,255,.04);border-radius:5px}.ix-bar:before{content:"";position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:rgba(255,255,255,.18)}
+.ix-bar i{position:absolute;top:0;bottom:0;border-radius:5px}
+@media(max-width:900px){.ix-main{grid-template-columns:repeat(2,minmax(0,1fr))}.ix-main .ix-t:first-child{grid-column:1/-1}}
+@media(max-width:560px){.ix-r{grid-template-columns:minmax(0,1fr) 64px;gap:4px 10px}.ix-r .v{display:none}.ix-r .ix-bar{grid-column:1/-1;grid-row:2}.ix-t b{font-size:19px}}
+.ix-more{margin:12px -20px -18px;width:calc(100% + 40px);border-radius:0 0 18px 18px}
 </style>
 <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
 </head>
@@ -694,6 +712,10 @@ section.band[data-n]>.wrap>*{position:relative;z-index:1}
     <div class="label">04<i>/</i><span>Dòng tiền ngành</span></div>
     <h2 class="sec-h rv">Dòng tiền đang chảy vào đâu?</h2>
     <p class="sec-p rv" id="sfSub">Giá trị giao dịch và biến động giá theo từng nhóm ngành, cùng giao dịch khối ngoại toàn thị trường, cập nhật sau mỗi phiên.</p>
+    <div class="ix-box rv" id="ixBox" hidden>
+      <div class="ix-main" id="ixMain"></div>
+      <div class="ix-sec card"><div class="ix-h"><h3>Chỉ số ngành HOSE</h3><span id="ixPer">% thay đổi 1 phiên</span></div><div id="ixSec"></div><p class="src" style="margin-top:10px">Điểm chỉ số do HOSE, HNX công bố, lấy qua FPTS · % thay đổi theo nút chọn kỳ bên dưới</p><button type="button" class="sf-more ix-more" id="ixMore" hidden></button></div>
+    </div>
     <div class="sf-top">
       <div class="sf-chips" id="sfChips"></div>
       <div class="sf-ctl">
@@ -976,6 +998,29 @@ fetch('nhan-dinh.txt',{cache:'no-cache'}).then(r=>r.ok?r.text():'').then(t=>{
   document.getElementById('ndCodes').innerHTML=codes.length?'<small>Mã chú ý:</small>'+codes.map(c=>`<a href="?ma=${c}#thi-truong" data-s="${c}">${logo(c)}${c}</a>`).join(''):'';
   document.getElementById('ndCodes').onclick=e=>{const a=e.target.closest('a[data-s]');if(!a)return;e.preventDefault();chart(a.dataset.s);document.getElementById('thi-truong').scrollIntoView({behavior:'smooth'})};
   document.getElementById('nhan-dinh').hidden=false;}).catch(()=>{});
+
+/* chỉ số các sàn + chỉ số ngành HOSE (data/indices.json) */
+{let IX=null,ixPer=1,ixAll=false;const IXTOP=6;
+ const MAIN=[['VNIndex','VN-Index'],['VN30','VN30'],['HNXIndex','HNX-Index'],['HNX30','HNX30'],['HNXUpcomIndex','UPCoM-Index']];
+ const SEC=[['VNFIN','Tài chính','Ngân hàng, chứng khoán, bảo hiểm'],['VNREAL','Bất động sản',''],['VNMAT','Nguyên vật liệu','Thép, hoá chất, khai khoáng'],['VNIT','Công nghệ thông tin',''],['VNCOND','Tiêu dùng không thiết yếu','Bán lẻ, ô tô, du lịch'],['VNCONS','Tiêu dùng thiết yếu','Thực phẩm, đồ uống'],['VNIND','Công nghiệp','Xây dựng, logistics, KCN'],['VNENE','Năng lượng','Dầu khí'],['VNHEAL','Y tế','Dược phẩm'],['VNUTI','Tiện ích','Điện, nước, khí'],['VNDIAMOND','VN Diamond','Mã hết room ngoại'],['VNDIVIDEND','VN Dividend','Cổ tức cao']];
+ const nf=(v,d=2)=>v==null?'–':v.toLocaleString('vi-VN',{minimumFractionDigits:d,maximumFractionDigits:d});
+ const chg=(k)=>{const ds=IX.dates.filter(d=>IX.hist[d][k]!=null);if(!ds.length)return{v:null,c:null,s:[]};const L=ds.at(-1),v=IX.hist[L][k];let base=null;
+   if(ixPer==='Y'){const y=L.slice(0,4);const pd=ds.filter(d=>d<y+'-01-01').at(-1);base=pd?IX.hist[pd][k]:null}
+   else{const i=ds.length-1-ixPer;base=i>=0?IX.hist[ds[i]][k]:null}
+   return{v,c:base?(v/base-1)*100:null,s:ds.slice(-30).map(d=>IX.hist[d][k])}};
+ const pc=c=>c==null?'<em class="fl">–</em>':`<em class="${c>0?'up':c<0?'dn':'fl'}">${c>0?'▲':c<0?'▼':''} ${nf(Math.abs(c))}%</em>`;
+ const draw=()=>{if(!IX)return;
+   document.getElementById('ixMain').innerHTML=MAIN.map(([k,n])=>{const r=chg(k);if(r.v==null)return'';return`<div class="ix-t"><small>${n}</small><b>${nf(r.v)}</b>${pc(r.c)}${spark(r.s,(r.c??0)>=0)}</div>`}).join('');
+   const rows=SEC.map(([k,n,sub])=>({k,n,sub,...chg(k)})).filter(r=>r.v!=null).sort((a,b)=>(b.c??-1e9)-(a.c??-1e9));
+   const mx=Math.max(1,...rows.map(r=>Math.abs(r.c||0)));
+   const mb=document.getElementById('ixMore');mb.hidden=rows.length<=IXTOP;mb.innerHTML=ixAll?'Rút gọn <span>▴</span>':`Xem thêm ${rows.length-IXTOP} chỉ số <span>▾</span>`;
+   document.getElementById('ixSec').innerHTML=(ixAll?rows:rows.slice(0,IXTOP)).map(r=>{const w=Math.abs(r.c||0)/mx*50;const col=(r.c||0)>=0?'#7fd1a0':'#ef8a7a';
+     return`<div class="ix-r"><span>${r.n}${r.sub?`<small>${r.sub}</small>`:''}</span><div class="v">${nf(r.v)}</div><div class="ix-bar"><i style="${(r.c||0)>=0?'left:50%':'right:50%'};width:${w}%;background:${col}"></i></div><div class="p ${(r.c||0)>0?'up':(r.c||0)<0?'dn':'fl'}">${r.c==null?'–':(r.c>0?'+':'')+nf(r.c)+'%'}</div></div>`}).join('');
+   const L=IX.dates.at(-1);document.getElementById('ixPer').textContent=`% thay đổi ${ixPer==='Y'?'từ đầu năm':ixPer+' phiên'} · ${L.split('-').reverse().join('/')}`;
+   document.getElementById('ixBox').hidden=false};
+ fetch('data/indices.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.hist)return;IX={hist:j.hist,dates:Object.keys(j.hist).sort()};if(!IX.dates.length)return;draw()}).catch(()=>{});
+ document.getElementById('ixMore').onclick=()=>{ixAll=!ixAll;draw();if(!ixAll)document.getElementById('ixBox').scrollIntoView({behavior:'smooth'})};
+ document.getElementById('sfPer').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;ixPer=b.dataset.p==='Y'?'Y':+b.dataset.p;draw()});}
 document.getElementById('sForm').addEventListener('submit',e=>{e.preventDefault();let v=document.getElementById('sCode').value.trim();if(!v)return;let c=v.split(/[\s–-]/)[0].toUpperCase().replace(/[^A-Z0-9]/g,'');if(SYMS&&!SYMS[c]){const st=t=>(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d');const q=st(v);const hit=Object.entries(SYMS).find(([k,x])=>st(x.n).includes(q));if(hit)c=hit[0]}chart(c);document.getElementById('sCode').blur()});
 
 
