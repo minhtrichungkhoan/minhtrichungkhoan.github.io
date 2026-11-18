@@ -638,6 +638,17 @@ small.u{font-size:.62em;font-weight:600;color:var(--muted);margin-left:.3em;lett
 .sc-t .cd{display:inline-flex;align-items:center;gap:8px;font-weight:800}.sc-t .cd .lg{width:24px;height:24px;border-radius:6px;font-size:8px}
 .sc-more{margin-top:10px;width:100%;min-height:42px;border-radius:10px;border:1px solid var(--line);background:rgba(212,174,94,.06);color:var(--gold2);font:inherit;font-weight:600;cursor:pointer}
 .sc-empty{color:var(--muted);padding:18px;text-align:center;border:1px dashed var(--line);border-radius:12px}
+
+/* thẻ kết quả: bố cục cố định */
+.qinfo{display:grid!important;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr) auto;align-items:center;gap:16px 24px}
+.qinfo .symw{grid-column:1;grid-row:1;min-width:0}.qinfo .sym{min-width:0}.qinfo .sym small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.qinfo .px{grid-column:2/4;grid-row:1;white-space:nowrap}
+.qinfo .acts{grid-column:4;grid-row:1;margin-left:0!important;justify-self:end}
+.qinfo .kv{grid-row:2;min-width:0;padding-top:14px;border-top:1px solid var(--line)}
+.qinfo .kv:nth-child(5){grid-column:3/5}
+.qinfo .empty{grid-column:1/-1}
+@media(max-width:560px){.qinfo .sym small{white-space:normal}.qinfo{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 14px}.qinfo .symw{grid-column:1/-1}.qinfo .px{grid-column:1/-1;grid-row:2}
+  .qinfo .kv{grid-row:3}.qinfo .kv:nth-child(5){grid-column:auto}.qinfo .acts{grid-column:1/-1;grid-row:4;justify-self:start}}
 </style>
 <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
 </head>
