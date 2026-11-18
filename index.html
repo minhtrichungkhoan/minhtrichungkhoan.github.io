@@ -887,7 +887,7 @@ const drawChart=()=>{const el=document.getElementById('pxChart');if(!el)return;i
   if(!lwc){lwc=LightweightCharts.createChart(el,{autoSize:true,layout:{background:{type:'solid',color:'transparent'},textColor:'#a19aa3',fontFamily:'Be Vietnam Pro'},grid:{vertLines:{color:'rgba(255,255,255,.04)'},horzLines:{color:'rgba(255,255,255,.05)'}},rightPriceScale:{borderColor:'rgba(255,255,255,.08)'},timeScale:{borderColor:'rgba(255,255,255,.08)'},localization:{priceFormatter:p=>Math.round(p).toLocaleString('vi-VN')}});
     cs=lwc.addCandlestickSeries({upColor:'#7fd1a0',downColor:'#ef8a7a',borderVisible:false,wickUpColor:'#7fd1a0',wickDownColor:'#ef8a7a'});
     vs=lwc.addHistogramSeries({priceScaleId:'',priceFormat:{type:'volume'},color:'rgba(212,174,94,.35)'});vs.priceScale().applyOptions({scaleMargins:{top:.8,bottom:0}});}
-  const b=curBars.slice(-curRange);
+  const DAYS={66:92,130:183,250:366,750:1096,1300:1827}[curRange];let b=curBars;if(DAYS&&curBars.length){const c=new Date(curBars.at(-1)[0]+'T00:00:00Z');c.setUTCDate(c.getUTCDate()-DAYS);const cs0=c.toISOString().slice(0,10);b=curBars.filter(x=>x[0]>=cs0)}
   cs.setData(b.map(x=>({time:x[0],open:x[1],high:x[2],low:x[3],close:x[4]})));
   vs.setData(b.map(x=>({time:x[0],value:x[5],color:x[4]>=x[1]?'rgba(127,209,160,.35)':'rgba(239,138,122,.35)'})));
   lwc.timeScale().fitContent()};
