@@ -299,6 +299,24 @@ export function compactBars(bars) {
   }
   return [...wk.map((w) => [w[0], w[1], w[2], w[3], w[4], w[5]]), ...recent];
 }
+
+// Lấy bù lịch sử cũ hơn mốc hiện có (thư viện thường chỉ trả ~5 năm cho 'max'): gọi lùi dần theo {from,to}
+let DEEP_LEFT = 0;
+async function deepBack(get, bars, debug, tag) {
+  const out = [...bars];
+  for (let i = 0; i < 6 && out.length; i++) {
+    const first = out[0][0];
+    const d = new Date(first + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() - 1); const to = d.toISOString().slice(0, 10);
+    if (to < '2000-01-01') break;
+    let r = [];
+    try { r = toBars(await retry(() => get({ from: '2000-01-01', to, interval: '1w' }))); }
+    catch { try { r = toBars(await retry(() => get({ from: '2000-01-01', to }))); } catch (e) { if (debug && !debug.deepErr) debug.deepErr = tag + ': ' + String(e.message || e).slice(0, 150); out.err = 1; break; } }
+    r = r.filter((b) => b[0] < first);
+    if (!r.length) break;
+    out.unshift(...r); out.sort((x, y) => (x[0] < y[0] ? -1 : 1));
+  }
+  return out;
+}
 const mergeBars = (oldB, newB) => { const m = new Map(oldB.map((b) => [b[0], b])); for (const b of newB) m.set(b[0], b); return [...m.values()].sort((x, y) => (x[0] < y[0] ? -1 : 1)); };
 
 // Danh sách mã của 3 sàn + tên + ngành
@@ -345,6 +363,7 @@ async function main() {
     for (const t of TICKERS) symbols[t] ||= { ex: 'HOSE' };
     fs.writeFileSync(path.join(root, 'symbols.json'), JSON.stringify(symbols));
     let codes = ONLY.length ? ONLY : Object.keys(symbols).sort();
+    DEEP_LEFT = MODE === 'full' || ONLY.length ? 1e9 : 600;
     debug.universe = codes.length;
 
     // 2) chỉ số thị trường
@@ -354,9 +373,10 @@ async function main() {
         const fresh = old?.bars?.length > 50;
         const raw = await retry(() => vn.index(ix).history(fresh ? '1mo' : 'max')).catch(() => retry(() => vn.index(ix).history('5y')));
         let bars = toBars(raw); if (fresh) bars = mergeBars(old.bars, bars);
+        let deep = old?.deep; if (bars.length && !deep) { bars = await deepBack((o) => vn.index(ix).history(o), bars, debug, ix); deep = bars.err ? 0 : 1; }
         bars = compactBars(bars);
         if (bars.length) {
-          fs.writeFileSync(f, JSON.stringify({ s: ix, bars }));
+          fs.writeFileSync(f, JSON.stringify({ s: ix, bars, deep }));
           const L = bars.at(-1), P = bars.at(-2) || L;
           summary.idx[ix] = { c: L[4], chp: P[4] ? (L[4] / P[4] - 1) * 100 : 0, t: L[0], spark: bars.slice(-60).map((b) => b[4]) };
         }
@@ -425,6 +445,7 @@ async function main() {
         let raw; try { raw = await retry(() => st.history(fresh ? '1mo' : 'max')); } catch { raw = await retry(() => st.history('5y')); }
         if (k < 2) debug[t + '_hist'] = clip(Array.isArray(raw) ? raw.slice(-2) : raw);
         let bars = toBars(raw); if (fresh) bars = mergeBars(old.bars, bars);
+        if (bars.length && !old.deep && (DEEP_LEFT-- > 0) && Date.now() - T0 < TIME_BUDGET_MS) { const n0 = bars.length; bars = await deepBack((o) => st.history(o), bars, debug, t); if (!bars.err) rec.deep = 1; if (k < 3) debug[t + '_deep'] = { before: n0, after: bars.length, first: bars[0]?.[0] }; }
         if (bars.length) { rec.bars = compactBars(bars); pxCount++; }
       } catch (e) { errors[t] = 'giá: ' + String(e.message || e).slice(0, 150); }
       // BCTC: mã cốt lõi mỗi ngày, các mã khác xoay vòng 7 ngày (hoặc tất cả khi --mode=full)
