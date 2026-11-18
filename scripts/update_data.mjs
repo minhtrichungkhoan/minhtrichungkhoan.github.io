@@ -469,7 +469,7 @@ async function main() {
 
   // 4) trung vị theo ngành + file tổng hợp số liệu quý
   const med = (a) => { const b = a.filter((x) => x != null && Number.isFinite(x)).sort((x, y) => x - y); if (!b.length) return null; const m = b.length >> 1; return b.length % 2 ? b[m] : (b[m - 1] + b[m]) / 2; };
-  const grp = {}, finAll = {};
+  const grp = {}, finAll = {}, rank = {};
   for (const fn of fs.readdirSync(pxDir)) {
     const d = readJ(path.join(pxDir, fn), null); if (!d || !d.s) continue;
     if (d.fin) finAll[d.s] = d.fin;
@@ -477,7 +477,17 @@ async function main() {
     const nmOf = (f) => { if (!f?.rev || !f?.np) return null; const n = f.np.slice(-4), v = f.rev.slice(-4); if (n.length < 4 || n.some((x) => x == null) || v.some((x) => x == null)) return null; const sv = v.reduce((a, b) => a + b, 0); return sv > 0 ? n.reduce((a, b) => a + b, 0) / sv : null; };
     const rr = { ...d.ratios }; if (rr.nm == null) rr.nm = nmOf(d.fin);
     for (const g of new Set([d.g || 'other', d.ind].filter(Boolean))) (grp[g] ||= []).push(rr);
+    // bảng xếp hạng trong ngành: vốn hoá hiện tại = số cp (vốn hoá cuối quý / giá cuối quý) × giá mới nhất
+    const rk = d.ind || (d.g !== 'other' ? d.g : null);
+    if (rk && d.s.length === 3) {
+      let capNow = null;
+      const m = String(rr.q || '').match(/Q(\d)\/(\d\d)/);
+      if (rr.cap && m && d.bars?.length) { const end = `20${m[2]}-${['03-31', '06-30', '09-30', '12-31'][m[1] - 1]}`; let pq = null; for (let i = d.bars.length - 1; i >= 0; i--) if (d.bars[i][0] <= end) { pq = d.bars[i][4]; break; } if (pq) capNow = rr.cap / pq * d.bars.at(-1)[4]; }
+      const r4 = (v) => (v == null || !Number.isFinite(Number(v)) ? null : Math.round(Number(v) * 1e4) / 1e4);
+      (rank[rk] ||= []).push([d.s, r4(rr.pe), r4(rr.pb), r4(rr.roe), r4(rr.nm), capNow ? Math.round(capNow / 1e9) : null]);
+    }
   }
+  fs.writeFileSync(path.join(root, 'rank.json'), JSON.stringify({ updated, cols: ['s', 'pe', 'pb', 'roe', 'nm', 'cap'], groups: rank }));
   // dòng tiền theo ngành: giá trị giao dịch (giá đóng cửa × khối lượng), biến động giá, khối ngoại ròng
   try {
     // lấy 21 phiên gần nhất: các ngày xuất hiện ở đa số mã cốt lõi (tránh lệch ngày giữa chỉ số và cổ phiếu)

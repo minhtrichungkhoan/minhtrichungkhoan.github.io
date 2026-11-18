@@ -515,7 +515,7 @@ section.band[data-n]>.wrap>*{position:relative;z-index:1}
 .sugg button:hover,.sugg button.on{background:rgba(212,174,94,.12)}
 .sugg b{font-weight:800;min-width:46px;letter-spacing:.02em}.sugg span:not(.lg){flex:1;color:var(--muted);font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sugg em{font-style:normal;font-size:11.5px;color:var(--gold2);border:1px solid rgba(212,174,94,.35);border-radius:6px;padding:1px 6px}
 .lg{position:relative;flex:none;width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#e9cd8a,#a9823a);color:#17120a;display:grid;place-items:center;font-weight:800;font-size:10.5px;line-height:1;letter-spacing:0;overflow:hidden}
-.lg img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;padding:3px}
+.lg img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;padding:3px;opacity:0;transition:opacity .2s}
 .qinfo .symw{display:flex;align-items:center;gap:14px}.qinfo .lg{width:56px;height:56px;border-radius:14px;font-size:15px}
 
 /* nhận định hôm nay */
@@ -561,6 +561,25 @@ section.band[data-n]>.wrap>*{position:relative;z-index:1}
 .ix-more{margin:12px -20px -18px;width:calc(100% + 40px);border-radius:0 0 18px 18px}
 small.u{font-size:.62em;font-weight:600;color:var(--muted);margin-left:.3em;letter-spacing:0;white-space:nowrap;display:inline!important}
 .sf-tbl small.u,.ix-sec small.u{font-size:.82em}
+
+/* xếp hạng trong ngành */
+.rk{margin-top:20px;border-radius:20px;padding:22px 24px}
+.rk-h{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.rk-h h3{font-size:18px;font-weight:700}.rk-h h3 span{color:var(--gold2)}.rk-h p{color:var(--muted);font-size:13px;margin-top:3px}
+.rk-tabs{display:flex;flex-wrap:wrap;gap:6px}.rk-tabs button{background:rgba(255,255,255,.04);border:1px solid var(--line);color:#cfc8d0;border-radius:8px;padding:6px 12px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;min-height:34px}
+.rk-tabs button.on{background:var(--gold);border-color:var(--gold);color:#17120a}
+.rk-sum{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:14px 16px;border-radius:14px;background:rgba(212,174,94,.07);border:1px solid rgba(212,174,94,.25);margin-bottom:12px}
+.rk-sum b{font-size:30px;font-weight:900;color:var(--gold2)}.rk-sum b small{font-size:16px;color:var(--muted);font-weight:700}.rk-sum span{color:#d9d2da}
+.rk-r{display:grid;grid-template-columns:38px 30px 52px minmax(0,1fr) 92px;align-items:center;gap:10px;width:100%;background:none;border:0;border-top:1px solid var(--line);padding:9px 6px;color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.rk-r:hover{background:rgba(255,255,255,.03)}.rk-r.me{background:rgba(212,174,94,.10);border-radius:10px;border-top-color:transparent}
+.rk-r i{font-style:normal;color:var(--muted);font-weight:700;font-size:13px}.rk-r.me i{color:var(--gold2)}
+.rk-r .lg{width:28px;height:28px;border-radius:8px;font-size:9px}
+.rk-r strong{font-weight:800}.rk-r em{font-style:normal;text-align:right;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rk-b{height:8px;background:rgba(255,255,255,.04);border-radius:4px;overflow:hidden}.rk-b u{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,#a9823a,#e9cd8a)}
+.rk-r.me .rk-b u{background:linear-gradient(90deg,#d4ae5e,#f5e2b0)}
+.rk-gap{text-align:center;color:var(--muted);padding:2px 0;letter-spacing:.3em}
+.rk-f{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:12.5px;margin-top:10px}
+@media(max-width:560px){.rk{padding:18px 16px}.rk-r{grid-template-columns:30px 28px 44px minmax(0,1fr) 78px;gap:8px}.rk-sum b{font-size:26px}}
 </style>
 <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
 </head>
@@ -754,6 +773,7 @@ small.u{font-size:.62em;font-weight:600;color:var(--muted);margin-left:.3em;lett
       </div>
     </div>
     <div class="qp" id="qp"></div>
+    <div class="rk card" id="rank" hidden></div>
     </div>
     <div class="rv ask">
       <p><span data-i="askA">Bạn đang quan tâm mã</span> <b id="askCode" style="color:var(--gold2)">FPT</b>?</p>
@@ -948,6 +968,30 @@ const renderRatios=(code,r,g,price)=>{r=fillPS(code,r);const ra=document.getElem
   ra.querySelectorAll('.rt-tabs button').forEach(b=>b.onclick=()=>{RT_TAB=b.dataset.t;renderRatios(code,r,g,price)});
 };
 
+
+/* bảng xếp hạng trong ngành (data/rank.json) */
+let RANK=null,RK_M='roe',RK_LAST=null;
+const RKM={roe:['ROE',3,false,v=>pctv(v).toFixed(1)+'%','cao'],nm:['Biên LN ròng',4,false,v=>pctv(v).toFixed(1)+'%','cao'],pe:['P/E',1,true,v=>v.toFixed(1)+'x','thấp'],pb:['P/B',2,true,v=>v.toFixed(2)+'x','thấp'],cap:['Vốn hoá',5,false,v=>fmtBig(v*1e9),'lớn']};
+const RK_NAME={bank:'Ngân hàng',sec:'Chứng khoán'};
+const loadRank=()=>RANK?Promise.resolve(RANK):fetch('data/rank.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>(RANK=j)).catch(()=>null);
+const renderRank=(code,key)=>{const box=document.getElementById('rank');RK_LAST=[code,key];if(!key){box.hidden=true;return}
+  loadRank().then(j=>{const rows=j&&j.groups&&j.groups[key];if(!rows||rows.length<3||window.curCode!==code){box.hidden=true;return}
+    const [lab,ix,asc,fmt,word]=RKM[RK_M];
+    const L=rows.map(r=>({s:r[0],v:r[ix]})).filter(x=>x.v!=null&&(RK_M==='pe'?x.v>0&&x.v<200:RK_M==='pb'?x.v>0:RK_M==='nm'?x.v>-1&&x.v<1.5:true)).sort((a,b)=>asc?a.v-b.v:b.v-a.v);
+    const pos=L.findIndex(x=>x.s===code);
+    const mid=L.length?L[L.length>>1].v:null;
+    const shown=L.slice(0,5).map((x,i)=>[i,x]);if(pos>=5)shown.push(null,[pos,L[pos]]);
+    const mx=Math.max(...shown.filter(Boolean).map(([,x])=>Math.abs(x.v)))||1;
+    const row=([i,x])=>`<button type="button" class="rk-r${x.s===code?' me':''}" data-s="${x.s}"><i>#${i+1}</i>${logo(x.s)}<strong>${x.s}</strong><span class="rk-b"><u style="width:${Math.max(3,Math.abs(x.v)/mx*100)}%"></u></span><em>${fmt(x.v)}</em></button>`;
+    box.innerHTML=`<div class="rk-h"><div><h3>Xếp hạng trong ngành <span>${RK_NAME[key]||key}</span></h3><p>${L.length} mã có số liệu · theo báo cáo quý gần nhất</p></div>
+      <div class="rk-tabs">${Object.entries(RKM).map(([k,v])=>`<button type="button" data-m="${k}" class="${k===RK_M?'on':''}">${v[0]}</button>`).join('')}</div></div>
+      <div class="rk-sum">${pos>=0?`<b>#${pos+1}<small>/${L.length}</small></b><span>${code} có ${lab} ${word} thứ ${pos+1} trong ngành${pos<3?' – thuộc nhóm dẫn đầu':pos>=L.length*.75?' – thuộc nhóm cuối':''}.</span>`:`<span>Chưa có số liệu ${lab} của ${code} để xếp hạng.</span>`}</div>
+      ${shown.map(x=>x?row(x):'<div class="rk-gap">···</div>').join('')}
+      <div class="rk-f"><span>Trung vị ngành: <b>${mid!=null?fmt(mid):'–'}</b></span><span>Bấm vào mã để xem chi tiết</span></div>`;
+    box.hidden=false;
+    box.querySelector('.rk-tabs').onclick=e=>{const b=e.target.closest('button');if(!b)return;RK_M=b.dataset.m;renderRank(code,key)};
+    box.querySelectorAll('.rk-r').forEach(b=>b.onclick=()=>{if(b.dataset.s===code)return;chart(b.dataset.s);document.getElementById('thi-truong').scrollIntoView({behavior:'smooth'})});
+  })};
 const chart=sym=>{const code=(sym.split(':')[1]||sym).toUpperCase();
   if(window.urlSync){try{history.replaceState(null,'',location.pathname+'?ma='+code+'#thi-truong')}catch(e){}}
   document.getElementById('askCode').textContent=code;window.curCode=code;quarter(code);
@@ -961,7 +1005,8 @@ const chart=sym=>{const code=(sym.split(':')[1]||sym).toUpperCase();
       <div class="acts"><button type="button" class="share" data-goatcounter-click="chia-se-ma" title="Chia sẻ mã ${code}" aria-label="Chia sẻ mã ${code}" onclick="shareCode('${code}',this)"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></button><a class="ext" href="${extLink(code)}" target="_blank" rel="noopener">Xem chi tiết ↗</a></div>`;
     drawChart();
     renderRatios(code,d.ratios||{},(d.ind&&SUM&&SUM.groups&&SUM.groups[d.ind])?d.ind:(d.g||'other'),L[4]);
-  }).catch(()=>{curBars=[];if(cs){cs.setData([]);vs.setData([])}document.querySelector('.mk').hidden=true;
+    renderRank(code,d.ind||(d.g&&d.g!=='other'?d.g:null));
+  }).catch(()=>{document.getElementById('rank').hidden=true;curBars=[];if(cs){cs.setData([]);vs.setData([])}document.querySelector('.mk').hidden=true;
     const msg=`Mã <b>${code}</b> chưa có trong danh sách theo dõi tự động. <a href="${extLink(code)}" target="_blank" rel="noopener">Xem ${code} trên Vietstock ↗</a> hoặc <a data-goatcounter-click="zalo" href="https://zalo.me/0833703936" target="_blank" rel="noopener">nhắn Zalo</a>.`;
     qi.innerHTML=`<div class="empty">${msg}</div>`;});
 };
@@ -979,7 +1024,7 @@ document.getElementById('quick').addEventListener('click',e=>{const b=e.target.c
 /* logo mã: thử 2 nguồn ảnh, nếu không có thì hiện chữ viết tắt trên nền vàng */
 const LOGO_SRC=[c=>`https://cdn.simplize.vn/simplizevn/logo/${c}.jpeg`,c=>`https://finance.vietstock.vn/image/${c}`];
 window.logoErr=img=>{const k=+(img.dataset.k||0)+1;if(LOGO_SRC[k]){img.dataset.k=k;img.src=LOGO_SRC[k](img.dataset.c)}else img.remove()};
-const logo=c=>`<span class="lg">${c.slice(0,3)}<img src="${LOGO_SRC[0](c)}" data-c="${c}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="logoErr(this)"></span>`;
+const logo=c=>`<span class="lg">${c.slice(0,3)}<img src="${LOGO_SRC[0](c)}" data-c="${c}" alt="" loading="lazy" referrerpolicy="no-referrer" onload="this.style.opacity=1" onerror="logoErr(this)"></span>`;
 {const inp=document.getElementById('sCode'),box=document.getElementById('sugg');let items=[],cur=-1;
  const strip=t=>(t||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d');
  const close=()=>{box.hidden=true;inp.setAttribute('aria-expanded','false');cur=-1};
