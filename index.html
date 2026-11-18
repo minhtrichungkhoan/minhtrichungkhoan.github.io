@@ -1189,7 +1189,7 @@ fetch('nhan-dinh.txt',{cache:'no-cache'}).then(r=>r.ok?r.text():'').then(t=>{
    const mb=document.getElementById('ixMore');mb.hidden=rows.length<=IXTOP;mb.innerHTML=ixAll?'Rút gọn <span>▴</span>':`Xem thêm ${rows.length-IXTOP} chỉ số <span>▾</span>`;
    document.getElementById('ixSec').innerHTML=(ixAll?rows:rows.slice(0,IXTOP)).map(r=>{const w=Math.abs(r.c||0)/mx*50;const col=(r.c||0)>=0?'#7fd1a0':'#ef8a7a';
      return`<div class="ix-r"><span>${r.n}${r.sub?`<small>${r.sub}</small>`:''}</span><div class="v">${nf(r.v)}</div><div class="ix-bar"><i style="${(r.c||0)>=0?'left:50%':'right:50%'};width:${w}%;background:${col}"></i></div><div class="p ${(r.c||0)>0?'up':(r.c||0)<0?'dn':'fl'}">${r.c==null?'–':(r.c>0?'+':'')+nf(r.c)+'%'}</div></div>`}).join('');
-   const L=IX.dates.at(-1);document.getElementById('ixPer').textContent=`% thay đổi ${ixPer==='Y'?'từ đầu năm':ixPer+' phiên'} · ${L.split('-').reverse().join('/')}`;
+   const L=IX.dates.at(-1);document.getElementById('ixPer').textContent=`% thay đổi ${ixPer==='Y'?'từ đầu năm':ixPer+' phiên'} · ${L.split('-').reverse().join('/')}`;if(rows.length&&rows.every(r=>r.c==null))document.getElementById('ixPer').textContent+=' · đang tích luỹ dữ liệu, % sẽ có từ các phiên tới';
    document.getElementById('ixBox').hidden=false};
  fetch('data/indices.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.hist)return;IX={hist:j.hist,dates:Object.keys(j.hist).sort()};if(!IX.dates.length)return;draw()}).catch(()=>{});
  document.getElementById('ixMore').onclick=()=>{ixAll=!ixAll;draw();if(!ixAll)document.getElementById('ixBox').scrollIntoView({behavior:'smooth'})};

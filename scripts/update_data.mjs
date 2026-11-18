@@ -346,6 +346,41 @@ async function universe(vn, debug) {
   return out;
 }
 
+async function fptsIndices(vn, root, errors, debug, updated) {
+  const readJ = (f, d) => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch { return d; } };
+    // 2c) chỉ số các sàn + chỉ số ngành HOSE (nguồn FPTS marketstream), lưu lịch sử để tính % thay đổi
+    try {
+      const fIdx = path.join(root, 'indices.json');
+      const ij = readJ(fIdx, {}) || {}; ij.hist ||= {};
+      const toISO = (d) => { const m = String(d || '').match(/^(\d{2})-(\d{2})-(\d{4})$/); return m ? `${m[3]}-${m[2]}-${m[1]}` : String(d || '').slice(0, 10); };
+      const got = {};
+      for (const ex of ['ho', 'ha']) {
+        try {
+          const r = await retry(async () => { const res = await fetch(`https://marketstream.fpts.com.vn/market/last_index?exchange=${ex}`, { headers: { 'user-agent': 'Mozilla/5.0', accept: 'application/json' } }); if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); });
+          const row = r?.Data?.[0]; if (!row) continue;
+          const d = toISO(row.TradingDate);
+          for (const [k, v] of Object.entries(row)) if (k !== 'TradingDate' && isNum(v)) { (ij.hist[d] ||= {})[k] = Number(v); got[k] = 1; }
+        } catch (e) { errors['fptsIdx_' + ex] = String(e.message || e).slice(0, 200); }
+      }
+      debug.fptsIdx = Object.keys(got).length;
+      // lần đầu: thử lấy lịch sử ngắn từ VietCap để có ngay % thay đổi
+      const dates0 = Object.keys(ij.hist).sort();
+      if (Object.keys(got).length) {
+        for (const k of Object.keys(got)) { if (dates0.filter((d) => ij.hist[d][k] != null).length >= 2) continue;
+          try {
+            const VI = { VNIndex: 'VNINDEX', VN30: 'VN30', VN100: 'VN100', HNXIndex: 'HNXIndex', HNX30: 'HNX30', HNXUpcomIndex: 'HNXUpcomIndex' }; if (!vn || !VI[k]) continue; const bars = toBars(await vn.index(VI[k]).history('1mo'));
+            for (const b of bars.slice(-25)) if (!ij.hist[b[0]]?.[k]) (ij.hist[b[0]] ||= {})[k] = b[4];
+          } catch {}
+        }
+      }
+      const keep = Object.keys(ij.hist).sort().slice(-400);
+      ij.hist = Object.fromEntries(keep.map((d) => [d, ij.hist[d]]));
+      ij.updated = updated;
+      if (keep.length) fs.writeFileSync(fIdx, JSON.stringify(ij));
+    } catch (e) { errors.fptsIdx = String(e.message || e).slice(0, 200); }
+
+}
+
 async function main() {
   const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'data');
   const pxDir = path.join(root, 'px');
@@ -402,36 +437,7 @@ async function main() {
       }
     } catch (e) { errors.marketForeign = String(e.message || e).slice(0, 200); }
 
-    // 2c) chỉ số các sàn + chỉ số ngành HOSE (nguồn FPTS marketstream), lưu lịch sử để tính % thay đổi
-    try {
-      const fIdx = path.join(root, 'indices.json');
-      const ij = readJ(fIdx, {}) || {}; ij.hist ||= {};
-      const toISO = (d) => { const m = String(d || '').match(/^(\d{2})-(\d{2})-(\d{4})$/); return m ? `${m[3]}-${m[2]}-${m[1]}` : String(d || '').slice(0, 10); };
-      const got = {};
-      for (const ex of ['ho', 'ha']) {
-        try {
-          const r = await retry(async () => { const res = await fetch(`https://marketstream.fpts.com.vn/market/last_index?exchange=${ex}`, { headers: { 'user-agent': 'Mozilla/5.0', accept: 'application/json' } }); if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); });
-          const row = r?.Data?.[0]; if (!row) continue;
-          const d = toISO(row.TradingDate);
-          for (const [k, v] of Object.entries(row)) if (k !== 'TradingDate' && isNum(v)) { (ij.hist[d] ||= {})[k] = Number(v); got[k] = 1; }
-        } catch (e) { errors['fptsIdx_' + ex] = String(e.message || e).slice(0, 200); }
-      }
-      debug.fptsIdx = Object.keys(got).length;
-      // lần đầu: thử lấy lịch sử ngắn từ VietCap để có ngay % thay đổi
-      const dates0 = Object.keys(ij.hist).sort();
-      if (dates0.length < 2 && Object.keys(got).length) {
-        for (const k of Object.keys(got)) {
-          try {
-            const bars = toBars(await vn.index(k.toUpperCase().replace('HNXUPCOMINDEX', 'UPCOMINDEX')).history('1mo'));
-            for (const b of bars.slice(-25)) if (!ij.hist[b[0]]?.[k]) (ij.hist[b[0]] ||= {})[k] = b[4];
-          } catch {}
-        }
-      }
-      const keep = Object.keys(ij.hist).sort().slice(-400);
-      ij.hist = Object.fromEntries(keep.map((d) => [d, ij.hist[d]]));
-      ij.updated = updated;
-      if (keep.length) fs.writeFileSync(fIdx, JSON.stringify(ij));
-    } catch (e) { errors.fptsIdx = String(e.message || e).slice(0, 200); }
+    await fptsIndices(vn, root, errors, debug, updated);
 
     // 3) giá + BCTC
     const day = Math.floor(Date.now() / 86400e3);
@@ -468,6 +474,8 @@ async function main() {
     });
     debug.pxCount = pxCount; debug.finCount = finCount;
   }
+
+  if (MODE === 'none') await fptsIndices(null, root, errors, debug, updated);
 
   // 3b) lưu trữ nhận định hằng ngày (đọc nhan-dinh.txt ở thư mục gốc)
   try {
