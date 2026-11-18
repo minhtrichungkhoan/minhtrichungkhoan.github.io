@@ -474,7 +474,9 @@ async function main() {
     const d = readJ(path.join(pxDir, fn), null); if (!d || !d.s) continue;
     if (d.fin) finAll[d.s] = d.fin;
     if (!d.ratios) continue;
-    for (const g of new Set([d.g || 'other', d.ind].filter(Boolean))) (grp[g] ||= []).push(d.ratios);
+    const nmOf = (f) => { if (!f?.rev || !f?.np) return null; const n = f.np.slice(-4), v = f.rev.slice(-4); if (n.length < 4 || n.some((x) => x == null) || v.some((x) => x == null)) return null; const sv = v.reduce((a, b) => a + b, 0); return sv > 0 ? n.reduce((a, b) => a + b, 0) / sv : null; };
+    const rr = { ...d.ratios }; if (rr.nm == null) rr.nm = nmOf(d.fin);
+    for (const g of new Set([d.g || 'other', d.ind].filter(Boolean))) (grp[g] ||= []).push(rr);
   }
   // dòng tiền theo ngành: giá trị giao dịch (giá đóng cửa × khối lượng), biến động giá, khối ngoại ròng
   try {
@@ -528,7 +530,7 @@ async function main() {
       debug.sectors = out.length;
     }
   } catch (e) { debug.sectorErr = String(e.stack || e).slice(0, 500); }
-  summary.groups = Object.fromEntries(Object.entries(grp).filter(([, rs]) => rs.length >= 3).map(([g, rs]) => [g, { n: rs.length, pe: med(rs.map((r) => r.pe).filter((v) => v > 0 && v < 200)), pb: med(rs.map((r) => r.pb).filter((v) => v > 0)), roe: med(rs.map((r) => r.roe)) }]));
+  summary.groups = Object.fromEntries(Object.entries(grp).filter(([, rs]) => rs.length >= 3).map(([g, rs]) => [g, { n: rs.length, pe: med(rs.map((r) => r.pe).filter((v) => v > 0 && v < 200)), pb: med(rs.map((r) => r.pb).filter((v) => v > 0)), roe: med(rs.map((r) => r.roe)), nm: med(rs.map((r) => r.nm).filter((v) => v != null && v > -1 && v < 1.5)) }]));
   summary.updated = updated;
   fs.writeFileSync(path.join(root, 'summary.json'), JSON.stringify(summary));
   fs.writeFileSync(path.join(root, 'fin.json'), JSON.stringify({ updated, tickers: Object.fromEntries(TICKERS.filter((t) => finAll[t]).map((t) => [t, finAll[t]])), errors: Object.fromEntries(Object.entries(errors).slice(0, 300)) }));

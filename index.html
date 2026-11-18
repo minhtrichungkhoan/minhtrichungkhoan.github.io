@@ -934,7 +934,7 @@ const renderRatios=(code,r,g,price)=>{r=fillPS(code,r);const ra=document.getElem
    eff:()=>`<div class="rt-big">
       <div class="rt-t"><small>ROE</small><b>${r.roe!=null?pctv(r.roe).toFixed(1)+'%':'–'}</b>${cmpB(r.roe,G.roe,'TB ngành',false)}${sparkG(h.roe)}</div>
       <div class="rt-t"><small>ROA</small><b>${r.roa!=null?pctv(r.roa).toFixed(1)+'%':'–'}</b>${sparkG(h.roa)}</div>
-      <div class="rt-t"><small>Biên lợi nhuận ròng</small><b>${r.nm!=null?pctv(r.nm).toFixed(1)+'%':'–'}</b>${sparkG(h.nm)}</div>
+      <div class="rt-t"><small>Biên lợi nhuận ròng</small><b>${r.nm!=null?pctv(r.nm).toFixed(1)+'%':'–'}</b>${cmpB(r.nm,G.nm,'TB ngành',false)}${sparkG(h.nm)}</div>
       <div class="rt-t"><small>Biên lợi nhuận gộp</small><b>${r.gm!=null?pctv(r.gm).toFixed(1)+'%':'–'}</b>${sparkG(h.gm)}</div></div>
       ${h.roe?`<div class="rt-h">ROE theo quý<span>đường gạch: trung bình</span></div>${qBars(h.roe.map(pctv),h.q,v=>v.toFixed(1)+'%')}`:''}`,
    hlt:()=>{const f=(typeof FIN!=='undefined'&&FIN[code])||null;return `<div class="rt-big">
