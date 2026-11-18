@@ -12,6 +12,16 @@
 # ---
 
 Ngày: 18/11/2026
+Tiêu đề: Bộ lọc xu hướng 18/11: MSB, VPI đạt tín hiệu kỹ thuật, BAF theo dõi
+Nội dung: Quét 111 cổ phiếu thanh khoản cao (giá trị giao dịch bình quân từ 10 tỷ/phiên) theo bộ lọc xu hướng của Minh Trí.
+- Đạt tín hiệu kỹ thuật tích cực: MSB, VPI. Ở mức theo dõi: BAF
+- MSB có nền tảng cân bằng nhất; VPI và BAF đang được định giá cao hơn nhiều so với ngành
+- Danh sách theo dõi, chờ thêm xác nhận: POW, KDH, VJC, TCH, NLG
+- VN-Index nằm dưới cả MA20, MA50 và MA200, thị trường chung còn yếu
+Mã: MSB, VPI, BAF
+Zalo: Nhận báo cáo đầy đủ qua Zalo (vùng giá, cắt lỗ, mục tiêu)
+---
+Ngày: 18/11/2026
 Tiêu đề: KDH +3% · Đi ngược thị trường, khối ngoại mua ròng mạnh nhất
 Nội dung: KDH đi ngược xu hướng suy yếu chung của thị trường và là cổ phiếu được khối ngoại mua ròng nhiều nhất phiên hôm nay với 41,6 tỷ đồng, chiếm 13% khối lượng giao dịch của mã.
 Mã: KDH

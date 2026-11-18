@@ -669,6 +669,7 @@ section.sec-col{padding-bottom:24px!important}section.sec-col .sec-h{margin-bott
 .tn-x{margin-left:auto;font-style:normal;color:var(--gold2);font-size:12.5px;font-weight:600}
 .tn-g{align-items:start}
 .f-src{color:#8d8690;font-size:13px}
+.tn-z{display:flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:8px 14px;border-radius:10px;background:var(--gold);color:#17120a;font-weight:700;font-size:13.5px;text-decoration:none;text-align:center}.tn-z:hover{filter:brightness(1.08)}
 </style>
 <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
 </head>
@@ -1265,14 +1266,14 @@ fetch('tin-noi-bat.txt',{cache:'no-cache'}).then(r=>r.ok?r.text():'').then(t=>{
     for(let line of blk.split(/\r?\n/)){const raw=line;line=line.trim();if(!line||line.startsWith('#'))continue;
       const m=line.match(/^([^:]{2,12}):\s*(.*)$/);const k=m?nk(m[1]):'';
       if(k==='ngay'){it.d=m[2].trim();last=null}else if(k==='tieu de'){it.t=m[2].trim();last=null}else if(k==='noi dung'){if(m[2].trim())it.body.push(m[2].trim());last='b'}
-      else if(k==='ma'||k==='ma chu y'){it.codes=m[2].toUpperCase().split(/[^A-Z0-9]+/).filter(c=>c.length===3);last=null}else if(k==='nguon'){it.src=m[2].trim();last=null}
+      else if(k==='ma'||k==='ma chu y'){it.codes=m[2].toUpperCase().split(/[^A-Z0-9]+/).filter(c=>c.length===3);last=null}else if(k==='nguon'){it.src=m[2].trim();last=null}else if(k==='zalo'){it.zalo=m[2].trim()||'Nhắn Zalo để nhận thêm';last=null}
       else if(/^[-•*+]\s*/.test(line)){it.li.push(line.replace(/^[-•*+]\s*/,''))}else if(last==='b'||!m)it.body.push(line)}
     const dm=String(it.d||'').match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);if(!dm||!(it.t||it.body.length||it.li.length))continue;
     const ts=Date.UTC(+dm[3],+dm[2]-1,+dm[1]);const age=Math.round((today-ts)/864e5);if(age<0||age>3)continue;it.ts=ts;it.age=age;items.push(it)}
   if(!items.length)return;items.sort((a,b)=>b.ts-a.ts);
   const srcH=s=>/^https?:\/\//.test(s)?`<a href="${esc(s)}" target="_blank" rel="noopener">${esc(s.replace(/^https?:\/\/(www\.)?/,'').split('/')[0])} ↗</a>`:esc(s);
   document.getElementById('tnList').innerHTML=items.map(it=>`<article class="tn${it.age===0?' new':''}" tabindex="0" role="button" aria-expanded="false"><div class="tn-m">${it.age===0?'<b>MỚI</b>':''}<span>${esc(it.d)}</span><em class="tn-x">Xem chi tiết ▾</em></div>${it.t?`<h3>${esc(it.t).replace(/([+\-−]\s?\d+(?:[.,]\d+)?%)/g,m=>`<span class="${/^[-−]/.test(m)?'dn':'up'}">${m}</span>`)}</h3>`:''}<div class="tn-b">${it.body.length?`<p>${it.body.map(esc).join('<br>')}</p>`:''}${it.li.length?`<ul>${it.li.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}</div>
-    ${(it.codes&&it.codes.length)||it.src?`<div class="tn-f">${(it.codes||[]).map(c=>`<a class="c" href="?ma=${c}#thi-truong" data-s="${c}">${logo(c)}${c}</a>`).join('')}${it.src?`<p class="src">Nguồn: ${srcH(it.src)}</p>`:''}</div>`:''}</article>`).join('');
+    ${it.zalo?`<a class="tn-z" data-goatcounter-click="zalo-tin-noi-bat" href="https://zalo.me/0833703936" target="_blank" rel="noopener">${esc(it.zalo)} ↗</a>`:''}${(it.codes&&it.codes.length)||it.src?`<div class="tn-f">${(it.codes||[]).map(c=>`<a class="c" href="?ma=${c}#thi-truong" data-s="${c}">${logo(c)}${c}</a>`).join('')}${it.src?`<p class="src">Nguồn: ${srcH(it.src)}</p>`:''}</div>`:''}</article>`).join('');
   document.getElementById('tnCnt').textContent=`${items.length} tin trong 4 ngày gần nhất`;
   document.getElementById('tnList').onclick=e=>{const a=e.target.closest('a.c[data-s]');if(!a){const c=e.target.closest('.tn');if(c&&!e.target.closest('a')){const o=c.classList.toggle('open');c.setAttribute('aria-expanded',o);c.querySelector('.tn-x').textContent=o?'Thu gọn ▴':'Xem chi tiết ▾'}return}e.preventDefault();chart(a.dataset.s);document.getElementById('thi-truong').scrollIntoView({behavior:'smooth'})};
   document.getElementById('tnList').onkeydown=e=>{if((e.key==='Enter'||e.key===' ')&&e.target.classList.contains('tn')){e.preventDefault();e.target.click()}};
