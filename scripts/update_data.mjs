@@ -212,35 +212,6 @@ export function build(incRaw, bsRaw) {
 
 
 
-// ---------- dòng tiền kinh doanh + sự kiện (cổ tức, phát hành, đại hội) ----------
-const CFO = ['luu chuyen tien thuan tu hoat dong kinh doanh', 'luu chuyen tien thuan tu cac hoat dong kinh doanh', 'luu chuyen tien thuan tu hdkd', 'net cash flows from operating activities', 'net cash from operating activities', 'net cash flow from operating', 'operating activities'];
-export function cfoFor(cfRaw, qLabels) {
-  const map = toPeriodMap(cfRaw); if (!map.size || !qLabels?.length) return null;
-  const ids = qLabels.map((q) => { const m = String(q).match(/Q(\d)\/(\d\d)/); return m ? `20${m[2]}-${m[1]}` : null; });
-  const key = findKey([...map.values()], CFO, ['truoc', 'before', 'thay doi', 'change', 'dau tu', 'tai chinh', 'investing', 'financing']);
-  if (!key) return null;
-  const v = pick(map, key, ids.map((i) => i || 'x'));
-  return v.some((x) => x != null) ? v : null;
-}
-export function eventsOf(raw) {
-  const recs = findRecords(raw) || (Array.isArray(raw) ? raw : []);
-  if (!recs.length) return [];
-  const ks = Object.keys(recs[0]); const nk = Object.fromEntries(ks.map((k) => [norm(k), k]));
-  const sq = (x) => norm(x).replace(/\s+/g, '').toLowerCase();
-  const g = (...names) => names.map((n) => nk[n]).find(Boolean) || names.map((n) => ks.find((k) => sq(k) === sq(n))).find(Boolean) || ks.find((k) => names.some((n) => sq(k).includes(sq(n))));
-  const exK = g('ex right date', 'exrightdate', 'ex date', 'ngay gdkhq');
-  const recK = g('record date', 'recorddate', 'ngay dkcc');
-  const issK = g('issue date', 'public date', 'payout date', 'pay date', 'display date1', 'display date');
-  const titK = g('event title', 'event name', 'title', 'name', 'event list name', 'ten su kien');
-  const typK = g('event code', 'event list code', 'type', 'kind', 'category');
-  const ratK = g('ratio', 'exercise ratio', 'ty le');
-  const valK = g('value', 'cash value', 'dividend', 'gia tri');
-  const d10 = (v) => { if (v == null || v === '') return null; if (typeof v === 'number') return new Date(v > 1e12 ? v : v * 1000).toISOString().slice(0, 10); const s = String(v); return /^\d{4}-\d{2}-\d{2}/.test(s) ? s.slice(0, 10) : (s.match(/^(\d{2})\/(\d{2})\/(\d{4})/) ? s.replace(/^(\d{2})\/(\d{2})\/(\d{4}).*/, '$3-$2-$1') : null); };
-  const cut = new Date(Date.now() - 4 * 365 * 86400e3).toISOString().slice(0, 10);
-  return recs.map((r) => ({ d: d10(r[exK]) || d10(r[recK]) || d10(r[issK]), r: d10(r[recK]), t: titK ? String(r[titK] || '').slice(0, 140) : '', k: typK ? String(r[typK] || '').slice(0, 40) : '', ra: ratK && isNum(r[ratK]) ? Number(r[ratK]) : null, v: valK && isNum(r[valK]) ? Number(r[valK]) : null }))
-    .filter((e) => e.d && e.d >= cut && (e.t || e.k)).sort((a, b) => (a.d < b.d ? 1 : -1)).slice(0, 40);
-}
-
 // ---------- giá & chỉ số định giá ----------
 export function toBars(raw) {
   const recs = findRecords(raw) || [];
@@ -306,18 +277,6 @@ const T0 = Date.now();
 const clip = (o) => { try { const s = JSON.stringify(o, null, 1); return s.length > 4000 ? s.slice(0, 4000) + '…' : JSON.parse(s); } catch { return String(o).slice(0, 2000); } };
 
 
-// Tạm tắt lấy sự kiện và dòng tiền HĐKD: nguồn VietCap phản hồi rất chậm, làm lần chạy hằng ngày kéo dài. Đổi thành true để bật lại.
-const EXTRA_ON = false;
-// gọi 1 lần, có giới hạn thời gian; tự tắt nếu nguồn lỗi liên tục (tránh kéo dài cả lần chạy)
-const BREAK = {};
-async function once(tag, fn, ms = 12000) {
-  const b = (BREAK[tag] ||= { fail: 0, off: false, ok: 0 });
-  if (b.off) throw new Error(tag + ' tạm tắt do lỗi liên tục');
-  try {
-    const r = await Promise.race([fn(), new Promise((_, rej) => setTimeout(() => rej(new Error('quá thời gian')), ms))]);
-    b.fail = 0; b.ok++; await sleep(CALL_GAP); return r;
-  } catch (e) { b.fail++; if (b.fail >= 25) b.off = true; if (/rate|429/i.test(String(e.message))) await sleep(5000); throw e; }
-}
 async function retry(fn, tries = 3) {
   let err;
   for (let i = 0; i < tries; i++) {
@@ -498,11 +457,8 @@ async function main() {
           const inc = await retry(() => st.financials('income', { period: 'quarter' }));
           const bs = await retry(() => st.financials('balance', { period: 'quarter' }));
           rec.fin = build(inc, bs); finCount++;
-          if (EXTRA_ON) try { const cf = await once('cashflow', () => st.financials('cashflow', { period: 'quarter' })); const c = cfoFor(cf, rec.fin.q); if (c) rec.fin.cfo = c; if (k < 2) debug[t + '_cfo'] = c; } catch (e) { if (k < 2) debug[t + '_cfoErr'] = String(e.message || e).slice(0, 150); }
         } catch (e) { errors[t] = ((errors[t] || '') + ' bctc: ' + String(e.message || e)).slice(0, 300); }
         try { const rat = await retry(() => st.financials('ratios', { period: 'quarter' })); rec.ratios = ratiosLatest(rat); } catch {}
-        const doEv = ONLY.length || core.has(t) || (k % 14) === (day % 14) || !old.ev;
-        if (doEv && EXTRA_ON) try { const evRaw = await once('events', () => st.events()); if (k < 2 || t === 'FPT') debug[t + '_events'] = clip(findRecords(evRaw)?.slice(0, 3) || evRaw); const ev = eventsOf(evRaw); rec.ev = ev; rec.evAt = updated; } catch (e) { if (k < 2) debug[t + '_evErr'] = String(e.message || e).slice(0, 150); }
       }
       if (rec.bars?.length) {
         fs.writeFileSync(f, JSON.stringify(rec));
@@ -608,7 +564,6 @@ async function main() {
   summary.updated = updated;
   fs.writeFileSync(path.join(root, 'summary.json'), JSON.stringify(summary));
   fs.writeFileSync(path.join(root, 'fin.json'), JSON.stringify({ updated, tickers: Object.fromEntries(TICKERS.filter((t) => finAll[t]).map((t) => [t, finAll[t]])), errors: Object.fromEntries(Object.entries(errors).slice(0, 300)) }));
-  debug.breakers = BREAK;
   debug.errorCount = Object.keys(errors).length; debug.errorsSample = Object.fromEntries(Object.entries(errors).slice(0, 40));
   debug.minutes = Math.round((Date.now() - T0) / 60000);
   fs.writeFileSync(path.join(root, 'debug.json'), JSON.stringify(debug, null, 1));

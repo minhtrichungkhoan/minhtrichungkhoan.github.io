@@ -68,7 +68,7 @@ jobs:
           for(const s of ["FPT","VCB"]){const x=J("data/px/"+s+".json");console.log(s,"last",JSON.stringify(x?.bars?.at(-1)),"ratios",JSON.stringify({...(x?.ratios||{}),hist:undefined}),"fin",JSON.stringify(x?.fin).slice(0,400))}
           const sm=J("data/summary.json");console.log("groups:",JSON.stringify(Object.fromEntries(Object.entries(sm?.groups||{}).slice(0,40).map(([k,v])=>[k,{n:v.n,roe:v.roe&&+v.roe.toFixed(3),nm:v.nm&&+v.nm.toFixed(3)}]))));
           const rk=J("data/rank.json");console.log("rank groups:",rk?Object.keys(rk.groups).length:null,"Ngan hang:",JSON.stringify((rk?.groups?.["Ngân hàng"]||[]).slice(0,4)));
-          {const x=J("data/px/FPT.json");console.log("FPT cfo",JSON.stringify(x?.fin?.cfo),"ev",JSON.stringify((x?.ev||[]).slice(0,4)),"peHist",x?.ratios?.hist?.pe?.length);console.log("events sample",JSON.stringify(d.FPT_events||d.A32_events||d.AAA_events).slice(0,600));console.log("breakers",JSON.stringify(d.breakers),"minutes",d.minutes);console.log("nhanDinh",d.nhanDinh,d.nhanDinhErr||"",JSON.stringify(J("data/nhan-dinh-cu.json")?.items?.slice(0,2)))}
+          console.log("nhanDinh",d.nhanDinh,d.nhanDinhErr||"",d.minutes,"phut");
           const ij=J("data/indices.json");console.log("indices dates:",ij?Object.keys(ij.hist||{}).length:null);
           '
       - name: Dong goi trang

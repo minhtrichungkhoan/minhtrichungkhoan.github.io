@@ -604,17 +604,6 @@ small.u{font-size:.62em;font-weight:600;color:var(--muted);margin-left:.3em;lett
 .nd-it summary{list-style:none;cursor:pointer;padding:10px 14px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:baseline}.nd-it summary::-webkit-details-marker{display:none}
 .nd-it summary small{display:inline!important;color:var(--muted);white-space:nowrap;font-size:13px}.nd-it summary b{font-weight:600;font-size:14.5px}
 .nd-it ul{margin:0 14px 12px 32px;color:#cfc8d0;font-size:14px;line-height:1.6}.nd-it .cs{margin:0 14px 12px;color:var(--muted);font-size:13px}
-/* sự kiện */
-.ev{margin-top:20px;border-radius:20px;padding:22px 24px}.ev h3{font-size:18px;font-weight:700;margin-bottom:4px}.ev>p{color:var(--muted);font-size:13px;margin-bottom:12px}
-.ev-r{display:grid;grid-template-columns:96px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
-.ev-r time{font-weight:700;font-variant-numeric:tabular-nums;color:#cfc8d0;font-size:14px}.ev-r span{font-size:14.5px;line-height:1.45}.ev-r span small{display:block;color:var(--muted);font-size:12.5px}
-.ev-r em{font-style:normal;font-size:11.5px;font-weight:700;border-radius:6px;padding:3px 8px;white-space:nowrap;background:rgba(255,255,255,.05);color:var(--muted)}
-.ev-r.up time{color:var(--gold2)}.ev-r.up em{background:rgba(127,209,160,.14);color:#7fd1a0}
-@media(max-width:560px){.ev{padding:18px 16px}.ev-r{grid-template-columns:82px minmax(0,1fr)}.ev-r em{grid-column:2;justify-self:start}}
-/* dòng tiền HĐKD */
-.cfo{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}.cfo h4{font-size:14.5px;font-weight:700;margin-bottom:6px}.cfo p{color:#cfc8d0;font-size:14px;line-height:1.55;margin-bottom:10px}.cfo p b{color:var(--ink)}
-.cfo-q{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}.cfo-q div{border:1px solid var(--line);border-radius:10px;padding:8px 10px}.cfo-q small{display:block;color:var(--muted);font-size:12px}.cfo-q b{font-size:15px;font-variant-numeric:tabular-nums}
-@media(max-width:560px){.cfo-q{grid-template-columns:repeat(3,minmax(0,1fr))}}
 /* bộ lọc */
 .sc{margin-top:28px;border-radius:20px;padding:22px 24px}
 .sc-h{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:14px}.sc-h h3{font-size:19px;font-weight:800}.sc-h p{color:var(--muted);font-size:13px;margin-top:3px}
@@ -844,7 +833,6 @@ small.u{font-size:.62em;font-weight:600;color:var(--muted);margin-left:.3em;lett
       </div>
     </div>
     <div class="qp" id="qp"></div>
-    <div class="ev card" id="evBox" hidden></div>
     <div class="rk card" id="rank" hidden></div>
     </div>
     <div class="rv ask">
@@ -957,11 +945,6 @@ const pct=(a,b)=>(a==null||b==null||b===0)?null:(a-b)/Math.abs(b)*100;
 const chg=v=>v==null?'<em class="nt">–</em>':`<em class="${v>=0?'up':'dn'}">${v>=0?'▲':'▼'} ${Math.abs(v).toFixed(1)}%</em>`;
 const bars=(arr,qs)=>{const m=Math.max(...arr.map(Math.abs));return arr.map((v,i)=>`<div class="br"><span>${qs[i]}</span><i class="${v<0?'neg':''}" style="width:${m?Math.abs(v)/m*100:0}%"></i><span>${fmt(v)}</span></div>`).join('')};
 const isEN=()=>document.documentElement.lang==='en';
-const cfoBlock=d=>{if(!d.cfo||!d.cfo.some(v=>v!=null))return'';const c4=d.cfo.slice(-4),n4=(d.np||[]).slice(-4);const ok=c4.length===4&&c4.every(v=>v!=null)&&n4.every(v=>v!=null);
-  const sc=ok?c4.reduce((a,b)=>a+b,0):null,sn=ok?n4.reduce((a,b)=>a+b,0):null;const ratio=ok&&sn>0?sc/sn:null;
-  const verdict=ratio==null?'':ratio>=1?'Lợi nhuận được <b>chuyển thành tiền mặt tốt</b>.':ratio>=0.5?'Chỉ <b>một phần</b> lợi nhuận đã thu về bằng tiền.':sc<0?'<b>Dòng tiền âm</b> trong khi doanh nghiệp vẫn báo lãi, cần xem kỹ khoản phải thu và hàng tồn kho.':'Phần lớn lợi nhuận <b>chưa thu về bằng tiền</b>.';
-  return `<div class="cfo"><h4>Dòng tiền thuần từ hoạt động kinh doanh</h4>${ok?`<p>4 quý gần nhất: <b>${fmt(sc)} tỷ</b>${ratio!=null?`, bằng <b>${(ratio*100).toFixed(0)}%</b> lợi nhuận sau thuế cùng kỳ`:''}. ${verdict}</p>`:''}
-    <div class="cfo-q">${d.q.map((q,i)=>`<div><small>${q}</small><b class="${d.cfo[i]==null?'':d.cfo[i]>=0?'up':'dn'}">${d.cfo[i]==null?'–':fmt(d.cfo[i])}</b></div>`).join('')}</div></div>`};
 const quarter=code=>{
   const box=document.getElementById('qp'),d=FIN[code],en=isEN();
   if(!d){box.hidden=true;box.innerHTML=`<div class="qempty">${en?`No quarterly data for <b>${code}</b> yet.`:`Chưa có số liệu quý cho mã <b>${code}</b>.`} <a data-goatcounter-click="zalo" href="https://zalo.me/0833703936" target="_blank" rel="noopener">${en?'Message on Zalo to get it':'Nhắn Zalo để nhận số liệu'}</a></div>`;return}
@@ -974,7 +957,6 @@ const quarter=code=>{
     <div class="kpi"><small>${en?'Liabilities / Equity':'Nợ phải trả / VCSH'}</small><b>${d.eq?(d.liab/d.eq).toFixed(2)+'x':'–'}</b><em class="nt">${en?'times':'lần'}</em></div>
   </div>
   <div class="bars"><div><h4>${L} – ${en?'last 5 quarters':'5 quý gần nhất'}</h4>${bars(d.rev,d.q)}</div><div><h4>${en?'Net profit – last 5 quarters':'Lợi nhuận sau thuế – 5 quý gần nhất'}</h4>${bars(d.np,d.q)}</div></div>
-  ${cfoBlock(d)}
   ${d.src?`<p class="src" style="margin-top:12px">${en?'Source':'Nguồn'}: ${d.src}${FIN_UPDATED?` · ${en?'updated':'cập nhật'} ${FIN_UPDATED}`:''}</p>`:''}`;
 };
 
@@ -1113,8 +1095,7 @@ const chart=sym=>{const code=(sym.split(':')[1]||sym).toUpperCase();
     drawChart();
     renderRatios(code,d.ratios||{},(d.ind&&SUM&&SUM.groups&&SUM.groups[d.ind])?d.ind:(d.g||'other'),L[4]);
     renderRank(code,d.ind||(d.g&&d.g!=='other'?d.g:null));
-    renderEv(code,d.ev,d.evAt);
-  }).catch(()=>{document.getElementById('rank').hidden=true;document.getElementById('evBox').hidden=true;curBars=[];if(cs){cs.setData([]);vs.setData([])}document.querySelector('.mk').hidden=true;
+  }).catch(()=>{document.getElementById('rank').hidden=true;curBars=[];if(cs){cs.setData([]);vs.setData([])}document.querySelector('.mk').hidden=true;
     const msg=`Mã <b>${code}</b> chưa có trong danh sách theo dõi tự động. <a href="${extLink(code)}" target="_blank" rel="noopener">Xem ${code} trên Vietstock ↗</a> hoặc <a data-goatcounter-click="zalo" href="https://zalo.me/0833703936" target="_blank" rel="noopener">nhắn Zalo</a>.`;
     qi.innerHTML=`<div class="empty">${msg}</div>`;});
 };
@@ -1202,15 +1183,6 @@ window.wlToggle=(c,btn)=>{let a=wlGet();if(a.includes(c))a=a.filter(x=>x!==c);el
 document.getElementById('wl').addEventListener('click',e=>{const a=e.target.closest('a[data-s]');if(!a)return;e.preventDefault();chart(a.dataset.s)});
 wlRender();
 
-/* ===== cổ tức & sự kiện ===== */
-const renderEv=(code,ev,at)=>{const box=document.getElementById('evBox');if(!ev||!ev.length){box.hidden=true;return}
-  const today=new Date(Date.now()+7*3600e3).toISOString().slice(0,10);const fd=d=>d?d.split('-').reverse().join('/'):'';
-  const kind=e=>{const t=(e.t+' '+e.k).toLowerCase();return /cổ tức|co tuc|div/.test(t)?'Cổ tức':/đại hội|dai hoi|agm|egm|họp/.test(t)?'Đại hội':/phát hành|phat hanh|iss|thưởng|quyền mua|right/.test(t)?'Phát hành':/niêm yết|listing|giao dịch bổ sung/.test(t)?'Niêm yết':'Sự kiện'};
-  const up=ev.filter(e=>e.d>=today).sort((a,b)=>a.d<b.d?-1:1),past=ev.filter(e=>e.d<today).slice(0,6);
-  const row=(e,isUp)=>`<div class="ev-r${isUp?' up':''}"><time>${fd(e.d)}</time><span>${(e.t||e.k).replace(/[<>]/g,'')}${e.r&&e.r!==e.d?`<small>Ngày đăng ký cuối cùng ${fd(e.r)}</small>`:''}</span><em>${isUp?'Sắp tới · ':''}${kind(e)}</em></div>`;
-  const divs=ev.filter(e=>kind(e)==='Cổ tức');
-  box.innerHTML=`<h3>Cổ tức & sự kiện của ${code}</h3><p>Ngày hiển thị là ngày giao dịch không hưởng quyền (nếu có)${divs.length?` · ${divs.length} lần chia cổ tức trong 4 năm gần nhất`:''}</p>${up.map(e=>row(e,true)).join('')}${past.map(e=>row(e,false)).join('')}`;
-  box.hidden=false};
 
 /* ===== nhận định các ngày trước ===== */
 Promise.all([fetch('data/nhan-dinh-cu.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null),fetch('nhan-dinh.txt',{cache:'no-cache'}).then(r=>r.ok?r.text():'').catch(()=>'')]).then(([j,t])=>{const mm=String(t).match(/^\s*Ng[àa]y\s*:\s*(.+)$/mi);const cur=mm?mm[1].trim():'';
