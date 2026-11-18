@@ -1,0 +1,12 @@
+# ===== THÔNG TIN NỔI BẬT =====
+# Mỗi tin cách nhau bằng một dòng chỉ có 3 dấu gạch ngang: ---
+# Tin tự ẩn sau 4 ngày tính từ "Ngày" (hôm đăng là ngày 1).
+# Dòng bắt đầu bằng dấu # là ghi chú, không hiện lên trang.
+#
+# Mẫu một tin:
+# Ngày: 18/11/2026
+# Tiêu đề: Một câu ngắn gọn
+# Nội dung: Viết 1–3 câu. Có thể xuống dòng, mỗi dòng bắt đầu bằng dấu - sẽ thành một ý.
+# Mã: VCB, FPT
+# Nguồn: Tên nguồn hoặc đường link
+# ---

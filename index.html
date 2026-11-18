@@ -638,6 +638,24 @@ small.u{font-size:.62em;font-weight:600;color:var(--muted);margin-left:.3em;lett
 .qinfo .empty{grid-column:1/-1}
 @media(max-width:560px){.qinfo .sym small{white-space:normal}.qinfo{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 14px}.qinfo .symw{grid-column:1/-1}.qinfo .px{grid-column:1/-1;grid-row:2}
   .qinfo .kv{grid-row:3}.qinfo .kv:nth-child(5){grid-column:auto}.qinfo .acts{grid-column:1/-1;grid-row:4;justify-self:start}}
+
+/* thông tin nổi bật */
+.tn-wrap{padding:18px 0 8px}
+.tn-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:12px}
+.tn-h h2{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:800}.tn-h h2 i{width:10px;height:10px;border-radius:2px;background:var(--gold);transform:rotate(45deg)}
+.tn-h span{color:var(--muted);font-size:13px}.tn-h h2{white-space:nowrap}@media(max-width:560px){.tn-h span{display:none}}
+.tn-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.tn{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.tn.new{border-color:rgba(212,174,94,.45);background:linear-gradient(135deg,rgba(212,174,94,.08),var(--card) 60%)}
+.tn-m{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12.5px;font-weight:600}
+.tn-m b{background:var(--gold);color:#17120a;border-radius:6px;padding:1px 7px;font-size:11px;letter-spacing:.04em}
+.tn h3{font-size:16.5px;font-weight:800;line-height:1.4}
+.tn p{color:#d4cdd5;font-size:14px;line-height:1.6}
+.tn ul{margin:0;padding-left:18px;color:#d4cdd5;font-size:14px;line-height:1.6}
+.tn-f{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:auto;padding-top:4px}
+.tn-f a.c{display:inline-flex;align-items:center;gap:6px;padding:3px 9px 3px 3px;border-radius:8px;border:1px solid rgba(212,174,94,.3);color:var(--ink);font-weight:700;font-size:13px;text-decoration:none}
+.tn-f a.c .lg{width:22px;height:22px;border-radius:6px;font-size:7.5px}
+.tn-f .src{margin:0 0 0 auto;font-size:12px;color:var(--muted)}.tn-f .src a{color:var(--gold2)}
 </style>
 <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
 </head>
@@ -717,6 +735,13 @@ small.u{font-size:.62em;font-weight:600;color:var(--muted);margin-left:.3em;lett
       <div class="nd-old" id="ndOld" hidden><button type="button" class="nd-ob" id="ndOb">Các nhận định trước <span>▾</span></button><div class="nd-ol" id="ndOl" hidden></div></div>
       <p class="nd-d">Quan điểm cá nhân của Lê Minh Trí, chỉ để tham khảo, không phải khuyến nghị mua/bán chứng khoán.</p>
     </div>
+  </div>
+</section>
+
+<section class="tn-wrap" id="tin-noi-bat" hidden>
+  <div class="wrap">
+    <div class="tn-h"><h2><i></i>Thông tin nổi bật</h2><span id="tnCnt"></span></div>
+    <div class="tn-g" id="tnList"></div>
   </div>
 </section>
 
@@ -1218,6 +1243,27 @@ Promise.all([fetch('data/nhan-dinh-cu.json',{cache:'no-cache'}).then(r=>r.ok?r.j
  IN('scF').addEventListener('input',()=>{limit=20;clearTimeout(window.__sc);window.__sc=setTimeout(run,250)});
  IN('scClr').onclick=()=>{clear();IN('scInd').value='';run()};
  const io=new IntersectionObserver(es=>{if(es.some(x=>x.isIntersecting)){io.disconnect();ensure().then(run)}},{rootMargin:'400px'});io.observe(IN('screener'));}
+
+/* thông tin nổi bật: đọc tin-noi-bat.txt, tự ẩn tin quá 4 ngày */
+fetch('tin-noi-bat.txt',{cache:'no-cache'}).then(r=>r.ok?r.text():'').then(t=>{
+  const esc=x=>String(x).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+  const nk=x=>x.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d').trim();
+  const now=new Date(Date.now()+7*3600e3);const today=Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate());
+  const items=[];for(const blk of t.split(/^\s*---\s*$/m)){const it={li:[],body:[]};let last=null;
+    for(let line of blk.split(/\r?\n/)){const raw=line;line=line.trim();if(!line||line.startsWith('#'))continue;
+      const m=line.match(/^([^:]{2,12}):\s*(.*)$/);const k=m?nk(m[1]):'';
+      if(k==='ngay'){it.d=m[2].trim();last=null}else if(k==='tieu de'){it.t=m[2].trim();last=null}else if(k==='noi dung'){if(m[2].trim())it.body.push(m[2].trim());last='b'}
+      else if(k==='ma'||k==='ma chu y'){it.codes=m[2].toUpperCase().split(/[^A-Z0-9]+/).filter(c=>c.length===3);last=null}else if(k==='nguon'){it.src=m[2].trim();last=null}
+      else if(/^[-•*+]\s*/.test(line)){it.li.push(line.replace(/^[-•*+]\s*/,''))}else if(last==='b'||!m)it.body.push(line)}
+    const dm=String(it.d||'').match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);if(!dm||!(it.t||it.body.length||it.li.length))continue;
+    const ts=Date.UTC(+dm[3],+dm[2]-1,+dm[1]);const age=Math.round((today-ts)/864e5);if(age<0||age>3)continue;it.ts=ts;it.age=age;items.push(it)}
+  if(!items.length)return;items.sort((a,b)=>b.ts-a.ts);
+  const srcH=s=>/^https?:\/\//.test(s)?`<a href="${esc(s)}" target="_blank" rel="noopener">${esc(s.replace(/^https?:\/\/(www\.)?/,'').split('/')[0])} ↗</a>`:esc(s);
+  document.getElementById('tnList').innerHTML=items.map(it=>`<article class="tn${it.age===0?' new':''}"><div class="tn-m">${it.age===0?'<b>MỚI</b>':''}<span>${esc(it.d)}</span></div>${it.t?`<h3>${esc(it.t)}</h3>`:''}${it.body.length?`<p>${it.body.map(esc).join('<br>')}</p>`:''}${it.li.length?`<ul>${it.li.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}
+    ${(it.codes&&it.codes.length)||it.src?`<div class="tn-f">${(it.codes||[]).map(c=>`<a class="c" href="?ma=${c}#thi-truong" data-s="${c}">${logo(c)}${c}</a>`).join('')}${it.src?`<p class="src">Nguồn: ${srcH(it.src)}</p>`:''}</div>`:''}</article>`).join('');
+  document.getElementById('tnCnt').textContent=`${items.length} tin trong 4 ngày gần nhất`;
+  document.getElementById('tnList').onclick=e=>{const a=e.target.closest('a.c[data-s]');if(!a)return;e.preventDefault();chart(a.dataset.s);document.getElementById('thi-truong').scrollIntoView({behavior:'smooth'})};
+  document.getElementById('tin-noi-bat').hidden=false}).catch(()=>{});
 document.getElementById('sForm').addEventListener('submit',e=>{e.preventDefault();let v=document.getElementById('sCode').value.trim();if(!v)return;let c=v.split(/[\s–-]/)[0].toUpperCase().replace(/[^A-Z0-9]/g,'');if(SYMS&&!SYMS[c]){const st=t=>(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d');const q=st(v);const hit=Object.entries(SYMS).find(([k,x])=>st(x.n).includes(q));if(hit)c=hit[0]}chart(c);document.getElementById('sCode').blur()});
 
 
