@@ -904,7 +904,17 @@ const pctv=v=>v==null?null:(Math.abs(v)<=1.5?v*100:v);
 const sparkG=a=>{const b=(a||[]).map(v=>v==null?null:v);const f=b.filter(v=>v!=null);if(f.length<2)return'';const mn=Math.min(...f),mx=Math.max(...f),W=200,H=34;const pts=b.map((v,i)=>v==null?null:`${(i/(b.length-1)*W).toFixed(1)},${(H-3-(mx>mn?(v-mn)/(mx-mn):.5)*(H-6)).toFixed(1)}`).filter(Boolean).join(' ');return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="#d4ae5e" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>`};
 const qBars=(vals,qs,fmt)=>{const v=(vals||[]).map(x=>x==null?0:x);const n=v.length;if(!n)return'';const take=Math.min(n,8);const vv=v.slice(-take),qq=(qs||[]).slice(-take);const mx=Math.max(...vv.map(Math.abs))||1;const av=avgOf(vv);
   return `<div class="qbars">${vv.map((x,i)=>`<div class="qb" title="${qq[i]}: ${fmt(x)}"><i style="height:${Math.max(2,Math.abs(x)/mx*76).toFixed(1)}px"></i><span>${qq[i]||''}</span></div>`).join('')}${av!=null?`<div class="avg" style="bottom:${(18+av/mx*76).toFixed(1)}px"><em>TB ${take} quý: ${fmt(av)}</em></div>`:''}</div>`};
-const renderRatios=(code,r,g,price)=>{const ra=document.getElementById('ratios');const h=r.hist||{};const G=(SUM&&SUM.groups&&SUM.groups[g])||{};
+/* EPS, BVPS, vốn hoá hiện tại: suy ra từ vốn hoá cuối quý, giá cuối quý và BCTC */
+const qEnd=q=>{const m=String(q||'').match(/Q(\d)\/(\d\d)/);return m?`20${m[2]}-${['03-31','06-30','09-30','12-31'][m[1]-1]}`:null};
+const pxAt=d=>{if(!d)return null;for(let i=curBars.length-1;i>=0;i--)if(curBars[i][0]<=d)return curBars[i][4];return null};
+const fillPS=(code,r)=>{r={...r};const pq=pxAt(qEnd(r.q));const f=FIN[code];
+  const cap0=r._cap0!=null?r._cap0:r.cap;r._cap0=cap0;const sh=cap0&&pq?cap0/pq:null;
+  if(r.eps==null){const np=f&&f.np&&f.np.slice(-4);if(sh&&np&&np.length===4&&np.every(v=>v!=null))r.eps=np.reduce((a,b)=>a+b,0)*1e9/sh;else if(pq&&r.pe>0)r.eps=pq/r.pe}
+  if(r.bvps==null){if(sh&&f&&f.eq)r.bvps=f.eq*1e9/sh;else if(pq&&r.pb>0)r.bvps=pq/r.pb}
+  const L=curBars.at(-1);if(sh&&L)r.cap=sh*L[4];
+  const h=r.hist||{};if(!h.eps&&h.pe&&h.q){const e=h.q.map((q,i)=>{const p=pxAt(qEnd(q)),pe=h.pe[i];return p&&pe>0?p/pe:null});if(e.some(v=>v!=null))r.hist={...h,eps:e}}
+  return r};
+const renderRatios=(code,r,g,price)=>{r=fillPS(code,r);const ra=document.getElementById('ratios');const h=r.hist||{};const G=(SUM&&SUM.groups&&SUM.groups[g])||{};
   const mk=document.querySelector('.mk');if(!Object.keys(r).some(k=>RL[k]&&r[k]!=null)){ra.parentElement.hidden=true;mk.classList.add('solo');return}ra.parentElement.hidden=false;mk.classList.remove('solo');
   const peAvg=avgOf(h.pe),pbAvg=avgOf(h.pb),roeAvg=avgOf(h.roe);
   const ins=[];
