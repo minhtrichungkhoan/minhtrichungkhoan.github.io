@@ -51,6 +51,22 @@ jobs:
         with:
           path: data
           key: data-${{ github.run_id }}
+      - name: Kiem tra so lieu
+        continue-on-error: true
+        run: |
+          node -e '
+          const fs=require("fs");const J=f=>{try{return JSON.parse(fs.readFileSync(f,"utf8"))}catch{return null}};
+          const d=J("data/debug.json")||{};const e=d.errors||{};
+          console.log("debug keys:",Object.keys(d).join(","));
+          console.log("deepErr:",d.deepErr,"| fptsIdx:",d.fptsIdx,"| pxCount:",d.pxCount,"| finCount:",d.finCount);
+          for(const k of Object.keys(d).filter(k=>/_deep$/.test(k)))console.log(k,JSON.stringify(d[k]));
+          const ev=Object.entries(e);console.log("so loi:",ev.length);const g={};for(const[,v] of ev){const t=String(v).slice(0,60);g[t]=(g[t]||0)+1}
+          console.log(JSON.stringify(Object.entries(g).sort((a,b)=>b[1]-a[1]).slice(0,12),null,1));
+          let n=0,deep=0,old=0;for(const f of fs.readdirSync("data/px")){const x=J("data/px/"+f);if(!x?.bars?.length)continue;n++;if(x.deep)deep++;if(x.bars[0][0]<"2021-01-01")old++}
+          console.log("px:",n,"deep:",deep,"co du lieu truoc 2021:",old);
+          for(const s of ["FPT","VNM","VCB","HPG","VNINDEX"]){const x=J("data/px/"+s+".json");console.log(s,x?.bars?.length,x?.bars?.[0]?.[0],x?.deep)}
+          const ij=J("data/indices.json");console.log("indices dates:",ij?Object.keys(ij.hist||{}).length:null);
+          '
       - name: Dong goi trang
         run: |
           mkdir -p _site
