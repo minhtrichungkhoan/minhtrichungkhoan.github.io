@@ -537,7 +537,7 @@ section.band[data-n]>.wrap>*{position:relative;z-index:1}
 .nd-d{color:#7d7680;font-size:12.5px;margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
 @media(max-width:640px){.nd{padding:20px 18px}}
 /* chia sẻ mã + miễn trừ */
-.qinfo .share{background:none;border:1px solid rgba(212,174,94,.45);color:var(--gold2);border-radius:10px;padding:8px 14px;font:inherit;font-weight:600;font-size:14px;cursor:pointer;min-height:40px}
+.qinfo .share{display:grid;place-items:center;width:40px;height:40px;padding:0;background:none;border:1px solid rgba(212,174,94,.45);color:var(--gold2);border-radius:50%;cursor:pointer}.qinfo .share svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}.qinfo .share .ok{font-size:17px;color:#7fd1a0}
 .qinfo .share:hover{background:rgba(212,174,94,.1)}.qinfo .acts{margin-left:auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}.qinfo .acts .ext{margin-left:0}
 @media(max-width:760px){.qinfo .acts{margin-left:0}}
 .disc-b{margin-top:14px;padding:12px 16px;border-left:3px solid var(--gold);background:rgba(255,255,255,.03);border-radius:0 10px 10px 0;color:#9d96a0;font-size:13.5px;line-height:1.6}.disc-b b{color:var(--gold2)}
@@ -944,7 +944,7 @@ const chart=sym=>{const code=(sym.split(':')[1]||sym).toUpperCase();
     const hi=Math.max(...y.map(b=>b[2])),lo=Math.min(...y.map(b=>b[3])),chp=P?(L[4]/P[4]-1)*100:0;
     qi.innerHTML=`<div class="symw">${logo(code)}<div class="sym">${code}<small>${d.n?d.n+' · ':''}${d.ex||''} · ${L[0]}</small></div></div><div class="px">${fmtP(L[4])}${pctTxt(chp)}</div>
       <div class="kv"><small>Khối lượng</small><b>${fmtP(L[5])}</b></div><div class="kv"><small>Cao nhất 52 tuần</small><b>${fmtP(hi)}</b></div><div class="kv"><small>Thấp nhất 52 tuần</small><b>${fmtP(lo)}</b></div>
-      <div class="acts"><button type="button" class="share" data-goatcounter-click="chia-se-ma" onclick="shareCode('${code}',this)">Chia sẻ mã ${code}</button><a class="ext" href="${extLink(code)}" target="_blank" rel="noopener">Xem chi tiết ↗</a></div>`;
+      <div class="acts"><button type="button" class="share" data-goatcounter-click="chia-se-ma" title="Chia sẻ mã ${code}" aria-label="Chia sẻ mã ${code}" onclick="shareCode('${code}',this)"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></button><a class="ext" href="${extLink(code)}" target="_blank" rel="noopener">Xem chi tiết ↗</a></div>`;
     drawChart();
     renderRatios(code,d.ratios||{},(d.ind&&SUM&&SUM.groups&&SUM.groups[d.ind])?d.ind:(d.g||'other'),L[4]);
   }).catch(()=>{curBars=[];if(cs){cs.setData([]);vs.setData([])}document.querySelector('.mk').hidden=true;
@@ -955,7 +955,7 @@ const ma0=((new URLSearchParams(location.search).get('ma')||'').toUpperCase().re
 chart(ma0.length===3?ma0:'FPT');window.urlSync=true;
 if(ma0.length===3){const go=()=>document.getElementById('thi-truong').scrollIntoView({block:'start'});setTimeout(go,300);addEventListener('load',()=>setTimeout(go,200))}
 window.shareCode=(c,btn)=>{const url=location.origin+location.pathname+'?ma='+c;const t=`Tra cứu ${c}: đồ thị giá, định giá, kết quả quý – Lê Minh Trí`;
-  const done=m=>{const o=btn.textContent;btn.textContent=m;setTimeout(()=>btn.textContent=o,2200)};
+  const done=m=>{const o=btn.innerHTML;btn.innerHTML='<b class="ok">✓</b>';btn.title=m;setTimeout(()=>{btn.innerHTML=o;btn.title='Chia sẻ mã '+c},2200)};
   if(navigator.share){navigator.share({title:t,url}).catch(()=>{});return}
   (navigator.clipboard?navigator.clipboard.writeText(url):Promise.reject()).then(()=>done('Đã chép link ✓')).catch(()=>{prompt('Chép link này:',url)})};
 const quick=[["FPT","HOSE"],["VCB","HOSE"],["HPG","HOSE"],["MWG","HOSE"],["SSI","HOSE"],["FTS","HOSE"],["SHS","HNX"]];
