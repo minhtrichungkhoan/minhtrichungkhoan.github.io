@@ -1,0 +1,14 @@
+# ===== NHẬN ĐỊNH HÔM NAY =====
+# Cách sửa: bấm biểu tượng cây bút (Edit) trên GitHub, sửa các dòng bên dưới, rồi bấm "Commit changes".
+# Dòng bắt đầu bằng dấu # là ghi chú, KHÔNG hiện lên trang.
+# Nếu để trống "Tiêu đề" và không có dòng gạch đầu dòng nào, khung nhận định sẽ tự ẩn.
+#
+# Ngày: ghi ngày nhận định
+# Tiêu đề: một câu tóm tắt thị trường
+# Mỗi ý viết trên 1 dòng, bắt đầu bằng dấu gạch ngang (-)
+# Mã chú ý: các mã cách nhau bằng dấu phẩy (người xem bấm vào là mở ngay mã đó)
+
+Ngày: 18/11/2026
+Tiêu đề: 
+- 
+Mã chú ý: 
