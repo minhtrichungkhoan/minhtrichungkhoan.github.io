@@ -305,6 +305,17 @@ const WORKERS = 3, CALL_GAP = 350, TIME_BUDGET_MS = 4.5 * 3600e3, ROTATE_DAYS = 
 const T0 = Date.now();
 const clip = (o) => { try { const s = JSON.stringify(o, null, 1); return s.length > 4000 ? s.slice(0, 4000) + '…' : JSON.parse(s); } catch { return String(o).slice(0, 2000); } };
 
+
+// gọi 1 lần, có giới hạn thời gian; tự tắt nếu nguồn lỗi liên tục (tránh kéo dài cả lần chạy)
+const BREAK = {};
+async function once(tag, fn, ms = 12000) {
+  const b = (BREAK[tag] ||= { fail: 0, off: false, ok: 0 });
+  if (b.off) throw new Error(tag + ' tạm tắt do lỗi liên tục');
+  try {
+    const r = await Promise.race([fn(), new Promise((_, rej) => setTimeout(() => rej(new Error('quá thời gian')), ms))]);
+    b.fail = 0; b.ok++; await sleep(CALL_GAP); return r;
+  } catch (e) { b.fail++; if (b.fail >= 25) b.off = true; if (/rate|429/i.test(String(e.message))) await sleep(5000); throw e; }
+}
 async function retry(fn, tries = 3) {
   let err;
   for (let i = 0; i < tries; i++) {
@@ -485,10 +496,11 @@ async function main() {
           const inc = await retry(() => st.financials('income', { period: 'quarter' }));
           const bs = await retry(() => st.financials('balance', { period: 'quarter' }));
           rec.fin = build(inc, bs); finCount++;
-          try { const cf = await retry(() => st.financials('cashflow', { period: 'quarter' })); const c = cfoFor(cf, rec.fin.q); if (c) rec.fin.cfo = c; if (k < 2) debug[t + '_cfo'] = c; } catch (e) { if (k < 2) debug[t + '_cfoErr'] = String(e.message || e).slice(0, 150); }
+          try { const cf = await once('cashflow', () => st.financials('cashflow', { period: 'quarter' })); const c = cfoFor(cf, rec.fin.q); if (c) rec.fin.cfo = c; if (k < 2) debug[t + '_cfo'] = c; } catch (e) { if (k < 2) debug[t + '_cfoErr'] = String(e.message || e).slice(0, 150); }
         } catch (e) { errors[t] = ((errors[t] || '') + ' bctc: ' + String(e.message || e)).slice(0, 300); }
         try { const rat = await retry(() => st.financials('ratios', { period: 'quarter' })); rec.ratios = ratiosLatest(rat); } catch {}
-        try { const evRaw = await retry(() => st.events()); if (k < 2 || t === 'FPT') debug[t + '_events'] = clip(findRecords(evRaw)?.slice(0, 3) || evRaw); const ev = eventsOf(evRaw); rec.ev = ev; rec.evAt = updated; } catch (e) { if (k < 2) debug[t + '_evErr'] = String(e.message || e).slice(0, 150); }
+        const doEv = MODE === 'full' || ONLY.length || core.has(t) || (k % 14) === (day % 14) || !old.ev;
+        if (doEv) try { const evRaw = await once('events', () => st.events()); if (k < 2 || t === 'FPT') debug[t + '_events'] = clip(findRecords(evRaw)?.slice(0, 3) || evRaw); const ev = eventsOf(evRaw); rec.ev = ev; rec.evAt = updated; } catch (e) { if (k < 2) debug[t + '_evErr'] = String(e.message || e).slice(0, 150); }
       }
       if (rec.bars?.length) {
         fs.writeFileSync(f, JSON.stringify(rec));
@@ -594,6 +606,7 @@ async function main() {
   summary.updated = updated;
   fs.writeFileSync(path.join(root, 'summary.json'), JSON.stringify(summary));
   fs.writeFileSync(path.join(root, 'fin.json'), JSON.stringify({ updated, tickers: Object.fromEntries(TICKERS.filter((t) => finAll[t]).map((t) => [t, finAll[t]])), errors: Object.fromEntries(Object.entries(errors).slice(0, 300)) }));
+  debug.breakers = BREAK;
   debug.errorCount = Object.keys(errors).length; debug.errorsSample = Object.fromEntries(Object.entries(errors).slice(0, 40));
   debug.minutes = Math.round((Date.now() - T0) / 60000);
   fs.writeFileSync(path.join(root, 'debug.json'), JSON.stringify(debug, null, 1));
