@@ -211,6 +211,36 @@ export function build(incRaw, bsRaw) {
 }
 
 
+
+// ---------- dòng tiền kinh doanh + sự kiện (cổ tức, phát hành, đại hội) ----------
+const CFO = ['luu chuyen tien thuan tu hoat dong kinh doanh', 'luu chuyen tien thuan tu cac hoat dong kinh doanh', 'luu chuyen tien thuan tu hdkd', 'net cash flows from operating activities', 'net cash from operating activities', 'net cash flow from operating', 'operating activities'];
+export function cfoFor(cfRaw, qLabels) {
+  const map = toPeriodMap(cfRaw); if (!map.size || !qLabels?.length) return null;
+  const ids = qLabels.map((q) => { const m = String(q).match(/Q(\d)\/(\d\d)/); return m ? `20${m[2]}-${m[1]}` : null; });
+  const key = findKey([...map.values()], CFO, ['truoc', 'before', 'thay doi', 'change', 'dau tu', 'tai chinh', 'investing', 'financing']);
+  if (!key) return null;
+  const v = pick(map, key, ids.map((i) => i || 'x'));
+  return v.some((x) => x != null) ? v : null;
+}
+export function eventsOf(raw) {
+  const recs = findRecords(raw) || (Array.isArray(raw) ? raw : []);
+  if (!recs.length) return [];
+  const ks = Object.keys(recs[0]); const nk = Object.fromEntries(ks.map((k) => [norm(k), k]));
+  const sq = (x) => norm(x).replace(/\s+/g, '').toLowerCase();
+  const g = (...names) => names.map((n) => nk[n]).find(Boolean) || names.map((n) => ks.find((k) => sq(k) === sq(n))).find(Boolean) || ks.find((k) => names.some((n) => sq(k).includes(sq(n))));
+  const exK = g('ex right date', 'exrightdate', 'ex date', 'ngay gdkhq');
+  const recK = g('record date', 'recorddate', 'ngay dkcc');
+  const issK = g('issue date', 'public date', 'payout date', 'pay date', 'display date1', 'display date');
+  const titK = g('event title', 'event name', 'title', 'name', 'event list name', 'ten su kien');
+  const typK = g('event code', 'event list code', 'type', 'kind', 'category');
+  const ratK = g('ratio', 'exercise ratio', 'ty le');
+  const valK = g('value', 'cash value', 'dividend', 'gia tri');
+  const d10 = (v) => { if (v == null || v === '') return null; if (typeof v === 'number') return new Date(v > 1e12 ? v : v * 1000).toISOString().slice(0, 10); const s = String(v); return /^\d{4}-\d{2}-\d{2}/.test(s) ? s.slice(0, 10) : (s.match(/^(\d{2})\/(\d{2})\/(\d{4})/) ? s.replace(/^(\d{2})\/(\d{2})\/(\d{4}).*/, '$3-$2-$1') : null); };
+  const cut = new Date(Date.now() - 4 * 365 * 86400e3).toISOString().slice(0, 10);
+  return recs.map((r) => ({ d: d10(r[exK]) || d10(r[recK]) || d10(r[issK]), r: d10(r[recK]), t: titK ? String(r[titK] || '').slice(0, 140) : '', k: typK ? String(r[typK] || '').slice(0, 40) : '', ra: ratK && isNum(r[ratK]) ? Number(r[ratK]) : null, v: valK && isNum(r[valK]) ? Number(r[valK]) : null }))
+    .filter((e) => e.d && e.d >= cut && (e.t || e.k)).sort((a, b) => (a.d < b.d ? 1 : -1)).slice(0, 40);
+}
+
 // ---------- giá & chỉ số định giá ----------
 export function toBars(raw) {
   const recs = findRecords(raw) || [];
@@ -251,7 +281,7 @@ export function ratiosLatest(raw) {
   const keys = Object.keys(row).map((k) => [k, norm(k)]);
   const out = { q: label };
   if (map.size) {
-    const ids = [...map.keys()].sort((a, b) => { const [ya, qa] = a.split('-').map(Number), [yb, qb] = b.split('-').map(Number); return ya - yb || qa - qb; }).slice(-12);
+    const ids = [...map.keys()].sort((a, b) => { const [ya, qa] = a.split('-').map(Number), [yb, qb] = b.split('-').map(Number); return ya - yb || qa - qb; }).slice(-20);
     const hist = { q: ids.map((i) => { const [y, q] = i.split('-'); return `Q${q}/${y.slice(2)}`; }) };
     for (const name of ['pe', 'pb', 'roe', 'roa', 'nm', 'gm', 'de', 'eps']) {
       const vals = ids.map((i) => { const r = map.get(i); const k = pickKey(r, RATIO_KEYS[name]); return k && isNum(r[k]) ? Number(r[k]) : null; });
@@ -455,8 +485,10 @@ async function main() {
           const inc = await retry(() => st.financials('income', { period: 'quarter' }));
           const bs = await retry(() => st.financials('balance', { period: 'quarter' }));
           rec.fin = build(inc, bs); finCount++;
+          try { const cf = await retry(() => st.financials('cashflow', { period: 'quarter' })); const c = cfoFor(cf, rec.fin.q); if (c) rec.fin.cfo = c; if (k < 2) debug[t + '_cfo'] = c; } catch (e) { if (k < 2) debug[t + '_cfoErr'] = String(e.message || e).slice(0, 150); }
         } catch (e) { errors[t] = ((errors[t] || '') + ' bctc: ' + String(e.message || e)).slice(0, 300); }
         try { const rat = await retry(() => st.financials('ratios', { period: 'quarter' })); rec.ratios = ratiosLatest(rat); } catch {}
+        try { const evRaw = await retry(() => st.events()); if (k < 2 || t === 'FPT') debug[t + '_events'] = clip(findRecords(evRaw)?.slice(0, 3) || evRaw); const ev = eventsOf(evRaw); rec.ev = ev; rec.evAt = updated; } catch (e) { if (k < 2) debug[t + '_evErr'] = String(e.message || e).slice(0, 150); }
       }
       if (rec.bars?.length) {
         fs.writeFileSync(f, JSON.stringify(rec));
@@ -466,6 +498,24 @@ async function main() {
     });
     debug.pxCount = pxCount; debug.finCount = finCount;
   }
+
+  // 3b) lưu trữ nhận định hằng ngày (đọc nhan-dinh.txt ở thư mục gốc)
+  try {
+    const txt = fs.readFileSync(path.join(root, '..', 'nhan-dinh.txt'), 'utf8');
+    let date = '', title = '', codes = [], li = [];
+    for (let line of txt.split(/\r?\n/)) { line = line.trim(); if (!line || line.startsWith('#')) continue;
+      const m = line.match(/^([^:]{2,12}):\s*(.*)$/); const key = m ? norm(m[1]) : '';
+      if (key === 'ngay') date = m[2].trim(); else if (key === 'tieu de') title = m[2].trim(); else if (key === 'ma chu y') codes = m[2].toUpperCase().split(/[^A-Z0-9]+/).filter((c) => c.length === 3);
+      else { const x = line.replace(/^[-•*+]\s*/, ''); if (x) li.push(x); } }
+    if (title || li.length) {
+      const fA = path.join(root, 'nhan-dinh-cu.json'); const A = readJ(fA, { items: [] }) || { items: [] }; A.items ||= [];
+      const key = date || updated.slice(0, 10);
+      A.items = A.items.filter((x) => x.d !== key); A.items.unshift({ d: key, t: title, li, codes, at: updated });
+      const dk = (s) => { const m = String(s).match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/); return m ? `${m[3]}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}` : String(s); };
+      A.items.sort((a, b) => (dk(a.d) < dk(b.d) ? 1 : -1)); A.items = A.items.slice(0, 200);
+      fs.writeFileSync(fA, JSON.stringify(A)); debug.nhanDinh = A.items.length;
+    }
+  } catch (e) { debug.nhanDinhErr = String(e.message || e).slice(0, 150); }
 
   // 4) trung vị theo ngành + file tổng hợp số liệu quý
   const med = (a) => { const b = a.filter((x) => x != null && Number.isFinite(x)).sort((x, y) => x - y); if (!b.length) return null; const m = b.length >> 1; return b.length % 2 ? b[m] : (b[m - 1] + b[m]) / 2; };
