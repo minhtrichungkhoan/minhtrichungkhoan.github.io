@@ -559,6 +559,8 @@ section.band[data-n]>.wrap>*{position:relative;z-index:1}
 @media(max-width:900px){.ix-main{grid-template-columns:repeat(2,minmax(0,1fr))}.ix-main .ix-t:first-child{grid-column:1/-1}}
 @media(max-width:560px){.ix-r{grid-template-columns:minmax(0,1fr) 64px;gap:4px 10px}.ix-r .v{display:none}.ix-r .ix-bar{grid-column:1/-1;grid-row:2}.ix-t b{font-size:19px}}
 .ix-more{margin:12px -20px -18px;width:calc(100% + 40px);border-radius:0 0 18px 18px}
+small.u{font-size:.62em;font-weight:600;color:var(--muted);margin-left:.3em;letter-spacing:0;white-space:nowrap;display:inline!important}
+.sf-tbl small.u,.ix-sec small.u{font-size:.82em}
 </style>
 <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
 </head>
@@ -867,7 +869,7 @@ const quarter=code=>{
 /* ===== dữ liệu giá tự lưu (data/px, data/summary.json) ===== */
 const fmtP=v=>v==null?'–':Math.round(v).toLocaleString('vi-VN');
 const fmtI=v=>v==null?'–':v.toLocaleString('vi-VN',{maximumFractionDigits:2});
-const fmtBig=v=>{if(v==null)return'–';const a=Math.abs(v);return a>=1e12?(v/1e12).toLocaleString('vi-VN',{maximumFractionDigits:1})+' nghìn tỷ':a>=1e9?(v/1e9).toLocaleString('vi-VN',{maximumFractionDigits:1})+' tỷ':a>=1e6?(v/1e6).toLocaleString('vi-VN',{maximumFractionDigits:1})+' tr':fmtP(v)};
+const fmtBig=v=>{if(v==null)return'–';const a=Math.abs(v);return a>=1e12?(v/1e12).toLocaleString('vi-VN',{maximumFractionDigits:1})+'<small class="u">nghìn tỷ</small>':a>=1e9?(v/1e9).toLocaleString('vi-VN',{maximumFractionDigits:1})+'<small class="u">tỷ</small>':a>=1e6?(v/1e6).toLocaleString('vi-VN',{maximumFractionDigits:1})+'<small class="u">triệu</small>':fmtP(v)};
 const pctTxt=v=>v==null?'':`<em class="${v>=0?'up':'dn'}">${v>=0?'▲':'▼'} ${Math.abs(v).toFixed(2)}%</em>`;
 const extLink=c=>`https://finance.vietstock.vn/${c}-.htm`;
 let SUM=null,lwc=null,cs=null,vs=null,curBars=[],curRange=250;
@@ -1082,7 +1084,7 @@ if('IntersectionObserver' in window){
 
 /* ===== dòng tiền ngành ===== */
 {let SF=null,sk='v',per=1,showAll=false;const TOP=6;const perTxt=()=>per==='Y'?'từ đầu năm':per+' phiên';
- const fT=v=>v==null?'–':(Math.abs(v)>=1000?(v/1000).toLocaleString('vi-VN',{maximumFractionDigits:1})+' nghìn tỷ':v.toLocaleString('vi-VN',{maximumFractionDigits:0})+' tỷ');
+ const fT=v=>v==null?'–':(Math.abs(v)>=1000?(v/1000).toLocaleString('vi-VN',{maximumFractionDigits:1})+'<small class="u">nghìn tỷ</small>':v.toLocaleString('vi-VN',{maximumFractionDigits:0})+'<small class="u">tỷ</small>');
  const pc=v=>v==null?'<span class="nt">–</span>':`<span class="${v>=0?'up':'dn'}">${v>=0?'+':''}${v.toFixed(2)}%</span>`;
  const fv=v=>v==null||!SF.hasForeign?'<span class="nt">–</span>':`<span class="${v>=0?'up':'dn'}">${v>=0?'+':''}${Math.abs(v)>=1?v.toLocaleString('vi-VN',{maximumFractionDigits:0}):v.toFixed(1)} tỷ</span>`;
  const ck=x=>x['c'+per],fk=x=>x['f'+per];
@@ -1102,11 +1104,11 @@ if('IntersectionObserver' in window){
  fetch('data/sectors.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.sectors||!j.sectors.length)return;SF=j;
    document.getElementById('dong-tien').hidden=false;
    const M=j.mkt;
-   const chips=()=>{const fvv=v=>v==null?'–':`<span class="${v>=0?'up':'dn'}">${v>=0?'+':''}${Math.abs(v)>=1?v.toLocaleString('vi-VN',{maximumFractionDigits:0}):v.toFixed(1)} tỷ</span>`;
+   const chips=()=>{const fvv=v=>v==null?'–':`<span class="${v>=0?'up':'dn'}">${v>=0?'+':''}${Math.abs(v)>=1?v.toLocaleString('vi-VN',{maximumFractionDigits:0}):v.toFixed(1)}<small class="u">tỷ</small></span>`;
      const up=j.sectors.filter(x=>(x.ratio||0)>=1.2).length;
      const note=(M&&M.from&&M.from.slice(5)>'01-05')?` (từ ${M.from.slice(8,10)}/${M.from.slice(5,7)})`:'';
      const fb=M&&M.spark?`<span class="fbars">${(()=>{const mx=Math.max(...M.spark.map(Math.abs))||1;return M.spark.map(v=>`<i class="${v>=0?'p':'n'}" style="height:${Math.max(2,Math.abs(v)/mx*22)}px"></i>`).join('')})()}</span>`:'';
-     document.getElementById('sfChips').innerHTML=`<div class="sf-chip card"><small>Giá trị giao dịch · ${j.date}</small><b>${fT(j.total)}</b></div>`
+     document.getElementById('sfChips').innerHTML=`<div class="sf-chip card"><small>Giá trị giao dịch · ${String(j.date).split('-').reverse().join('/')}</small><b>${fT(j.total)}</b></div>`
       +(M?`<div class="sf-chip card"><small>Khối ngoại ròng ${per==='Y'?'1 phiên':perTxt()} · toàn thị trường</small><b>${fvv(M['f'+(per==='Y'?1:per)])}</b>${fb}</div><div class="sf-chip card"><small>Khối ngoại lũy kế từ đầu năm${note}</small><b>${fvv(M.fY)}</b></div>`:'')
       +`<div class="sf-chip card"><small>Ngành dòng tiền tăng mạnh</small><b>${up}/${j.sectors.length}</b></div>`;};
    chips();
