@@ -10,3 +10,33 @@
 # Mã: VCB, FPT
 # Nguồn: Tên nguồn hoặc đường link
 # ---
+
+Ngày: 18/11/2026
+Tiêu đề: KDH +3% · Đi ngược thị trường, khối ngoại mua ròng mạnh nhất
+Nội dung: KDH đi ngược xu hướng suy yếu chung của thị trường và là cổ phiếu được khối ngoại mua ròng nhiều nhất phiên hôm nay với 41,6 tỷ đồng, chiếm 13% khối lượng giao dịch của mã.
+Mã: KDH
+---
+Ngày: 18/11/2026
+Tiêu đề: SAB +1% · Tạm ứng cổ tức 3.000 đồng/cổ phiếu
+Nội dung: SAB công bố tạm ứng cổ tức năm tài chính 2026 bằng tiền, mức 3.000 đồng/cổ phiếu (lợi suất khoảng 7,1%).
+- Ngày giao dịch không hưởng quyền: 28/12
+- Ngày thanh toán: 2/2/2027
+Mã: SAB
+---
+Ngày: 18/11/2026
+Tiêu đề: FPT -3% · Dẫn đầu thanh khoản, khối ngoại bán ròng mạnh
+Nội dung: Kết quả kinh doanh 10 tháng 2026 vẫn tích cực, nhưng cổ phiếu giảm 3,2% và dẫn đầu thanh khoản thị trường. Khối ngoại tiếp tục bán ròng khoảng 226 tỷ đồng cổ phiếu FPT trong phiên.
+Mã: FPT
+---
+Ngày: 18/11/2026
+Tiêu đề: Ngân hàng suy yếu: LPB -5%, VCB -3%, VPB -3%, STB -3%
+Nội dung: Nhóm ngân hàng nằm trong nhóm gây áp lực chính lên thị trường, trong đó LPB giảm 4,6%.
+- LPB ghi nhận thêm 80 triệu cổ phiếu giao dịch thỏa thuận, trị giá hơn 2,7 nghìn tỷ đồng
+- Tiếp nối chuỗi giao dịch thỏa thuận lô lớn bất thường trong các phiên gần đây
+Mã: LPB, VCB, VPB, STB
+---
+Ngày: 18/11/2026
+Tiêu đề: PNJ -5% · Thay đổi nhân sự cấp cao liên tiếp
+Nội dung: Bà Diệp Mỹ Tâm Xuân được bổ nhiệm làm Trưởng ban Kiểm toán nội bộ (nhiệm kỳ 3 năm, hiệu lực từ 17/11), thay ông Nguyễn Anh Tuấn chuyển sang làm Phó Trưởng ban. Một ngày trước đó, Giám đốc cao cấp - Tài chính Nguyễn Minh Hải từ nhiệm vì lý do cá nhân, cũng hiệu lực từ 17/11. Hai thay đổi liên tiếp nhiều khả năng gây thêm áp lực tâm lý khi thị trường chung đang hạ tỷ trọng rủi ro.
+Mã: PNJ
+---
