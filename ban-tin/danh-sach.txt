@@ -1,0 +1,12 @@
+# ===== BẢN TIN THỊ TRƯỜNG =====
+# Mỗi bản tin cách nhau bằng dòng ---  (bản mới nhất để trên cùng)
+# Ảnh: tên file ảnh nằm trong thư mục ban-tin
+# Dòng bắt đầu bằng dấu # là ghi chú, không hiện lên trang.
+
+Ngày: 18/11/2026
+Ảnh: 2026-11-18.jpg
+Tiêu đề: VN-Index mất 23,71 điểm, khối ngoại bán ròng hơn 1.150 tỷ
+- VN-Index giảm 1,37% về 1.703,01 điểm, đóng cửa gần mức thấp nhất ngày
+- Độ rộng nghiêng hẳn về bên bán: HOSE 272 mã giảm, 64 mã tăng; cả 20 nhóm ngành đều giảm
+- Khối ngoại bán ròng 1.151,7 tỷ toàn thị trường, tập trung ở FPT và VIC; mua ròng KDH, FRT, BSR, POW
+---
