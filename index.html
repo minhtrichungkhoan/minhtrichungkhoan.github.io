@@ -656,6 +656,19 @@ small.u{font-size:.62em;font-weight:600;color:var(--muted);margin-left:.3em;lett
 .tn-f a.c{display:inline-flex;align-items:center;gap:6px;padding:3px 9px 3px 3px;border-radius:8px;border:1px solid rgba(212,174,94,.3);color:var(--ink);font-weight:700;font-size:13px;text-decoration:none}
 .tn-f a.c .lg{width:22px;height:22px;border-radius:6px;font-size:7.5px}
 .tn-f .src{margin:0 0 0 auto;font-size:12px;color:var(--muted)}.tn-f .src a{color:var(--gold2)}
+
+/* thu gọn mục */
+.clh{display:none!important}
+.label{position:relative}.sec-tg{margin-left:auto;float:right;background:rgba(212,174,94,.08);border:1px solid rgba(212,174,94,.35);color:var(--gold2);border-radius:999px;padding:5px 14px;font:inherit;font-size:13px;font-weight:600;letter-spacing:0;text-transform:none;cursor:pointer;min-height:34px}
+.sec-tg:hover{background:rgba(212,174,94,.16)}
+.sec-hc{cursor:pointer}
+section.sec-col{padding-bottom:24px!important}section.sec-col .sec-h{margin-bottom:0;font-size:clamp(22px,2.6vw,30px);color:#cfc8d0}
+/* tin nổi bật rút gọn */
+.tn{cursor:pointer}.tn:focus-visible{outline:2px solid var(--gold)}
+.tn .tn-b{display:none}.tn.open .tn-b{display:block}.tn.open .tn-b>*+*{margin-top:8px}
+.tn-x{margin-left:auto;font-style:normal;color:var(--gold2);font-size:12.5px;font-weight:600}
+.tn-g{align-items:start}
+.f-src{color:#8d8690;font-size:13px}
 </style>
 <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
 </head>
@@ -819,7 +832,7 @@ small.u{font-size:.62em;font-weight:600;color:var(--muted);margin-left:.3em;lett
     <p class="sec-p rv" id="sfSub">Giá trị giao dịch và biến động giá theo từng nhóm ngành, cùng giao dịch khối ngoại toàn thị trường, cập nhật sau mỗi phiên.</p>
     <div class="ix-box rv" id="ixBox" hidden>
       <div class="ix-main" id="ixMain"></div>
-      <div class="ix-sec card"><div class="ix-h"><h3>Chỉ số ngành HOSE</h3><span id="ixPer">% thay đổi 1 phiên</span></div><div id="ixSec"></div><p class="src" style="margin-top:10px">Điểm chỉ số do HOSE, HNX công bố, lấy qua FPTS · % thay đổi theo nút chọn kỳ bên dưới</p><button type="button" class="sf-more ix-more" id="ixMore" hidden></button></div>
+      <div class="ix-sec card"><div class="ix-h"><h3>Chỉ số ngành HOSE</h3><span id="ixPer">% thay đổi 1 phiên</span></div><div id="ixSec"></div><button type="button" class="sf-more ix-more" id="ixMore" hidden></button></div>
     </div>
     <div class="sf-top">
       <div class="sf-chips" id="sfChips"></div>
@@ -829,7 +842,7 @@ small.u{font-size:.62em;font-weight:600;color:var(--muted);margin-left:.3em;lett
       </div>
     </div>
     <div class="sf-tbl card rv"><div class="sf-h"><span>Ngành</span><span>Giá trị giao dịch (tỷ đồng)</span><span>So với TB 20 phiên</span><span id="sfHc">% giá 1 phiên</span><span>GTGD 20 phiên</span></div><div id="sfBody"></div><button type="button" class="sf-more" id="sfMore" hidden></button></div>
-    <p class="sf-note">Giá trị giao dịch tính bằng giá đóng cửa × khối lượng khớp. "Từ đầu năm": % giá so với phiên cuối năm trước. Khối ngoại là số liệu mua/bán ròng của toàn thị trường (HOSE, HNX, UPCoM), lũy kế từ phiên đầu năm. % giá là bình quân gia quyền theo giá trị giao dịch. Bấm vào từng ngành để xem các mã giao dịch nhiều nhất. Nguồn: VietCap qua vnstock-js.</p>
+    <p class="sf-note">Giá trị giao dịch tính bằng giá đóng cửa × khối lượng khớp. "Từ đầu năm": % giá so với phiên cuối năm trước. Khối ngoại là số liệu mua/bán ròng của toàn thị trường (HOSE, HNX, UPCoM), lũy kế từ phiên đầu năm. % giá là bình quân gia quyền theo giá trị giao dịch. Bấm vào từng ngành để xem các mã giao dịch nhiều nhất.</p>
   </div>
 </section>
 
@@ -881,7 +894,6 @@ small.u{font-size:.62em;font-weight:600;color:var(--muted);margin-left:.3em;lett
     <p class="disc-b"><b>Lưu ý:</b> Số liệu và chỉ số trên trang được tổng hợp tự động từ nguồn công khai, có thể có sai sót hoặc độ trễ. Thông tin chỉ để tham khảo, không phải khuyến nghị mua/bán. Nhà đầu tư tự chịu trách nhiệm với quyết định của mình.</p>
     <h3 class="wt" id="idxH" style="margin-top:48px" hidden>Tổng quan thị trường</h3>
     <div class="idx" id="idxCards"></div>
-    <p class="src"><span data-i="src">Dữ liệu giá và báo cáo tài chính: VietCap (qua thư viện vnstock-js), tự cập nhật lúc 18:00 mỗi ngày. Biểu đồ vẽ bằng</span> <a href="https://www.tradingview.com/lightweight-charts/" target="_blank" rel="noopener">TradingView Lightweight Charts</a>. <span data-i="src2">Thông tin chỉ để tham khảo, không phải khuyến nghị đầu tư.</span></p>
   </div>
 </section>
 
@@ -930,6 +942,7 @@ small.u{font-size:.62em;font-weight:600;color:var(--muted);margin-left:.3em;lett
   <div class="wrap">
     <p>© 2026 Lê Minh Trí · Tư vấn đầu tư chứng khoán, Công ty Cổ phần Chứng khoán FPT (FPTS) · CCHN Quản lý quỹ 002059/QLQ</p>
     <p>0833.70.3936 · <a data-goatcounter-click="tiktok" href="https://www.tiktok.com/@minhtrifpts" target="_blank" rel="noopener" style="color:var(--gold)">TikTok @minhtrifpts</a></p>
+    <p class="f-src">Nguồn dữ liệu: VietCap (qua vnstock-js) · Chỉ số HOSE, HNX qua FPTS · Tự động cập nhật mỗi ngày</p>
     <p data-i="disc">Thông tin trên trang mang tính giới thiệu và thể hiện quan điểm cá nhân, không phải khuyến nghị mua bán chứng khoán. Số liệu được tổng hợp từ nguồn công khai, có thể có sai sót hoặc độ trễ. Đầu tư chứng khoán luôn có rủi ro.</p>
   </div>
 </footer>
@@ -981,8 +994,7 @@ const quarter=code=>{
     <div class="kpi"><small>${en?'Total liabilities':'Tổng nợ phải trả'}</small><b>${fmt(d.liab)}</b>${d.liab0?chg(pct(d.liab,d.liab0)).replace('</em>',en?' YTD</em>':' từ đầu năm</em>'):'<em class="nt">–</em>'}</div>
     <div class="kpi"><small>${en?'Liabilities / Equity':'Nợ phải trả / VCSH'}</small><b>${d.eq?(d.liab/d.eq).toFixed(2)+'x':'–'}</b><em class="nt">${en?'times':'lần'}</em></div>
   </div>
-  <div class="bars"><div><h4>${L} – ${en?'last 5 quarters':'5 quý gần nhất'}</h4>${bars(d.rev,d.q)}</div><div><h4>${en?'Net profit – last 5 quarters':'Lợi nhuận sau thuế – 5 quý gần nhất'}</h4>${bars(d.np,d.q)}</div></div>
-  ${d.src?`<p class="src" style="margin-top:12px">${en?'Source':'Nguồn'}: ${d.src}${FIN_UPDATED?` · ${en?'updated':'cập nhật'} ${FIN_UPDATED}`:''}</p>`:''}`;
+  <div class="bars"><div><h4>${L} – ${en?'last 5 quarters':'5 quý gần nhất'}</h4>${bars(d.rev,d.q)}</div><div><h4>${en?'Net profit – last 5 quarters':'Lợi nhuận sau thuế – 5 quý gần nhất'}</h4>${bars(d.np,d.q)}</div></div>`;
 };
 
 /* ===== dữ liệu giá tự lưu (data/px, data/summary.json) ===== */
@@ -1078,7 +1090,7 @@ const renderRatios=(code,r,g,price)=>{r=fillPS(code,r);const ra=document.getElem
       <div class="rt-t"><small>Vốn chủ sở hữu</small><b>${f&&f.eq!=null?fmtBig(f.eq*1e9):'–'}</b></div></div>`}};
   const lbl={val:'Định giá',eff:'Hiệu quả',hlt:'Sức khoẻ'};
   ra.innerHTML=`<div class="rt-tabs">${Object.keys(tabs).map(k=>`<button type="button" data-t="${k}" class="${k===RT_TAB?'on':''}">${lbl[k]}</button>`).join('')}</div>
-   <div class="rt-body">${tabs[RT_TAB]()}${ins.length?`<div class="rt-ins">${ins.map(x=>`<p>${x}</p>`).join('')}</div>`:''}<p class="rt-note">Theo báo cáo ${r.q||'gần nhất'} · nguồn VietCap · trung vị ngành tính trên các mã trong danh sách theo dõi</p></div>`;
+   <div class="rt-body">${tabs[RT_TAB]()}${ins.length?`<div class="rt-ins">${ins.map(x=>`<p>${x}</p>`).join('')}</div>`:''}<p class="rt-note">Theo báo cáo ${r.q||'gần nhất'}</p></div>`;
   ra.querySelectorAll('.rt-tabs button').forEach(b=>b.onclick=()=>{RT_TAB=b.dataset.t;renderRatios(code,r,g,price)});
 };
 
@@ -1106,7 +1118,7 @@ const renderRank=(code,key)=>{const box=document.getElementById('rank');RK_LAST=
     box.querySelector('.rk-tabs').onclick=e=>{const b=e.target.closest('button');if(!b)return;RK_M=b.dataset.m;renderRank(code,key)};
     box.querySelectorAll('.rk-r').forEach(b=>b.onclick=()=>{if(b.dataset.s===code)return;chart(b.dataset.s);document.getElementById('thi-truong').scrollIntoView({behavior:'smooth'})});
   })};
-const chart=sym=>{const code=(sym.split(':')[1]||sym).toUpperCase();
+const chart=sym=>{const code=(sym.split(':')[1]||sym).toUpperCase();if(window.expandSec&&window.urlSync)window.expandSec('thi-truong');
   if(window.urlSync){try{history.replaceState(null,'',location.pathname+'?ma='+code+'#thi-truong')}catch(e){}}
   document.getElementById('askCode').textContent=code;window.curCode=code;quarter(code);
   const qi=document.getElementById('qinfo'),ra=document.getElementById('ratios');
@@ -1259,11 +1271,30 @@ fetch('tin-noi-bat.txt',{cache:'no-cache'}).then(r=>r.ok?r.text():'').then(t=>{
     const ts=Date.UTC(+dm[3],+dm[2]-1,+dm[1]);const age=Math.round((today-ts)/864e5);if(age<0||age>3)continue;it.ts=ts;it.age=age;items.push(it)}
   if(!items.length)return;items.sort((a,b)=>b.ts-a.ts);
   const srcH=s=>/^https?:\/\//.test(s)?`<a href="${esc(s)}" target="_blank" rel="noopener">${esc(s.replace(/^https?:\/\/(www\.)?/,'').split('/')[0])} ↗</a>`:esc(s);
-  document.getElementById('tnList').innerHTML=items.map(it=>`<article class="tn${it.age===0?' new':''}"><div class="tn-m">${it.age===0?'<b>MỚI</b>':''}<span>${esc(it.d)}</span></div>${it.t?`<h3>${esc(it.t).replace(/([+\-−]\s?\d+(?:[.,]\d+)?%)/g,m=>`<span class="${/^[-−]/.test(m)?'dn':'up'}">${m}</span>`)}</h3>`:''}${it.body.length?`<p>${it.body.map(esc).join('<br>')}</p>`:''}${it.li.length?`<ul>${it.li.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}
+  document.getElementById('tnList').innerHTML=items.map(it=>`<article class="tn${it.age===0?' new':''}" tabindex="0" role="button" aria-expanded="false"><div class="tn-m">${it.age===0?'<b>MỚI</b>':''}<span>${esc(it.d)}</span><em class="tn-x">Xem chi tiết ▾</em></div>${it.t?`<h3>${esc(it.t).replace(/([+\-−]\s?\d+(?:[.,]\d+)?%)/g,m=>`<span class="${/^[-−]/.test(m)?'dn':'up'}">${m}</span>`)}</h3>`:''}<div class="tn-b">${it.body.length?`<p>${it.body.map(esc).join('<br>')}</p>`:''}${it.li.length?`<ul>${it.li.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}</div>
     ${(it.codes&&it.codes.length)||it.src?`<div class="tn-f">${(it.codes||[]).map(c=>`<a class="c" href="?ma=${c}#thi-truong" data-s="${c}">${logo(c)}${c}</a>`).join('')}${it.src?`<p class="src">Nguồn: ${srcH(it.src)}</p>`:''}</div>`:''}</article>`).join('');
   document.getElementById('tnCnt').textContent=`${items.length} tin trong 4 ngày gần nhất`;
-  document.getElementById('tnList').onclick=e=>{const a=e.target.closest('a.c[data-s]');if(!a)return;e.preventDefault();chart(a.dataset.s);document.getElementById('thi-truong').scrollIntoView({behavior:'smooth'})};
+  document.getElementById('tnList').onclick=e=>{const a=e.target.closest('a.c[data-s]');if(!a){const c=e.target.closest('.tn');if(c&&!e.target.closest('a')){const o=c.classList.toggle('open');c.setAttribute('aria-expanded',o);c.querySelector('.tn-x').textContent=o?'Thu gọn ▴':'Xem chi tiết ▾'}return}e.preventDefault();chart(a.dataset.s);document.getElementById('thi-truong').scrollIntoView({behavior:'smooth'})};
+  document.getElementById('tnList').onkeydown=e=>{if((e.key==='Enter'||e.key===' ')&&e.target.classList.contains('tn')){e.preventDefault();e.target.click()}};
   document.getElementById('tin-noi-bat').hidden=false}).catch(()=>{});
+
+/* thu gọn / mở rộng các mục (trừ Nhận định và Giới thiệu) */
+{const IDS=['hoat-dong','bao-cao-nganh','dong-tien','thi-truong','goc-nhin'];
+ const st=()=>{try{return JSON.parse(localStorage.getItem('secc')||'{}')}catch(e){return{}}};
+ const save=o=>{try{localStorage.setItem('secc',JSON.stringify(o))}catch(e){}};
+ const parts=sec=>{const lab=sec.querySelector('.label'),h=sec.querySelector('.sec-h');const keep=[lab,h].filter(Boolean);const out=[];
+   const walk=el=>{for(const c of el.children){if(keep.includes(c))continue;if(keep.some(k=>c.contains(k)))walk(c);else out.push(c)}};walk(sec.querySelector('.wrap')||sec);return out};
+ const set=(id,col,persist=true)=>{const sec=document.getElementById(id);if(!sec)return;sec.classList.toggle('sec-col',col);parts(sec).forEach(x=>x.classList.toggle('clh',col));
+   const b=sec.querySelector('.sec-tg');if(b){b.innerHTML=col?'Mở rộng <span>▾</span>':'Thu gọn <span>▴</span>';b.setAttribute('aria-expanded',!col)}
+   if(persist){const o=st();o[id]=col;save(o)}};
+ window.expandSec=id=>{const sec=document.getElementById(id);if(sec&&sec.classList.contains('sec-col'))set(id,false)};
+ const S=st();
+ for(const id of IDS){const sec=document.getElementById(id);if(!sec)continue;const lab=sec.querySelector('.label');if(!lab)continue;
+   const b=document.createElement('button');b.type='button';b.className='sec-tg';lab.appendChild(b);
+   b.onclick=()=>set(id,!sec.classList.contains('sec-col'));const h=sec.querySelector('.sec-h');if(h){h.classList.add('sec-hc');h.onclick=()=>set(id,!sec.classList.contains('sec-col'))}
+   set(id,!!S[id],false)}
+ if(new URLSearchParams(location.search).get('ma'))set('thi-truong',false,false);
+ document.addEventListener('click',e=>{const a=e.target.closest('a[href*="#"]');if(!a)return;const id=(a.getAttribute('href').split('#')[1]||'');if(IDS.includes(id))window.expandSec(id)});}
 document.getElementById('sForm').addEventListener('submit',e=>{e.preventDefault();let v=document.getElementById('sCode').value.trim();if(!v)return;let c=v.split(/[\s–-]/)[0].toUpperCase().replace(/[^A-Z0-9]/g,'');if(SYMS&&!SYMS[c]){const st=t=>(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d');const q=st(v);const hit=Object.entries(SYMS).find(([k,x])=>st(x.n).includes(q));if(hit)c=hit[0]}chart(c);document.getElementById('sCode').blur()});
 
 
