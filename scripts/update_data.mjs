@@ -499,7 +499,7 @@ async function main() {
           try { const cf = await once('cashflow', () => st.financials('cashflow', { period: 'quarter' })); const c = cfoFor(cf, rec.fin.q); if (c) rec.fin.cfo = c; if (k < 2) debug[t + '_cfo'] = c; } catch (e) { if (k < 2) debug[t + '_cfoErr'] = String(e.message || e).slice(0, 150); }
         } catch (e) { errors[t] = ((errors[t] || '') + ' bctc: ' + String(e.message || e)).slice(0, 300); }
         try { const rat = await retry(() => st.financials('ratios', { period: 'quarter' })); rec.ratios = ratiosLatest(rat); } catch {}
-        const doEv = MODE === 'full' || ONLY.length || core.has(t) || (k % 14) === (day % 14) || !old.ev;
+        const doEv = ONLY.length || core.has(t) || (k % 14) === (day % 14) || !old.ev;
         if (doEv) try { const evRaw = await once('events', () => st.events()); if (k < 2 || t === 'FPT') debug[t + '_events'] = clip(findRecords(evRaw)?.slice(0, 3) || evRaw); const ev = eventsOf(evRaw); rec.ev = ev; rec.evAt = updated; } catch (e) { if (k < 2) debug[t + '_evErr'] = String(e.message || e).slice(0, 150); }
       }
       if (rec.bars?.length) {
