@@ -3,6 +3,13 @@
 # Ảnh: tên file ảnh nằm trong thư mục ban-tin
 # Dòng bắt đầu bằng dấu # là ghi chú, không hiện lên trang.
 
+Ngày: 19/11/2026
+Ảnh: 2026-11-19.png
+Tiêu đề: VN-Index lùi 13,39 điểm, khối ngoại bán ròng gần 1.000 tỷ
+- VN-Index giảm 0,79% về 1.689,62 điểm; riêng VIC lấy đi 8,05 điểm
+- Khớp lệnh HOSE 9.328 tỷ, thấp hơn phiên trước 16%; HOSE 207 mã giảm, 107 mã tăng
+- Khối ngoại bán ròng 999,9 tỷ toàn thị trường, tập trung ở FPT và ACB
+---
 Ngày: 18/11/2026
 Ảnh: 2026-11-18.png
 Tiêu đề: VN-Index mất 23,71 điểm, khối ngoại bán ròng hơn 1.150 tỷ
