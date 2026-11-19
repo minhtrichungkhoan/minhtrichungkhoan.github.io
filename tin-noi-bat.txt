@@ -12,6 +12,16 @@
 # ---
 
 Ngày: 19/11/2026
+Tiêu đề: Điểm nhanh báo cáo doanh nghiệp: PVS, FPT, HPG, NLG, VPB
+Nội dung: Các điểm chính từ những báo cáo cập nhật doanh nghiệp mới nhất.
+- PVS: Ký hợp đồng EPC trạm biến áp ngoài khơi Fengmiao 2, tín hiệu phục hồi của mảng EPC điện gió ngoài khơi
+- FPT: Tăng trưởng dự kiến phục hồi trong quý 4; mục tiêu doanh thu ký mới mảng CNTT nước ngoài năm 2027 tăng 15–20% so với cùng kỳ trong bối cảnh chuyển đổi AI (gặp gỡ nhà đầu tư)
+- HPG: Dự báo lợi nhuận được nâng lên, định giá càng thêm hấp dẫn
+- NLG: Backlog vững chắc củng cố tiềm năng tăng trưởng lợi nhuận năm 2027
+- VPB: Hệ sinh thái với nền tảng vốn vững mạnh mở ra triển vọng tăng trưởng, mức định giá hấp dẫn
+Mã: PVS, FPT, HPG, NLG, VPB
+---
+Ngày: 19/11/2026
 Tiêu đề: Ngành hàng không · Các hãng đề xuất lùi thời điểm chuyển sang sân bay Long Thành
 Nội dung: CHKQT Long Thành vẫn giữ mục tiêu khai thác từ 24/12/2026. Trong khi đó, các hãng hàng không đang khai thác tại Tân Sơn Nhất đề xuất dời kế hoạch chuyển đổi sang Long Thành.
 - Hãng nội địa: VJC và HVN dự kiến khai thác 20–30 chuyến/ngày, sản lượng đăng ký tương đương 6–10% công suất thiết kế
