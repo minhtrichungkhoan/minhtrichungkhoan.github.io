@@ -641,9 +641,9 @@ small.u{font-size:.62em;font-weight:600;color:var(--muted);margin-left:.3em;lett
 
 /* thông tin nổi bật */
 .tn-wrap{padding:18px 0 8px}
-.tn-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:12px}
+.tn-h{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
 .tn-h h2{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:800}.tn-h h2 i{width:10px;height:10px;border-radius:2px;background:var(--gold);transform:rotate(45deg)}
-.tn-h span{color:var(--muted);font-size:13px}.tn-h h2{white-space:nowrap}@media(max-width:560px){.tn-h span{display:none}}
+#tnCnt{color:var(--muted);font-size:13px}.tn-h h2{white-space:nowrap}@media(max-width:560px){#tnCnt{display:none}.tn-tg{margin-left:auto}}
 .tn-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
 .tn{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:8px}
 .tn.new{border-color:rgba(212,174,94,.45);background:linear-gradient(135deg,rgba(212,174,94,.08),var(--card) 60%)}
@@ -656,6 +656,16 @@ small.u{font-size:.62em;font-weight:600;color:var(--muted);margin-left:.3em;lett
 .tn-f a.c{display:inline-flex;align-items:center;gap:6px;padding:3px 9px 3px 3px;border-radius:8px;border:1px solid rgba(212,174,94,.3);color:var(--ink);font-weight:700;font-size:13px;text-decoration:none}
 .tn-f a.c .lg{width:22px;height:22px;border-radius:6px;font-size:7.5px}
 .tn-f .src{margin:0 0 0 auto;font-size:12px;color:var(--muted)}.tn-f .src a{color:var(--gold2)}
+
+.tn-h span#tnCnt{margin-left:auto}.tn-tg{float:none;flex:none}
+.tn.more-h{display:none}
+.tn-more-b{display:block;margin:14px auto 0;min-height:40px;padding:0 20px;border-radius:999px;border:1px solid rgba(212,174,94,.45);background:rgba(212,174,94,.08);color:var(--gold2);font:inherit;font-weight:700;font-size:14px;cursor:pointer}.tn-more-b:hover{background:rgba(212,174,94,.16)}
+.tn-m b{position:relative;overflow:hidden;background:linear-gradient(110deg,#D4AE5E 30%,#F0D595 50%,#D4AE5E 70%);background-size:220% 100%;animation:tnShine 2.2s linear infinite,tnGlow 1.6s ease-in-out infinite}
+.tn-m b::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#17120a;margin-right:5px;vertical-align:1px;animation:tnBlink 1s steps(2,start) infinite}
+@keyframes tnShine{to{background-position:-220% 0}}
+@keyframes tnGlow{0%,100%{box-shadow:0 0 0 0 rgba(240,213,149,.55)}50%{box-shadow:0 0 12px 3px rgba(240,213,149,.55)}}
+@keyframes tnBlink{to{visibility:hidden}}
+@media(prefers-reduced-motion:reduce){.tn-m b,.tn-m b::before{animation:none}}
 
 /* thu gọn mục */
 .clh{display:none!important}
@@ -773,8 +783,9 @@ section.sec-col{padding-bottom:24px!important}section.sec-col .sec-h{margin-bott
 
 <section class="tn-wrap" id="tin-noi-bat" hidden>
   <div class="wrap">
-    <div class="tn-h"><h2><i></i>Thông tin nổi bật</h2><span id="tnCnt"></span></div>
-    <div class="tn-g" id="tnList"></div>
+    <div class="tn-h"><h2><i></i>Thông tin nổi bật</h2><span id="tnCnt"></span><button type="button" class="sec-tg tn-tg" id="tnTg" aria-expanded="true">Thu gọn <span>▴</span></button></div>
+    <div id="tnBody"><div class="tn-g" id="tnList"></div>
+    <button type="button" class="tn-more-b" id="tnMore" hidden></button></div>
   </div>
 </section>
 
@@ -1294,6 +1305,12 @@ fetch('tin-noi-bat.txt',{cache:'no-cache'}).then(r=>r.ok?r.text():'').then(t=>{
   document.getElementById('tnList').innerHTML=items.map(it=>`<article class="tn${it.age===0?' new':''}" tabindex="0" role="button" aria-expanded="false"><div class="tn-m">${it.age===0?'<b>MỚI</b>':''}<span>${esc(it.d)}</span><em class="tn-x">Xem chi tiết ▾</em></div>${it.t?`<h3>${esc(it.t).replace(/([+\-−]\s?\d+(?:[.,]\d+)?%)/g,m=>`<span class="${/^[-−]/.test(m)?'dn':'up'}">${m}</span>`)}</h3>`:''}<div class="tn-b">${it.body.length?`<p>${it.body.map(esc).join('<br>')}</p>`:''}${it.li.length?`<ul>${it.li.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}</div>
     ${it.zalo?`<a class="tn-z" data-goatcounter-click="zalo-tin-noi-bat" href="https://zalo.me/0833703936" target="_blank" rel="noopener">${esc(it.zalo)} ↗</a>`:''}${(it.codes&&it.codes.length)||it.src?`<div class="tn-f">${(it.codes||[]).map(c=>`<a class="c" href="?ma=${c}#thi-truong" data-s="${c}">${logo(c)}${c}</a>`).join('')}${it.src?`<p class="src">Nguồn: ${srcH(it.src)}</p>`:''}</div>`:''}</article>`).join('');
   document.getElementById('tnCnt').textContent=`${items.length} tin trong 4 ngày gần nhất`;
+  {const N=10,L=document.getElementById('tnList'),mb=document.getElementById('tnMore'),cards=[...L.children];let all=false;
+   const show=()=>{cards.forEach((c,i)=>c.classList.toggle('more-h',!all&&i>=N));mb.hidden=cards.length<=N;mb.innerHTML=all?'Ẩn bớt ▴':`Xem thêm ${cards.length-N} tin ▾`};
+   mb.onclick=()=>{all=!all;show();if(!all)document.getElementById('tin-noi-bat').scrollIntoView({behavior:'smooth'})};show();
+   const tg=document.getElementById('tnTg'),bd=document.getElementById('tnBody');
+   const setC=(c,p)=>{bd.hidden=c;tg.innerHTML=c?'Mở rộng <span>▾</span>':'Thu gọn <span>▴</span>';tg.setAttribute('aria-expanded',!c);if(p)try{localStorage.setItem('tnCol',c?'1':'')}catch(e){}};
+   let c0=false;try{c0=localStorage.getItem('tnCol')==='1'}catch(e){}setC(c0,false);tg.onclick=()=>setC(!bd.hidden,true)}
   document.getElementById('tnList').onclick=e=>{const a=e.target.closest('a.c[data-s]');if(!a){const c=e.target.closest('.tn');if(c&&!e.target.closest('a')){const o=c.classList.toggle('open');c.setAttribute('aria-expanded',o);c.querySelector('.tn-x').textContent=o?'Thu gọn ▴':'Xem chi tiết ▾'}return}e.preventDefault();chart(a.dataset.s);document.getElementById('thi-truong').scrollIntoView({behavior:'smooth'})};
   document.getElementById('tnList').onkeydown=e=>{if((e.key==='Enter'||e.key===' ')&&e.target.classList.contains('tn')){e.preventDefault();e.target.click()}};
   document.getElementById('tin-noi-bat').hidden=false}).catch(()=>{});
