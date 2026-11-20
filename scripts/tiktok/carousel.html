@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="utf-8">
+<!-- Bộ ảnh lướt TikTok 3 trang (1080x1920). Dữ liệu = JSON bản tin cuối phiên (scripts/ban-tin/render.py), trang chọn bằng window.PAGE = 1|2|3 -->
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;background:#0A090B;color:#F3EFE8;font-family:'Be Vietnam Pro',sans-serif;overflow:hidden}
+.pg{position:relative;width:1080px;height:1920px;padding:80px 64px 220px;display:flex;flex-direction:column;
+ background:radial-gradient(900px 600px at 85% -5%,rgba(212,174,94,.20),transparent 60%),radial-gradient(700px 500px at -10% 105%,rgba(212,174,94,.10),transparent 60%),#0A090B}
+.top{display:flex;align-items:center;gap:18px}
+.lg{width:76px;height:76px;border-radius:20px;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,#F0D595,#D4AE5E 60%,#a8873f);box-shadow:0 0 40px rgba(212,174,94,.55);color:#0A090B;font-weight:800;font-size:48px}
+.br b{display:block;font-size:32px;font-weight:800}.br span{font-size:17px;color:#D4AE5E;letter-spacing:.3em;font-weight:700}
+.pn{margin-left:auto;font-size:24px;font-weight:800;color:#0A090B;background:#D4AE5E;border-radius:999px;padding:8px 20px}
+.kick{margin-top:44px;font-size:28px;letter-spacing:.2em;color:#D4AE5E;font-weight:800}
+h1{margin-top:10px;font-size:76px;line-height:1.08;font-weight:800}
+h1 em,h2 em{font-style:normal;color:#D4AE5E}
+h2{margin-top:36px;font-size:60px;line-height:1.1;font-weight:800}
+.big{margin-top:34px;padding:34px 36px;border-radius:28px;background:#18161A;border:1px solid rgba(212,174,94,.3)}
+.big .n{font-size:28px;color:#bdb5be;font-weight:600}
+.big .v{display:flex;align-items:baseline;gap:24px;margin-top:4px}
+.big .v b{font-size:104px;font-weight:800;letter-spacing:-.01em}.big .v span{font-size:44px;font-weight:800}
+.big p{margin-top:12px;font-size:28px;line-height:1.4;color:#d8d1d9}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px}
+.st{padding:24px 28px;border-radius:22px;background:#18161A;border:1px solid rgba(255,255,255,.06)}
+.st .l{font-size:22px;color:#a9a1aa;font-weight:600;letter-spacing:.04em}.st .v{margin-top:6px;font-size:44px;font-weight:800}.st .s{margin-top:4px;font-size:22px;color:#a9a1aa}
+.bar{display:flex;height:22px;border-radius:999px;overflow:hidden;margin:14px 0 10px}.bar i{display:block}
+.lb{display:flex;justify-content:space-between;font-size:24px;font-weight:800}
+.sec{margin-top:30px;font-size:24px;letter-spacing:.2em;color:#D4AE5E;font-weight:800}
+.card{margin-top:14px;padding:22px 28px;border-radius:22px;background:#18161A;border:1px solid rgba(255,255,255,.06)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:34px}
+.hd{font-size:20px;letter-spacing:.14em;font-weight:800;margin-bottom:6px}
+.tl div{display:flex;justify-content:space-between;padding:9px 0;border-top:1px solid rgba(255,255,255,.06);font-size:29px}
+.tl div:first-child{border-top:0}.tl b{font-weight:800}
+.chips{display:flex;flex-wrap:wrap;gap:12px}
+.chip{display:flex;gap:10px;align-items:baseline;padding:10px 18px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);font-size:28px}
+.chip b{font-weight:800}
+.ev{display:flex;gap:16px;align-items:flex-start;padding:12px 0;border-top:1px solid rgba(255,255,255,.06);font-size:27px;line-height:1.38}
+.ev:first-child{border-top:0}
+.tag{flex:none;font-size:18px;font-weight:800;padding:6px 12px;border-radius:8px;background:rgba(212,174,94,.15);color:#F0D595;margin-top:3px;letter-spacing:.04em}
+.up{color:#3dd68c}.dn{color:#ff6b6b}.fl{color:#e0b84a}em{font-style:normal;color:#F0D595;font-weight:700}
+.sw{margin-top:auto;display:flex;align-items:center;justify-content:space-between;font-size:26px;color:#a9a1aa}
+.sw b{color:#D4AE5E;font-size:30px}
+.cta{margin-top:auto;padding:30px 34px;border-radius:26px;background:linear-gradient(120deg,rgba(212,174,94,.22),rgba(212,174,94,.06));border:1px solid rgba(212,174,94,.5)}
+.cta b{display:block;font-size:40px;font-weight:800}.cta span{display:block;margin-top:8px;font-size:26px;color:#d8d1d9}
+.dis{margin-top:16px;font-size:20px;color:#8d8690}
+</style></head><body><div class="pg" id="pg"></div>
+<script>
+const D=window.DATA,P=window.PAGE||1;
+const e=s=>String(s??'').replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
+const hl=s=>e(s).replace(/\*\*(.+?)\*\*/g,'<em>$1</em>').replace(/\+\+(.+?)\+\+/g,'<span class="up">$1</span>').replace(/--(.+?)--/g,'<span class="dn">$1</span>');
+const c=v=>{v=String(v).trim();return v.startsWith('-')?'dn':(v.startsWith('+')?'up':'fl')};
+const C=D.carousel||{};
+let h=`<div class="top"><div class="lg">T</div><div class="br"><b>MINH TRÍ</b><span>CHỨNG KHOÁN</span></div><div class="pn">${P}/3</div></div>`;
+const vn=D.chi_so[0];
+if(P==1){
+ const r=D.do_rong,t=r.tang+r.dung+r.giam;
+ h+=`<div class="kick">TỔNG KẾT PHIÊN · ${e(D.thu).toUpperCase()} ${e(D.ngay)}</div><h1>${hl(C.tieu_de||D.tieu_de)}</h1>
+ <div class="big"><div class="n">VN-Index đóng cửa</div><div class="v"><b>${e(vn[1])}</b><span class="${c(vn[2])}">${e(vn[2])}</span></div>${C.mo_ta?`<p>${hl(C.mo_ta)}</p>`:''}</div>
+ <div class="row"><div class="st"><div class="l">GT GIAO DỊCH HOSE</div><div class="v">${e(vn[3])}</div>${C.gt_ghi_chu?`<div class="s">${hl(C.gt_ghi_chu)}</div>`:''}</div>
+ <div class="st"><div class="l">KHỐI NGOẠI HOSE</div><div class="v ${c(C.kn_rong||'')}">${e(C.kn_rong||'')}</div><div class="s">${hl(C.kn_ghi_chu||'')}</div></div></div>
+ <div class="st" style="margin-top:20px"><div class="l">ĐỘ RỘNG HOSE</div><div class="bar"><i style="width:${r.tang/t*100}%;background:#3dd68c"></i><i style="width:${r.dung/t*100}%;background:#e0b84a"></i><i style="width:${r.giam/t*100}%;background:#ff6b6b"></i></div><div class="lb"><span class="up">${r.tang} tăng</span><span class="fl">${r.dung} đứng</span><span class="dn">${r.giam} giảm</span></div></div>
+ <div class="sw"><span>Khối ngoại · Nhóm ngành · Cổ phiếu nổi bật</span><b>Vuốt xem →</b></div>`;
+}else if(P==2){
+ const k=D.khoi_ngoai,n=D.nganh;
+ h+=`<h2>Dòng tiền <em>hôm nay</em> đi đâu?</h2>
+ <div class="sec">KHỐI NGOẠI (HOSE)</div><div class="card"><div class="two">
+ <div><div class="hd up">MUA RÒNG</div><div class="tl">${k.mua.map(x=>`<div><b>${e(x[0])}</b><span class="up">${e(x[1])}</span></div>`).join('')}</div></div>
+ <div><div class="hd dn">BÁN RÒNG</div><div class="tl">${k.ban.map(x=>`<div><b>${e(x[0])}</b><span class="dn">${e(x[1])}</span></div>`).join('')}</div></div></div></div>`;
+ if(C.keo||C.de)h+=`<div class="sec">MÃ ẢNH HƯỞNG VN-INDEX (ĐIỂM)</div><div class="card"><div class="two">
+ <div><div class="hd up">KÉO LÊN</div><div class="tl">${(C.keo||[]).map(x=>`<div><b>${e(x[0])}</b><span class="up">${e(x[1])}</span></div>`).join('')}</div></div>
+ <div><div class="hd dn">ĐÈ XUỐNG</div><div class="tl">${(C.de||[]).map(x=>`<div><b>${e(x[0])}</b><span class="dn">${e(x[1])}</span></div>`).join('')}</div></div></div></div>`;
+ h+=`<div class="sec">NHÓM NGÀNH</div><div class="card"><div class="two">
+ <div><div class="hd up">MẠNH NHẤT</div><div class="tl">${n.manh.map(x=>`<div><b style="font-size:26px">${e(x[0])}</b><span class="up">${e(x[1])}</span></div>`).join('')}</div></div>
+ <div><div class="hd dn">YẾU NHẤT</div><div class="tl">${n.yeu.map(x=>`<div><b style="font-size:26px">${e(x[0])}</b><span class="dn">${e(x[1])}</span></div>`).join('')}</div></div></div></div>
+ <div class="sw"><span>Cổ phiếu nổi bật · Sự kiện doanh nghiệp</span><b>Vuốt xem →</b></div>`;
+}else{
+ h+=`<h2>Cổ phiếu <em>đáng chú ý</em></h2>
+ <div class="sec">TĂNG MẠNH</div><div class="card"><div class="chips">${(C.tang||[]).map(x=>`<div class="chip"><b>${e(x[0])}</b><span class="up">${e(x[1])}</span></div>`).join('')}</div></div>
+ <div class="sec">GIẢM MẠNH</div><div class="card"><div class="chips">${(C.giam||[]).map(x=>`<div class="chip"><b>${e(x[0])}</b><span class="dn">${e(x[1])}</span></div>`).join('')}</div></div>
+ <div class="sec">SỰ KIỆN DOANH NGHIỆP</div><div class="card">${(C.su_kien||D.su_kien).map(x=>`<div class="ev"><span class="tag">${e(x[0])}</span><span>${hl(x[1])}</span></div>`).join('')}</div>
+ <div class="cta"><b>Theo dõi <em>@minhtrifpts</em></b><span>Cập nhật tổng kết phiên mỗi ngày giao dịch</span></div>
+ <div class="dis">Thông tin tham khảo, không phải khuyến nghị đầu tư</div>`;
+}
+document.getElementById('pg').innerHTML=h;
+</script></body></html>
