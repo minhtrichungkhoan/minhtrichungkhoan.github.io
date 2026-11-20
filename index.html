@@ -719,7 +719,7 @@ section.sec-col{padding-bottom:24px!important}section.sec-col .sec-h{margin-bott
       <a href="#hoat-dong" class="hide-m">Hoạt động</a>
       <a href="#dong-tien" class="hide-m">Dòng tiền</a>
       <a href="#thi-truong" class="hide-m">Tra cứu cổ phiếu</a>
-      <a href="#goc-nhin" class="hide-m">Góc nhìn</a>
+      <a href="#nhan-dinh" class="hide-m" id="navGocNhin">Góc nhìn</a>
       <div class="dd" id="dd">
         <button type="button" class="dd-btn" aria-expanded="false" aria-controls="dd-menu"><span data-i="navRp">Báo cáo ngành</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
         <div class="dd-menu" id="dd-menu" role="menu">
@@ -1201,6 +1201,8 @@ const logo=c=>`<span class="lg">${c.slice(0,3)}<img src="${LOGO_SRC[0](c)}" data
  document.addEventListener('click',e=>{if(!e.target.closest('.sbox'))close()});
  document.getElementById('sForm').addEventListener('submit',close);}
 
+/* menu Góc nhìn: tới Nhận định hôm nay; nếu khung nhận định đang ẩn (chưa có nội dung) thì tới mục Góc nhìn thị trường */
+document.getElementById('navGocNhin').addEventListener('click',e=>{if(document.getElementById('nhan-dinh').hidden){e.preventDefault();window.expandSec&&window.expandSec('goc-nhin');document.getElementById('goc-nhin').scrollIntoView({behavior:'smooth'})}});
 /* nhận định hôm nay: đọc file nhan-dinh.txt */
 fetch('nhan-dinh.txt',{cache:'no-cache'}).then(r=>r.ok?r.text():'').then(t=>{
   let title='',date='',codes=[],li=[];const esc=x=>x.replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
