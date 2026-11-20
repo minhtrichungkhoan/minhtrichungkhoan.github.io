@@ -7,7 +7,7 @@ du-lieu.json:
   "ngay": "20/11/2026", "thu": "Thứ Sáu",
   "vnindex": {"diem": "1.670,01", "thay_doi": "-19,61 (-1,16%)", "ghi_chu": "Khối ngoại bán ròng **xxx tỷ**"},   (có thể bỏ)
   "tam_diem": ["3 câu ngắn, bọc số liệu nổi bật trong **...**"],
-  "tin": [{"ma": "FPT", "noi_dung": "1–2 dòng ngắn"}]   (nên 5 tin, mỗi tin 1 dòng; giữ trống ~200px đáy cho phần chữ TikTok)
+  "tin": [{"ma": "FPT", "noi_dung": "1–2 dòng ngắn"}]   (9–11 tin doanh nghiệp, mỗi tin 1 dòng ngắn ~45 ký tự; từ 7 tin mẫu tự chuyển chế độ gọn; giữ trống ~200px đáy cho phần chữ TikTok)
 }
 Không ghi số điện thoại / Zalo (ảnh dùng cho TikTok).
 """
