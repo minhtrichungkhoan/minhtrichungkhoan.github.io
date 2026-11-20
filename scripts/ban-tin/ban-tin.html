@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="utf-8">
+<!-- Mẫu ảnh "Bản tin cuối phiên" cho website (rộng 1080 CSS px, chụp x2 = 2160px). Dữ liệu: window.DATA (render.py chèn). Khối nào không có dữ liệu thì tự ẩn. -->
+<link rel="stylesheet" href="../tiktok/fonts/fonts.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1080px;background:#0A090B;color:#F3EFE8;font-family:'Be Vietnam Pro',sans-serif}
+.pg{padding:56px 52px 40px;background:radial-gradient(800px 500px at 90% -5%,rgba(212,174,94,.16),transparent 60%),#0A090B}
+.top{display:flex;align-items:center;gap:18px}
+.lg{width:72px;height:72px;border-radius:18px;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,#F0D595,#D4AE5E 60%,#a8873f);box-shadow:0 0 36px rgba(212,174,94,.5);color:#0A090B;font-weight:800;font-size:44px}
+.br b{display:block;font-size:30px;font-weight:800}.br span{font-size:15px;color:#D4AE5E;letter-spacing:.3em;font-weight:700}
+.day{margin-left:auto;text-align:right;font-size:18px;color:#a9a1aa}.day b{display:block;color:#F3EFE8;font-size:22px}
+h1{margin-top:34px;font-size:52px;line-height:1.15;font-weight:800}
+.sub{margin-top:10px;font-size:20px;color:#a9a1aa}
+.card{margin-top:24px;padding:26px 30px;border-radius:22px;background:#18161A;border:1px solid rgba(255,255,255,.06);border-bottom:3px solid rgba(212,174,94,.55)}
+.h{font-size:17px;letter-spacing:.18em;font-weight:800;color:#D4AE5E;margin-bottom:16px}
+em{font-style:normal;color:#F0D595;font-weight:700}.up{color:#3dd68c}.dn{color:#ff6b6b}.fl{color:#e0b84a}
+ul.pt{list-style:none;display:flex;flex-direction:column;gap:12px}
+ul.pt li{position:relative;padding-left:26px;font-size:22px;line-height:1.45}
+ul.pt li::before{content:"";position:absolute;left:2px;top:12px;width:10px;height:10px;border-radius:2px;background:#D4AE5E}
+table{width:100%;border-collapse:collapse;font-size:21px}
+th{font-size:14px;letter-spacing:.1em;color:#8d8690;text-align:right;font-weight:700;padding:6px 0}
+th:first-child,td:first-child{text-align:left}
+td{padding:10px 0;text-align:right;border-top:1px solid rgba(255,255,255,.05)}
+td:first-child{font-weight:700}
+.note{margin-top:14px;padding:14px 18px;border-radius:12px;background:rgba(212,174,94,.08);font-size:18px;line-height:1.5;color:#d8d1d9}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.g2 .card{margin-top:24px}
+.bar{display:flex;height:22px;border-radius:999px;overflow:hidden;margin:6px 0 10px}
+.bar i{display:block}.lb{display:flex;justify-content:space-between;font-size:17px;font-weight:700}
+.sm{font-size:16px;color:#8d8690;margin-top:10px;line-height:1.5}
+.tl{display:flex;flex-direction:column;gap:2px;font-size:20px}
+.tl div{display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid rgba(255,255,255,.05)}
+.tl b{font-weight:700}
+.st{font-size:14px;letter-spacing:.12em;font-weight:800;margin:4px 0 6px}
+.tag{display:inline-block;font-size:14px;font-weight:800;padding:3px 10px;border-radius:6px;background:rgba(212,174,94,.15);color:#F0D595;margin-right:10px}
+.ln{font-size:20px;line-height:1.55;margin-top:8px}
+.ft{margin-top:26px;display:flex;justify-content:space-between;font-size:16px;color:#8d8690}.ft b{color:#D4AE5E}
+</style></head><body><div class="pg" id="pg"></div>
+<script>
+const D=window.DATA,e=s=>String(s??'').replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
+const hl=s=>e(s).replace(/\*\*(.+?)\*\*/g,'<em>$1</em>').replace(/\+\+(.+?)\+\+/g,'<span class="up">$1</span>').replace(/--(.+?)--/g,'<span class="dn">$1</span>');
+const c=v=>{v=String(v).trim();return v.startsWith('-')||v.startsWith('−')?'dn':(v.startsWith('+')?'up':'fl')};
+let h=`<div class="top"><div class="lg">T</div><div class="br"><b>MINH TRÍ</b><span>CHỨNG KHOÁN</span></div><div class="day"><b>${e(D.thu)}, ${e(D.ngay)}</b>Tổng kết phiên</div></div>
+<h1>${hl(D.tieu_de)}</h1>${D.phu_de?`<div class="sub">${hl(D.phu_de)}</div>`:''}`;
+if(D.diem_nhan)h+=`<div class="card"><div class="h">ĐIỂM NHẤN</div><ul class="pt">${D.diem_nhan.map(x=>`<li>${hl(x)}</li>`).join('')}</ul></div>`;
+if(D.chi_so)h+=`<div class="card"><div class="h">CHỈ SỐ &amp; THANH KHOẢN</div><table><tr><th>CHỈ SỐ</th><th>ĐÓNG CỬA</th><th>THAY ĐỔI</th><th>${e(D.chi_so_cot4||'GT KHỚP')}</th></tr>${D.chi_so.map(r=>`<tr><td>${e(r[0])}</td><td>${e(r[1])}</td><td class="${c(r[2])}">${e(r[2])}</td><td>${e(r[3]||'')}</td></tr>`).join('')}</table>${D.chi_so_ghi_chu?`<div class="note">${hl(D.chi_so_ghi_chu)}</div>`:''}</div>`;
+let g='';
+if(D.do_rong){const r=D.do_rong,t=r.tang+r.dung+r.giam;g+=`<div class="card"><div class="h">ĐỘ RỘNG THỊ TRƯỜNG</div><div class="st">${e(r.san||'HOSE')}</div><div class="bar"><i style="width:${r.tang/t*100}%;background:#3dd68c"></i><i style="width:${r.dung/t*100}%;background:#e0b84a"></i><i style="width:${r.giam/t*100}%;background:#ff6b6b"></i></div><div class="lb"><span class="up">${r.tang} tăng</span><span class="fl">${r.dung} đứng</span><span class="dn">${r.giam} giảm</span></div>${r.ghi_chu?`<div class="sm">${hl(r.ghi_chu)}</div>`:''}</div>`}
+if(D.dong_tien)g+=`<div class="card"><div class="h">DÒNG TIỀN TRONG PHIÊN</div>${D.dong_tien.map(x=>`<div class="ln">${hl(x)}</div>`).join('')}</div>`;
+if(g)h+=`<div class="g2">${g}</div>`;
+if(D.khoi_ngoai){const k=D.khoi_ngoai;h+=`<div class="card"><div class="h">KHỐI NGOẠI</div>${k.tom_tat?`<div class="ln" style="margin:0 0 12px">${hl(k.tom_tat)}</div>`:''}${(k.mua||k.ban)?`<div class="g2" style="gap:36px">${k.mua?`<div><div class="st up">MUA RÒNG</div><div class="tl">${k.mua.map(x=>`<div><b>${e(x[0])}</b><span class="up">${e(x[1])}</span></div>`).join('')}</div></div>`:'<div></div>'}${k.ban?`<div><div class="st dn">BÁN RÒNG</div><div class="tl">${k.ban.map(x=>`<div><b>${e(x[0])}</b><span class="dn">${e(x[1])}</span></div>`).join('')}</div></div>`:''}</div>`:''}</div>`}
+if(D.nganh){const n=D.nganh;h+=`<div class="card"><div class="h">NHÓM NGÀNH</div><div class="g2" style="gap:36px">${n.manh?`<div><div class="st up">MẠNH NHẤT</div><div class="tl">${n.manh.map(x=>`<div><b>${e(x[0])}</b><span class="${c(x[1])}">${e(x[1])}</span></div>`).join('')}</div></div>`:''}${n.yeu?`<div><div class="st dn">YẾU NHẤT</div><div class="tl">${n.yeu.map(x=>`<div><b>${e(x[0])}</b><span class="${c(x[1])}">${e(x[1])}</span></div>`).join('')}</div></div>`:''}</div></div>`}
+if(D.co_phieu)h+=`<div class="card"><div class="h">CỔ PHIẾU NỔI BẬT</div>${D.co_phieu.map(x=>`<div class="ln"><span class="tag">${e(x[0])}</span>${hl(x[1])}</div>`).join('')}</div>`;
+if(D.su_kien)h+=`<div class="card"><div class="h">SỰ KIỆN DOANH NGHIỆP</div>${D.su_kien.map(x=>`<div class="ln"><span class="tag">${e(x[0])}</span>${hl(x[1])}</div>`).join('')}</div>`;
+h+=`<div class="ft"><span>Minh Trí Chứng Khoán · <b>0833 703 936</b></span><span>Thông tin tham khảo, không phải khuyến nghị đầu tư</span></div>`;
+document.getElementById('pg').innerHTML=h;
+</script></body></html>
