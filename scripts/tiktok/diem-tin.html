@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="utf-8">
+<!-- Mẫu ảnh TikTok "ĐIỂM TIN CHỨNG KHOÁN NGÀY" 1080x1920. Dữ liệu đọc từ biến DATA (render.py chèn vào). -->
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;background:#0A090B;color:#F3EFE8;font-family:'Be Vietnam Pro',sans-serif;overflow:hidden}
+.pg{position:relative;width:1080px;height:1920px;padding:84px 64px 210px;display:flex;flex-direction:column;
+ background:radial-gradient(900px 600px at 85% -5%,rgba(212,174,94,.20),transparent 60%),radial-gradient(700px 500px at -10% 105%,rgba(212,174,94,.10),transparent 60%),#0A090B}
+.top{display:flex;align-items:center;gap:22px}
+.lg{width:92px;height:92px;border-radius:24px;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,#F0D595,#D4AE5E 60%,#a8873f);box-shadow:0 0 50px rgba(212,174,94,.55);color:#0A090B;font-weight:800;font-size:58px}
+.br b{display:block;font-size:40px;font-weight:800;letter-spacing:.02em}
+.br span{font-size:22px;color:#D4AE5E;letter-spacing:.32em;font-weight:700}
+.day{margin-left:auto;text-align:right;font-size:26px;color:#bdb5be;font-weight:600;line-height:1.35}
+.day b{display:block;color:#F3EFE8;font-size:30px}
+h1{margin-top:44px;font-size:86px;line-height:1.02;font-weight:800;letter-spacing:-.01em}
+h1 span{display:block;color:#D4AE5E}
+.dt{align-self:flex-start;margin-top:20px;padding:10px 26px;border-radius:999px;border:2px solid rgba(212,174,94,.6);color:#F0D595;font-size:34px;font-weight:700}
+.ix{margin-top:30px;display:flex;align-items:center;gap:26px;padding:26px 32px;border-radius:26px;background:#18161A;border:1px solid rgba(212,174,94,.25)}
+.ix .n{font-size:28px;color:#bdb5be;font-weight:600}.ix .v{font-size:56px;font-weight:800}
+.ix .c{font-size:36px;font-weight:800;white-space:nowrap}.ix .note{margin-left:auto;max-width:380px;text-align:right;font-size:25px;color:#cfc8d0;line-height:1.35}
+.up{color:#3dd68c}.dn{color:#ff6b6b}
+.sec{margin-top:32px;font-size:26px;letter-spacing:.22em;color:#D4AE5E;font-weight:800}
+.td{margin-top:18px;display:flex;flex-direction:column;gap:16px}
+.td div{display:flex;gap:18px;font-size:31px;line-height:1.36;font-weight:700}
+.td i{flex:none;width:46px;height:46px;border-radius:12px;background:#D4AE5E;color:#0A090B;font-style:normal;font-weight:800;display:grid;place-items:center;font-size:28px;margin-top:2px}
+.ls{margin-top:16px;display:flex;flex-direction:column;gap:12px}
+.it{display:flex;gap:20px;align-items:center;padding:14px 22px;border-radius:20px;background:#18161A;border:1px solid rgba(255,255,255,.06)}
+.tk{flex:none;min-width:104px;padding:6px 0;text-align:center;border-radius:12px;border:2px solid rgba(212,174,94,.55);color:#F0D595;font-weight:800;font-size:28px;letter-spacing:.03em}
+.it p{font-size:28px;line-height:1.38;font-weight:500;color:#e6e0e7}
+em{font-style:normal;color:#F0D595;font-weight:700}
+.ft{margin-top:auto;padding-top:20px;display:flex;justify-content:space-between;align-items:center;font-size:24px;color:#8d8690}
+.ft b{color:#D4AE5E;font-size:30px;font-weight:800}
+</style></head><body>
+<div class="pg" id="pg"></div>
+<script>
+const D=window.DATA;
+const e=s=>String(s).replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
+const hl=s=>e(s).replace(/\*\*(.+?)\*\*/g,'<em>$1</em>');
+const cls=s=>/^[-−]/.test(String(s).trim())?'dn':'up';
+let h=`<div class="top"><div class="lg">T</div><div class="br"><b>MINH TRÍ</b><span>CHỨNG KHOÁN</span></div><div class="day"><b>${e(D.thu)}</b>${e(D.ngay)}</div></div>
+<h1>ĐIỂM TIN<span>CHỨNG KHOÁN</span></h1><div class="dt">NGÀY ${e(D.ngay)}</div>`;
+if(D.vnindex)h+=`<div class="ix"><div><div class="n">VN-Index</div><div class="v">${e(D.vnindex.diem)}</div></div><div class="c ${cls(D.vnindex.thay_doi)}">${e(D.vnindex.thay_doi)}</div>${D.vnindex.ghi_chu?`<div class="note">${hl(D.vnindex.ghi_chu)}</div>`:''}</div>`;
+h+=`<div class="sec">TÂM ĐIỂM HÔM NAY</div><div class="td">${D.tam_diem.map((t,i)=>`<div><i>${i+1}</i><span>${hl(t)}</span></div>`).join('')}</div>`;
+h+=`<div class="sec">TIN DOANH NGHIỆP</div><div class="ls">${D.tin.map(t=>`<div class="it"><div class="tk">${e(t.ma)}</div><p>${hl(t.noi_dung)}</p></div>`).join('')}</div>`;
+h+=`<div class="ft"><span>Thông tin tham khảo, không phải khuyến nghị đầu tư</span><b>@minhtrifpts</b></div>`;
+document.getElementById('pg').innerHTML=h;
+</script></body></html>
