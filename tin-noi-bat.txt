@@ -12,6 +12,16 @@
 # ---
 
 Ngày: 23/11/2026
+Tiêu đề: Ngành điện · Bộ Công Thương trình giao chỉ tiêu 5.630 MW điện mặt trời mái nhà đến hết 2027 cho 34 tỉnh thành
+Nội dung: Ngày 20/11/2026, Bộ Công Thương có Tờ trình 9904/TTr-BCT trình Chính phủ dự thảo Nghị quyết giao chỉ tiêu phát triển điện mặt trời mái nhà tự sản xuất, tự tiêu thụ cho 34 tỉnh thành, tổng 5.630 MW đến hết năm 2027, nhằm xử lý cấp bách nguy cơ thiếu điện mùa khô. Tác động phân hóa trong ngành.
+- Giai đoạn 1 (xong trước 31/03/2027): 2.630 MW, đẩy nhanh trước mùa nắng nóng quý II/2027 để chống thiếu điện giờ cao điểm miền Bắc và các trung tâm công nghiệp lớn
+- Giai đoạn 2 (01/04/2027 đến hết 2027): 3.000 MW, mở rộng tại KCN, CCN và trụ sở cơ quan nhà nước. Giai đoạn 2028–2030 sẽ đánh giá kết quả 2 năm đầu rồi giao tiếp, hướng tới mục tiêu 50% công sở và 50% nhà dân theo Quy hoạch điện VIII điều chỉnh
+- Đổi cách phân bổ: bỏ cách tính cào bằng 50% số hộ x 1 kW/hộ (từng cho ra đề xuất 14.073 MW, bị nhiều địa phương phản ánh vượt nhu cầu và khả năng tài chính của dân); chuyển sang căn cứ tốc độ tăng phụ tải 2026–2027 do 5 Tổng công ty Điện lực tính và diện tích mái nhà xưởng trong KCN
+- Địa phương công nghiệp lớn (TP.HCM, Đồng Nai, Bình Dương, Hải Phòng, Bắc Ninh, Hà Nội...) được giao hạn mức cao nhất
+- Khối công sở: bình quân 30 kW/trụ sở cấp tỉnh, 20 kW/trụ sở cấp xã, hoàn thành sớm nhất trong giai đoạn 1
+- Hộ gia đình, trang trại, mái nhà xưởng doanh nghiệp: hoàn toàn tự nguyện, không áp chỉ tiêu bắt buộc, không gắn với thủ tục hành chính khác
+---
+Ngày: 23/11/2026
 Tiêu đề: PNJ · Giảm sàn về 12.600 đồng sau khi CEO thừa nhận lỗ hằng tháng
 Nội dung: PNJ giảm 6,67% xuống 12.600 đồng/cổ phiếu, khớp gần 16,2 triệu cổ phiếu, gấp hơn 3 lần phiên trước.
 - Tổng Giám đốc cho biết doanh số chưa đủ bù chi phí vận hành nên công ty lỗ hằng tháng; áp lực đến từ các khoản thanh toán mua lại sản phẩm đến hạn
