@@ -1,19 +1,275 @@
-{"ngay": "23/11/2026", "thu": "Thứ Hai",
- "tieu_de": "VN-Index bật tăng **8,35 điểm** nhờ VIC, VHM; PNJ giảm sàn",
- "phu_de": "Sáng có lúc lùi về quanh 1.673 điểm; cầu bắt đáy cuối phiên sáng và nhóm vốn hoá lớn buổi chiều kéo chỉ số sát mốc 1.700",
- "diem_nhan": ["VN-Index tăng ++8,35 điểm (+0,49%)++ lên **1.697,14** điểm, chặn chuỗi 4 phiên giảm; VIC góp **6,06 điểm**",
-  "Khớp lệnh HOSE **12.691 tỷ**, thấp hơn bình quân 20 phiên khoảng 24%; độ rộng nghiêng bên mua: **164 mã tăng**, 136 mã giảm",
-  "Khối ngoại bán ròng **407,1 tỷ** trên HOSE, phiên thứ 6 liên tiếp, tập trung HDB, SSI, VIX; mua ròng mạnh POW (**176,8 tỷ**)"],
- "chi_so": [["VN-Index", "1.697,14", "+8,35 (+0,49%)", "12.691 tỷ"], ["HNX-Index", "232,23", "-2,36 (-1,01%)", "—"], ["UPCoM-Index", "119,17", "+0,03 (+0,03%)", "—"]],
+{
+ "ngay": "23/11/2026",
+ "thu": "Thứ Hai",
+ "tieu_de": "VN-Index tăng **8,35 điểm**, đảo chiều từ đáy 1.671",
+ "phu_de": "VIC góp hơn 6 điểm, viễn thông và công nghệ bứt lên; khối ngoại vẫn bán ròng",
+ "diem_nhan": [
+  "VN-Index tăng ++8,35 điểm (+0,49%)++ lên **1.697,14**, đóng cửa gần mức cao nhất ngày sau khi có lúc xuống --1.671,72--; VIC góp **6,06 điểm**",
+  "Độ rộng cân bằng: HOSE ++164 mã tăng++, --136 mã giảm--. Khớp lệnh HOSE **8.651 tỷ**, thấp hơn phiên trước --19%--",
+  "Khối ngoại bán ròng --437,6 tỷ-- toàn thị trường, nhiều nhất ở HDB và SSI; mua ròng mạnh POW (**176,8 tỷ**)"
+ ],
+ "chi_so": [
+  [
+   "VN-Index",
+   "1.697,14",
+   "+8,35 (+0,49%)",
+   "8.651 tỷ"
+  ],
+  [
+   "HNX-Index",
+   "232,23",
+   "-2,36 (-1,01%)",
+   "430 tỷ"
+  ],
+  [
+   "UPCoM-Index",
+   "119,17",
+   "+0,03 (+0,03%)",
+   "207 tỷ"
+  ]
+ ],
  "chi_so_cot4": "GT KHỚP LỆNH",
- "chi_so_ghi_chu": "Kéo chỉ số: ++VIC +6,06++ · ++VHM +1,86++ · ++FPT +0,72++ · ++HVN +0,51++ điểm. Đè chỉ số: --TCB -0,99-- · --GAS -0,60-- · --STB -0,43-- · --MBB -0,31-- điểm",
- "do_rong": {"san": "HOSE", "tang": 164, "dung": 68, "giam": 136, "ghi_chu": "Độ rộng nghiêng về bên mua"},
- "dong_tien": ["**Sáng:** mở cửa trong sắc đỏ, đáy phiên quanh 1.673 điểm lúc khoảng 10h; cầu bắt đáy vào 30 phút cuối phiên sáng", "**Chiều:** lực mua nhóm vốn hoá lớn đẩy chỉ số lên vùng 1.690–1.698 điểm", "**Khối lượng khớp HOSE:** 605,5 triệu cổ phiếu; PNJ khớp gần 16,2 triệu, gấp hơn 3 lần phiên trước"],
- "khoi_ngoai": {"tom_tat": "HOSE: mua **1.459,3 tỷ**, bán **1.866,4 tỷ**, bán ròng **407,1 tỷ** — phiên bán ròng thứ 6 liên tiếp.", "mua": [["POW", "+176,8 tỷ"], ["GMD", "+61,4 tỷ"], ["HVN", "+35,3 tỷ"], ["FPT", "+23,8 tỷ"], ["HDG", "+21,0 tỷ"]], "ban": [["HDB", "-98,5 tỷ"], ["SSI", "-67,8 tỷ"], ["VIX", "-67,5 tỷ"], ["VPX", "-65,1 tỷ"], ["TCB", "-51,9 tỷ"]]},
- "co_phieu": [["TĂNG", "FPT +++4,11%++ · GMD +++3,80%++ · HVN +++3,49%++ · POW +++3,01%++ · GVR +++2,01%++ · VHM +++1,82%++"], ["GIẢM", "PNJ ---6,67%-- · TCH ---4,32%-- · TCB ---2,12%-- · VPI ---1,86%-- · GAS ---1,70%-- · STB ---1,55%--"], ["PNJ", "Giảm sàn về **12.600 đồng**; CEO thừa nhận doanh nghiệp lỗ hằng tháng, áp lực từ các khoản mua lại sản phẩm đến hạn"]],
- "su_kien": [["CỔ TỨC", "MSH tạm ứng **40%** tiền (ĐKCC 27/11); FPT **10%** tiền (ĐKCC 30/11); SMB 20%, BVH 8,09%"], ["PHÁT HÀNH", "BID phát hành hơn **1,397 tỷ** cổ phiếu trả cổ tức; ABB chào bán tỷ lệ 100:50, giá 10.000 đồng"], ["NHÂN SỰ", "LPB: bà Vũ Nam Hương làm Quyền Tổng Giám đốc từ 23/11"], ["NỘI BỘ", "SHI: Chủ tịch đăng ký mua gần **7,88 triệu** cổ phiếu từ 25/11"]],
- "carousel": {"tieu_de": "VIC, VHM kéo VN-Index **về sát 1.700**", "mo_ta": "Sáng có lúc lùi về quanh **1.673** điểm, chặn chuỗi 4 phiên giảm", "gt_ghi_chu": "Thấp hơn bình quân 20 phiên ~24%", "kn_rong": "-407,1 tỷ", "kn_ghi_chu": "Mua 1.459,3 · Bán 1.866,4 tỷ",
-  "keo": [["VIC", "+6,06"], ["VHM", "+1,86"], ["FPT", "+0,72"], ["HVN", "+0,51"]], "de": [["TCB", "-0,99"], ["GAS", "-0,60"], ["STB", "-0,43"], ["MBB", "-0,31"]],
-  "tang": [["FPT", "+4,11%"], ["GMD", "+3,80%"], ["HVN", "+3,49%"], ["POW", "+3,01%"], ["GVR", "+2,01%"], ["VHM", "+1,82%"]],
-  "giam": [["PNJ", "-6,67%"], ["TCH", "-4,32%"], ["TCB", "-2,12%"], ["VPI", "-1,86%"], ["GAS", "-1,70%"], ["STB", "-1,55%"]],
-  "su_kien": [["PNJ", "Giảm sàn, CEO thừa nhận **lỗ hằng tháng**"], ["CỔ TỨC", "MSH tạm ứng **40%** tiền, ĐKCC 27/11"], ["CỔ TỨC", "FPT tạm ứng **10%** tiền, ĐKCC 30/11"], ["PHÁT HÀNH", "BID phát hành **1,397 tỷ** cp trả cổ tức"], ["PHÁT HÀNH", "ABB chào bán tỷ lệ **100:50**, giá 10.000đ"], ["NHÂN SỰ", "LPB có Quyền Tổng Giám đốc mới"]]}}
+ "chi_so_ghi_chu": "KL khớp HOSE **418,8 triệu cp**, bằng 76% TB20; phiên trước khớp 10.681 tỷ. P/E VN-Index **10,65 lần** (20/11), thấp nhất 1 năm",
+ "do_rong": {
+  "san": "HOSE",
+  "tang": 164,
+  "dung": 68,
+  "giam": 136,
+  "ghi_chu": "HNX 67 tăng · 55 đứng · 61 giảm; UPCoM 130 tăng · 80 đứng · 86 giảm"
+ },
+ "dong_tien": [
+  "**Sáng:** khớp lệnh HOSE 3.992 tỷ, chỉ số có lúc mất gần 17 điểm",
+  "**Chiều:** thêm 4.659 tỷ, lực cầu ở VIC, VHM, FPT kéo chỉ số lên gần đỉnh ngày",
+  "**Cả ngày:** KL khớp HOSE bằng 76% trung bình 20 phiên"
+ ],
+ "khoi_ngoai": {
+  "tom_tat": "HOSE: mua **1.463,9 tỷ**, bán **1.882,9 tỷ**, bán ròng --418,9 tỷ--. Toàn thị trường bán ròng --437,6 tỷ-- (HNX -15,2 tỷ, UPCoM -3,5 tỷ). 15/20 phiên gần nhất bán ròng.",
+  "mua": [
+   [
+    "POW",
+    "+176,8 tỷ"
+   ],
+   [
+    "GMD",
+    "+61,4 tỷ"
+   ],
+   [
+    "HVN",
+    "+35,3 tỷ"
+   ],
+   [
+    "FPT",
+    "+23,8 tỷ"
+   ],
+   [
+    "HDG",
+    "+20,9 tỷ"
+   ]
+  ],
+  "ban": [
+   [
+    "HDB",
+    "-98,5 tỷ"
+   ],
+   [
+    "SSI",
+    "-67,8 tỷ"
+   ],
+   [
+    "VIX",
+    "-67,5 tỷ"
+   ],
+   [
+    "VPX",
+    "-65,1 tỷ"
+   ],
+   [
+    "TCB",
+    "-51,9 tỷ"
+   ]
+  ]
+ },
+ "nganh": {
+  "manh": [
+   [
+    "Viễn thông",
+    "+5,07%"
+   ],
+   [
+    "Công nghệ",
+    "+2,94%"
+   ],
+   [
+    "Bất động sản",
+    "+1,30%"
+   ]
+  ],
+  "yeu": [
+   [
+    "Truyền thông",
+    "-1,62%"
+   ],
+   [
+    "Bán lẻ",
+    "-0,73%"
+   ],
+   [
+    "Tài nguyên",
+    "-0,66%"
+   ]
+  ]
+ },
+ "co_phieu": [
+  [
+   "KÉO",
+   "++VIC +6,06++ · ++VHM +1,86++ · ++FPT +0,72++ · ++HVN +0,51++ điểm · FPT ++4,11%++, HDG ++4,04%++, GMD ++3,80%++, HVN ++3,49%++, POW ++3,01%++"
+  ],
+  [
+   "GHÌ",
+   "--TCB -0,99-- · --GAS -0,60-- · --STB -0,43-- · --MBB -0,31-- điểm"
+  ],
+  [
+   "PNJ",
+   "Giảm sàn --6,67%-- về **12.600 đồng** (GTGD 206 tỷ); CEO thừa nhận doanh nghiệp lỗ hằng tháng"
+  ]
+ ],
+ "su_kien": [
+  [
+   "CỔ TỨC",
+   "MSH tạm ứng **40%** tiền (ĐKCC 27/11); FPT **10%** tiền (ĐKCC 30/11); SMB 20%, BVH 8,09%"
+  ],
+  [
+   "PHÁT HÀNH",
+   "BID phát hành hơn **1,397 tỷ** cổ phiếu trả cổ tức; ABB chào bán tỷ lệ 100:50, giá 10.000 đồng"
+  ],
+  [
+   "NHÂN SỰ",
+   "LPB: bà Vũ Nam Hương làm Quyền Tổng Giám đốc từ 23/11"
+  ],
+  [
+   "NỘI BỘ",
+   "SHI: Chủ tịch đăng ký mua gần **7,88 triệu** cổ phiếu từ 25/11"
+  ]
+ ],
+ "carousel": {
+  "tieu_de": "VN-Index **đảo chiều** từ đáy 1.671",
+  "mo_ta": "VIC góp **6,06 điểm**, đóng cửa gần mức cao nhất ngày",
+  "gt_ghi_chu": "Khớp lệnh HOSE, thấp hơn phiên trước 19%",
+  "kn_rong": "-418,9 tỷ",
+  "kn_ghi_chu": "Mua 1.463,9 · Bán 1.882,9 tỷ",
+  "keo": [
+   [
+    "VIC",
+    "+6,06"
+   ],
+   [
+    "VHM",
+    "+1,86"
+   ],
+   [
+    "FPT",
+    "+0,72"
+   ],
+   [
+    "HVN",
+    "+0,51"
+   ]
+  ],
+  "de": [
+   [
+    "TCB",
+    "-0,99"
+   ],
+   [
+    "GAS",
+    "-0,60"
+   ],
+   [
+    "STB",
+    "-0,43"
+   ],
+   [
+    "MBB",
+    "-0,31"
+   ]
+  ],
+  "tang": [
+   [
+    "FPT",
+    "+4,11%"
+   ],
+   [
+    "GMD",
+    "+3,80%"
+   ],
+   [
+    "HVN",
+    "+3,49%"
+   ],
+   [
+    "POW",
+    "+3,01%"
+   ],
+   [
+    "GVR",
+    "+2,01%"
+   ],
+   [
+    "VHM",
+    "+1,82%"
+   ]
+  ],
+  "giam": [
+   [
+    "PNJ",
+    "-6,67%"
+   ],
+   [
+    "TCH",
+    "-4,32%"
+   ],
+   [
+    "TCB",
+    "-2,12%"
+   ],
+   [
+    "VPI",
+    "-1,86%"
+   ],
+   [
+    "GAS",
+    "-1,70%"
+   ],
+   [
+    "STB",
+    "-1,55%"
+   ]
+  ],
+  "su_kien": [
+   [
+    "PNJ",
+    "Giảm sàn, CEO thừa nhận **lỗ hằng tháng**"
+   ],
+   [
+    "CỔ TỨC",
+    "MSH tạm ứng **40%** tiền, ĐKCC 27/11"
+   ],
+   [
+    "CỔ TỨC",
+    "FPT tạm ứng **10%** tiền, ĐKCC 30/11"
+   ],
+   [
+    "PHÁT HÀNH",
+    "BID phát hành **1,397 tỷ** cp trả cổ tức"
+   ],
+   [
+    "PHÁT HÀNH",
+    "ABB chào bán tỷ lệ **100:50**, giá 10.000đ"
+   ],
+   [
+    "NHÂN SỰ",
+    "LPB có Quyền Tổng Giám đốc mới"
+   ]
+  ]
+ }
+}

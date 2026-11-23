@@ -56,7 +56,7 @@ if(P==1){
  const r=D.do_rong,t=r.tang+r.dung+r.giam;
  h+=`<div class="kick">TỔNG KẾT PHIÊN · ${e(D.thu).toUpperCase()} ${e(D.ngay)}</div><h1>${hl(C.tieu_de||D.tieu_de)}</h1>
  <div class="big"><div class="n">VN-Index đóng cửa</div><div class="v"><b>${e(vn[1])}</b><span class="${c(vn[2])}">${e(vn[2])}</span></div>${C.mo_ta?`<p>${hl(C.mo_ta)}</p>`:''}</div>
- <div class="row"><div class="st"><div class="l">GT GIAO DỊCH HOSE</div><div class="v">${e(vn[3])}</div>${C.gt_ghi_chu?`<div class="s">${hl(C.gt_ghi_chu)}</div>`:''}</div>
+ <div class="row"><div class="st"><div class="l">GT KHỚP LỆNH HOSE</div><div class="v">${e(vn[3])}</div>${C.gt_ghi_chu?`<div class="s">${hl(C.gt_ghi_chu)}</div>`:''}</div>
  <div class="st"><div class="l">KHỐI NGOẠI HOSE</div><div class="v ${c(C.kn_rong||'')}">${e(C.kn_rong||'')}</div><div class="s">${hl(C.kn_ghi_chu||'')}</div></div></div>
  <div class="st" style="margin-top:20px"><div class="l">ĐỘ RỘNG HOSE</div><div class="bar"><i style="width:${r.tang/t*100}%;background:#3dd68c"></i><i style="width:${r.dung/t*100}%;background:#e0b84a"></i><i style="width:${r.giam/t*100}%;background:#ff6b6b"></i></div><div class="lb"><span class="up">${r.tang} tăng</span><span class="fl">${r.dung} đứng</span><span class="dn">${r.giam} giảm</span></div></div>
  <div class="sw"><span>Khối ngoại · ${D.nganh?'Nhóm ngành · ':''}Cổ phiếu nổi bật</span><b>Vuốt xem →</b></div>`;
