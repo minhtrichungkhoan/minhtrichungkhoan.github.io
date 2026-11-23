@@ -59,7 +59,7 @@ if(P==1){
  <div class="row"><div class="st"><div class="l">GT GIAO DỊCH HOSE</div><div class="v">${e(vn[3])}</div>${C.gt_ghi_chu?`<div class="s">${hl(C.gt_ghi_chu)}</div>`:''}</div>
  <div class="st"><div class="l">KHỐI NGOẠI HOSE</div><div class="v ${c(C.kn_rong||'')}">${e(C.kn_rong||'')}</div><div class="s">${hl(C.kn_ghi_chu||'')}</div></div></div>
  <div class="st" style="margin-top:20px"><div class="l">ĐỘ RỘNG HOSE</div><div class="bar"><i style="width:${r.tang/t*100}%;background:#3dd68c"></i><i style="width:${r.dung/t*100}%;background:#e0b84a"></i><i style="width:${r.giam/t*100}%;background:#ff6b6b"></i></div><div class="lb"><span class="up">${r.tang} tăng</span><span class="fl">${r.dung} đứng</span><span class="dn">${r.giam} giảm</span></div></div>
- <div class="sw"><span>Khối ngoại · Nhóm ngành · Cổ phiếu nổi bật</span><b>Vuốt xem →</b></div>`;
+ <div class="sw"><span>Khối ngoại · ${D.nganh?'Nhóm ngành · ':''}Cổ phiếu nổi bật</span><b>Vuốt xem →</b></div>`;
 }else if(P==2){
  const k=D.khoi_ngoai,n=D.nganh;
  h+=`<h2>Dòng tiền <em>hôm nay</em> đi đâu?</h2>
@@ -69,10 +69,10 @@ if(P==1){
  if(C.keo||C.de)h+=`<div class="sec">MÃ ẢNH HƯỞNG VN-INDEX (ĐIỂM)</div><div class="card"><div class="two">
  <div><div class="hd up">KÉO LÊN</div><div class="tl">${(C.keo||[]).map(x=>`<div><b>${e(x[0])}</b><span class="up">${e(x[1])}</span></div>`).join('')}</div></div>
  <div><div class="hd dn">ĐÈ XUỐNG</div><div class="tl">${(C.de||[]).map(x=>`<div><b>${e(x[0])}</b><span class="dn">${e(x[1])}</span></div>`).join('')}</div></div></div></div>`;
- h+=`<div class="sec">NHÓM NGÀNH</div><div class="card"><div class="two">
+ if(n)h+=`<div class="sec">NHÓM NGÀNH</div><div class="card"><div class="two">
  <div><div class="hd up">MẠNH NHẤT</div><div class="tl">${n.manh.map(x=>`<div><b style="font-size:26px">${e(x[0])}</b><span class="up">${e(x[1])}</span></div>`).join('')}</div></div>
- <div><div class="hd dn">YẾU NHẤT</div><div class="tl">${n.yeu.map(x=>`<div><b style="font-size:26px">${e(x[0])}</b><span class="dn">${e(x[1])}</span></div>`).join('')}</div></div></div></div>
- <div class="sw"><span>Cổ phiếu nổi bật · Sự kiện doanh nghiệp</span><b>Vuốt xem →</b></div>`;
+ <div><div class="hd dn">YẾU NHẤT</div><div class="tl">${n.yeu.map(x=>`<div><b style="font-size:26px">${e(x[0])}</b><span class="dn">${e(x[1])}</span></div>`).join('')}</div></div></div></div>`;
+ h+=`<div class="sw"><span>Cổ phiếu nổi bật · Sự kiện doanh nghiệp</span><b>Vuốt xem →</b></div>`;
 }else{
  h+=`<h2>Cổ phiếu <em>đáng chú ý</em></h2>
  <div class="sec">TĂNG MẠNH</div><div class="card"><div class="chips">${(C.tang||[]).map(x=>`<div class="chip"><b>${e(x[0])}</b><span class="up">${e(x[1])}</span></div>`).join('')}</div></div>

@@ -3,6 +3,13 @@
 # Ảnh: tên file ảnh nằm trong thư mục ban-tin
 # Dòng bắt đầu bằng dấu # là ghi chú, không hiện lên trang.
 
+Ngày: 23/11/2026
+Ảnh: 2026-11-23.png
+Tiêu đề: VN-Index tăng 8,35 điểm nhờ VIC, VHM; khối ngoại bán ròng 407,1 tỷ
+- VN-Index tăng 8,35 điểm (+0,49%) lên 1.697,14 điểm, chặn chuỗi 4 phiên giảm; VIC góp 6,06 điểm
+- Khớp lệnh HOSE 12.691 tỷ, thấp hơn bình quân 20 phiên khoảng 24%; HOSE 164 mã tăng, 136 mã giảm
+- Khối ngoại bán ròng 407,1 tỷ trên HOSE (phiên thứ 6 liên tiếp), tập trung HDB, SSI, VIX; mua ròng mạnh POW
+---
 Ngày: 20/11/2026
 Ảnh: 2026-11-20.png
 Tiêu đề: VN-Index hồi gần trọn đà giảm, khối ngoại bán ròng 842,6 tỷ
