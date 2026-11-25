@@ -3,6 +3,13 @@
 # Ảnh: tên file ảnh nằm trong thư mục ban-tin
 # Dòng bắt đầu bằng dấu # là ghi chú, không hiện lên trang.
 
+Ngày: 25/11/2026
+Ảnh: 2026-11-25.png
+Tiêu đề: VN-Index giảm 9,69 điểm; khối ngoại bán ròng 5.675,9 tỷ, riêng VIC 4.705,5 tỷ
+- VN-Index giảm 9,69 điểm (−0,57%) về 1.687,45 điểm, đảo chiều sau khi lên 1.706,16 trong phiên sáng
+- Khớp lệnh HOSE 8.446 tỷ, thấp hơn phiên trước 2%; HOSE 87 mã tăng, 241 mã giảm
+- Khối ngoại bán ròng 5.675,9 tỷ toàn thị trường, riêng VIC 4.705,5 tỷ chủ yếu qua thỏa thuận; mua ròng nhiều nhất VNM
+---
 Ngày: 23/11/2026
 Ảnh: 2026-11-23.png
 Tiêu đề: VN-Index tăng 8,35 điểm, đảo chiều từ đáy 1.671; khối ngoại bán ròng 437,6 tỷ

@@ -1,0 +1,63 @@
+{
+ "ngay": "25/11/2026",
+ "thu": "Thứ Tư",
+ "tieu_de": "VN-Index giảm **9,69 điểm**, khối ngoại bán ròng 5.676 tỷ",
+ "phu_de": "Riêng VIC bị bán ròng 4.706 tỷ, chủ yếu qua thỏa thuận; độ rộng nghiêng hẳn về bên bán",
+ "diem_nhan": [
+  "VN-Index giảm --9,69 điểm (−0,57%)-- về **1.687,45**, đảo chiều sau khi lên ++1.706,16++ trong phiên sáng; MCH, VHM, HPG, VCB lấy đi --2,57 điểm--",
+  "Độ rộng nghiêng bán: HOSE --241 mã giảm--, ++87 mã tăng++. Khớp lệnh HOSE **8.446 tỷ**, thấp hơn phiên trước --2%--",
+  "Khối ngoại bán ròng --5.675,9 tỷ-- toàn thị trường, riêng VIC --4.705,5 tỷ--; không tính VIC, HOSE vẫn bán ròng gần --969 tỷ--"
+ ],
+ "chi_so": [
+  ["VN-Index", "1.687,45", "-9,69 (-0,57%)", "8.446 tỷ"],
+  ["HNX-Index", "227,46", "-4,77 (-2,05%)", "588 tỷ"],
+  ["UPCoM-Index", "119,82", "+0,65 (+0,55%)", "395 tỷ"]
+ ],
+ "chi_so_cot4": "GT KHỚP LỆNH",
+ "chi_so_ghi_chu": "KL khớp HOSE **410,6 triệu cp**, bằng 75% TB20; phiên trước khớp 8.651 tỷ. P/E VN-Index **10,69 lần** (23/11), sát đáy 1 năm 10,65 lần",
+ "do_rong": {"san": "HOSE", "tang": 87, "dung": 53, "giam": 241, "ghi_chu": "HNX 50 tăng · 57 đứng · 93 giảm; UPCoM 109 tăng · 67 đứng · 109 giảm"},
+ "dong_tien": [
+  "**Sáng:** khớp lệnh HOSE 3.257 tỷ, chỉ số giữ sắc xanh quanh 1.700",
+  "**Chiều:** thêm 5.189 tỷ (ATC 1.216 tỷ), lực bán lan rộng, chỉ số có lúc xuống 1.683,17",
+  "**Cả ngày:** KL khớp HOSE bằng 75% trung bình 20 phiên"
+ ],
+ "khoi_ngoai": {
+  "tom_tat": "HOSE: mua **1.465,1 tỷ**, bán **7.139,5 tỷ**, bán ròng --5.674,4 tỷ--. Toàn thị trường bán ròng --5.675,9 tỷ-- (HNX +6,5 tỷ, UPCoM -8,1 tỷ). VIC bị bán ròng 19,1 triệu cp, chủ yếu qua thỏa thuận. 15/20 phiên gần nhất bán ròng.",
+  "mua": [["VNM", "+33,1 tỷ"], ["SAB", "+28,8 tỷ"], ["HCM", "+27,9 tỷ"], ["PNJ", "+26,9 tỷ"], ["HDG", "+24,2 tỷ"]],
+  "ban": [["VIC", "-4.705,5 tỷ"], ["FUEVFVND", "-483,5 tỷ"], ["MSN", "-123,6 tỷ"], ["VIX", "-59,2 tỷ"], ["HDB", "-55,0 tỷ"]]
+ },
+ "nganh": {
+  "manh": [["Tài nguyên", "+2,01%"], ["Du lịch & Giải trí", "+1,10%"], ["Ôtô & phụ tùng", "+0,96%"]],
+  "yeu": [["Dầu khí", "-1,98%"], ["Xây dựng & Vật liệu", "-1,86%"], ["Dịch vụ tài chính", "-1,80%"]]
+ },
+ "co_phieu": [
+  ["KÉO", "++HVN +0,38++ · ++VPL +0,37++ · ++SAB +0,28++ · ++ACB +0,12++ điểm · VVS ++6,95%++, KLB ++6,86%++, HVN ++2,53%++, SAB ++2,44%++"],
+  ["GHÌ", "--MCH -0,76-- · --VHM -0,68-- · --HPG -0,61-- · --VCB -0,52-- điểm · HSL --6,97%--, HDC --6,64%--, NKG --6,58%--, CTS --4,76%--"],
+  ["UPCOM", "MSR tăng ++14,94%++ (GTGD 175 tỷ), AAV ++14,71%++; VCP --15%--. HNX: CEO --4,35%--, SHS --3,73%--"]
+ ],
+ "su_kien": [
+  ["CỔ TỨC", "GDKHQ 26/11: MSH **4.000đ**/cp, BVH 809đ/cp; GDKHQ 25/11: DXP cổ phiếu 100:15, NSH 100đ/cp"],
+  ["THỊ TRƯỜNG", "Từ **28/12/2026** toàn bộ cổ phiếu niêm yết HNX chuyển sang giao dịch tại HOSE"],
+  ["ĐẦU TƯ", "BAF khởi công nhà máy chế biến thực phẩm **1.250 tỷ** tại Gia Lai"],
+  ["PHÁT HÀNH", "AIG lấy ý kiến phát hành tối đa **9,8 triệu** cp ESOP giá 10.000đ"]
+ ],
+ "carousel": {
+  "tieu_de": "Khối ngoại bán ròng **5.676 tỷ**",
+  "mo_ta": "VN-Index giảm **9,69 điểm**, riêng VIC bị bán ròng 4.706 tỷ",
+  "gt_ghi_chu": "Khớp lệnh HOSE, thấp hơn phiên trước 2%",
+  "kn_rong": "-5.674,4 tỷ",
+  "kn_ghi_chu": "Mua 1.465,1 · Bán 7.139,5 tỷ",
+  "keo": [["HVN", "+0,38"], ["VPL", "+0,37"], ["SAB", "+0,28"], ["ACB", "+0,12"]],
+  "de": [["MCH", "-0,76"], ["VHM", "-0,68"], ["HPG", "-0,61"], ["VCB", "-0,52"]],
+  "tang": [["VVS", "+6,95%"], ["KLB", "+6,86%"], ["HVN", "+2,53%"], ["SAB", "+2,44%"], ["BMP", "+2,31%"], ["BFC", "+1,69%"]],
+  "giam": [["HSL", "-6,97%"], ["HDC", "-6,64%"], ["NKG", "-6,58%"], ["KOS", "-6,14%"], ["CTS", "-4,76%"], ["NVL", "-3,94%"]],
+  "su_kien": [
+   ["VIC", "Khối ngoại bán ròng **4.706 tỷ**, chủ yếu thỏa thuận"],
+   ["THỊ TRƯỜNG", "Cổ phiếu HNX chuyển sang HOSE từ **28/12**"],
+   ["CỔ TỨC", "MSH **4.000đ**/cp, GDKHQ 26/11"],
+   ["ĐẦU TƯ", "BAF khởi công nhà máy **1.250 tỷ** ở Gia Lai"],
+   ["UPCOM", "MSR tăng **14,94%**, GTGD 175 tỷ"],
+   ["PHÁT HÀNH", "AIG dự kiến ESOP **9,8 triệu** cp giá 10.000đ"]
+  ]
+ }
+}
