@@ -973,8 +973,6 @@ section.sec-col{padding-bottom:24px!important}section.sec-col .sec-h{margin-bott
       <div class="sc-res" id="scRes"></div>
     </div>
     <p class="disc-b"><b>Lưu ý:</b> Số liệu và chỉ số trên trang được tổng hợp tự động từ nguồn công khai, có thể có sai sót hoặc độ trễ. Thông tin chỉ để tham khảo, không phải khuyến nghị mua/bán. Nhà đầu tư tự chịu trách nhiệm với quyết định của mình.</p>
-    <h3 class="wt" id="idxH" style="margin-top:48px" hidden>Tổng quan thị trường</h3>
-    <div class="idx" id="idxCards"></div>
   </div>
 </section>
 
@@ -1095,7 +1093,7 @@ fetch('data/summary.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j
   const it=Object.entries(j.items||{});
   if(it.length){const h=it.map(([k,v])=>`<span class="chip">${k} <b>${fmtP(v.c)}</b> <span class="${v.chp>=0?'up':'dn'}">${v.chp>=0?'▲':'▼'}${Math.abs(v.chp).toFixed(1)}%</span></span>`).join('');document.getElementById('tape').innerHTML=h+h;document.getElementById('tapeBox').hidden=false}
   const names={VNINDEX:'VN-Index',VN30:'VN30',HNXINDEX:'HNX-Index',UPCOMINDEX:'UPCoM-Index'};
-  if(Object.keys(j.idx||{}).length)document.getElementById('idxH').hidden=false;document.getElementById('idxCards').innerHTML=Object.entries(j.idx||{}).map(([k,v])=>`<div class="ic2 card"><small>${names[k]||k} · ${v.t||''}</small><b>${fmtI(v.c)} ${pctTxt(v.chp)}</b>${spark(v.spark,v.chp>=0)}</div>`).join('');
+  if(Object.keys(j.idx||{}).length)(document.getElementById('idxH')||{}).hidden=false;(document.getElementById('idxCards')||{}).innerHTML=Object.entries(j.idx||{}).map(([k,v])=>`<div class="ic2 card"><small>${names[k]||k} · ${v.t||''}</small><b>${fmtI(v.c)} ${pctTxt(v.chp)}</b>${spark(v.spark,v.chp>=0)}</div>`).join('');
 }).catch(()=>{});
 let SYMS=null;
 fetch('data/symbols.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(!j)return;SYMS=j;
