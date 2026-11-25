@@ -730,6 +730,15 @@ section.sec-col{padding-bottom:24px!important}section.sec-col .sec-h{margin-bott
 @media(max-width:1000px){.sm-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.sm-cols{grid-template-columns:1fr}.sm-dl{grid-template-columns:1fr}}
 @media(max-width:640px){.sm-card{padding:16px 14px}.sm-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sm-t{min-height:64px;padding:10px 12px}.sm-t b{font-size:17px}
   .sc2-h{grid-template-columns:minmax(0,1fr) 80px auto}.st2{grid-template-columns:104px 70px minmax(0,1fr);gap:8px}}
+
+/* tab con trong từng mục */
+.subtabs{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 22px;padding:5px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.02);width:fit-content;max-width:100%}
+.subtabs button{background:none;border:0;color:#cfc8d0;border-radius:10px;padding:9px 18px;font:inherit;font-size:14.5px;font-weight:700;cursor:pointer;min-height:42px;white-space:nowrap}
+.subtabs button:hover{color:var(--gold2)}.subtabs button.on{background:var(--gold);color:#17120a}
+.subpane[hidden]{display:none!important}
+@media(max-width:560px){.subtabs{width:100%;display:grid;grid-auto-flow:column;grid-auto-columns:1fr}.subtabs button{padding:9px 8px;font-size:13.5px;white-space:normal;line-height:1.2}}
+.ix-seg{display:flex;gap:4px;flex-wrap:wrap}.ix-seg button{background:rgba(255,255,255,.04);border:1px solid var(--line);color:#cfc8d0;border-radius:8px;padding:4px 10px;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;min-height:32px}.ix-seg button.on{background:var(--gold);border-color:var(--gold);color:#17120a}
+.ix-per{color:var(--muted);font-size:12.5px;margin:-4px 0 8px}
 </style>
 <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
 </head>
@@ -904,7 +913,7 @@ section.sec-col{padding-bottom:24px!important}section.sec-col .sec-h{margin-bott
     </div>
     <div class="ix-box rv" id="ixBox" hidden>
       <div class="ix-main" id="ixMain"></div>
-      <div class="ix-sec card"><div class="ix-h"><h3>Chỉ số ngành HOSE</h3><span id="ixPer">% thay đổi 1 phiên</span></div><div id="ixSec"></div><button type="button" class="sf-more ix-more" id="ixMore" hidden></button></div>
+      <div class="ix-sec card"><div class="ix-h"><h3>Chỉ số ngành HOSE</h3><div class="ix-seg" id="ixSeg"><button type="button" data-p="1" class="on">1 phiên</button><button type="button" data-p="5">5 phiên</button><button type="button" data-p="20">20 phiên</button><button type="button" data-p="Y">Từ đầu năm</button></div></div><p class="ix-per" id="ixPer">% thay đổi 1 phiên</p><div id="ixSec"></div><button type="button" class="sf-more ix-more" id="ixMore" hidden></button></div>
     </div>
     <div class="sf-top">
       <div class="sf-chips" id="sfChips"></div>
@@ -1190,7 +1199,7 @@ const renderRank=(code,key)=>{const box=document.getElementById('rank');RK_LAST=
     box.querySelector('.rk-tabs').onclick=e=>{const b=e.target.closest('button');if(!b)return;RK_M=b.dataset.m;renderRank(code,key)};
     box.querySelectorAll('.rk-r').forEach(b=>b.onclick=()=>{if(b.dataset.s===code)return;chart(b.dataset.s);document.getElementById('thi-truong').scrollIntoView({behavior:'smooth'})});
   })};
-const chart=sym=>{const code=(sym.split(':')[1]||sym).toUpperCase();if(window.expandSec&&window.urlSync)window.expandSec('thi-truong');
+const chart=sym=>{const code=(sym.split(':')[1]||sym).toUpperCase();if(window.urlSync&&window.showTab&&window.showTab['thi-truong'])window.showTab['thi-truong']('tra-cuu');if(window.expandSec&&window.urlSync)window.expandSec('thi-truong');
   if(window.urlSync){try{history.replaceState(null,'',location.pathname+'?ma='+code+'#thi-truong')}catch(e){}}
   document.getElementById('askCode').textContent=code;window.curCode=code;quarter(code);
   const qi=document.getElementById('qinfo'),ra=document.getElementById('ratios');
@@ -1279,7 +1288,8 @@ fetch('nhan-dinh.txt',{cache:'no-cache'}).then(r=>r.ok?r.text():'').then(t=>{
    document.getElementById('ixBox').hidden=false};
  fetch('data/indices.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.hist)return;IX={hist:j.hist,dates:Object.keys(j.hist).sort()};if(!IX.dates.length)return;draw()}).catch(()=>{});
  document.getElementById('ixMore').onclick=()=>{ixAll=!ixAll;draw();if(!ixAll)document.getElementById('ixBox').scrollIntoView({behavior:'smooth'})};
- document.getElementById('sfPer').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;ixPer=b.dataset.p==='Y'?'Y':+b.dataset.p;draw()});}
+ document.getElementById('sfPer').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;ixPer=b.dataset.p==='Y'?'Y':+b.dataset.p;document.querySelectorAll('#ixSeg button').forEach(x=>x.classList.toggle('on',x.dataset.p===b.dataset.p));draw()});
+ document.getElementById('ixSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;ixPer=b.dataset.p==='Y'?'Y':+b.dataset.p;document.querySelectorAll('#ixSeg button').forEach(x=>x.classList.toggle('on',x===b));draw()});}
 
 /* ===== danh mục theo dõi (lưu trên máy người xem) ===== */
 const wlGet=()=>{try{return JSON.parse(localStorage.getItem('wl')||'[]')}catch(e){return[]}};
@@ -1433,6 +1443,26 @@ fetch('ban-tin/danh-sach.txt',{cache:'no-cache'}).then(r=>r.ok?r.text():'').then
  $('smap').addEventListener('click',e=>{const st=e.target.closest('.st2');if(st){chart(st.dataset.s);document.getElementById('thi-truong').scrollIntoView({behavior:'smooth'});return}
    const t=e.target.closest('[data-n]');if(t&&CUR){const s=CUR.secs.find(x=>x.n===t.dataset.n);if(s){$('smDet').dataset.n=s.n;detail(s);if(!t.classList.contains('sm-t'))$('smDet').scrollIntoView({behavior:'smooth',block:'nearest'})}}});
  fetch('data/sector-map.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.sectors||!j.sectors.length)return;SM=j;draw();$('smap').hidden=false}).catch(()=>{});}
+
+/* ===== tab con: gom các khối trong mục 04 và 05 ===== */
+{const TABS={'dong-tien':[['ban-do','Bản đồ ngành','#smap'],['chi-so','Chỉ số','#ixBox'],['dong-tien-nganh','Dòng tiền ngành',null]],
+  'thi-truong':[['tra-cuu','Tra cứu mã',null],['bo-loc','Bộ lọc cổ phiếu','#screener']]};
+ const KEEP=el=>el.classList.contains('label')||el.classList.contains('sec-h')||el.classList.contains('sec-p')||el.classList.contains('disc-b');
+ const save=(k,v)=>{try{localStorage.setItem('tab-'+k,v)}catch(e){}},load=k=>{try{return localStorage.getItem('tab-'+k)}catch(e){return null}};
+ for(const [sid,defs] of Object.entries(TABS)){const sec=document.getElementById(sid);if(!sec)continue;const wrap=sec.querySelector('.wrap');if(!wrap)continue;
+   for(const d of defs){if(!d[2])continue;const t=wrap.querySelector(d[2]);if(t&&t.parentElement!==wrap){let top=t;while(top.parentElement!==wrap)top=top.parentElement;wrap.insertBefore(t,top.nextSibling)}}
+   const kids=[...wrap.children].filter(el=>!KEEP(el));if(!kids.length)continue;
+   const panes=defs.map(([k])=>{const d=document.createElement('div');d.className='subpane';d.dataset.tab=k;return d});
+   const first=kids[0];const bar=document.createElement('div');bar.className='subtabs';bar.setAttribute('role','tablist');
+   bar.innerHTML=defs.map(([k,t])=>`<button type="button" role="tab" data-tab="${k}">${t}</button>`).join('');
+   wrap.insertBefore(bar,first);panes.forEach(p=>wrap.insertBefore(p,first));
+   const dflt=defs.findIndex(d=>!d[2]);for(const el of kids){const i=defs.findIndex(([, ,q])=>q&&el.matches(q));panes[i<0?dflt:i].appendChild(el)}
+   const show=(k,persist=true)=>{if(!defs.some(d=>d[0]===k))k=defs[0][0];panes.forEach(p=>p.hidden=p.dataset.tab!==k);bar.querySelectorAll('button').forEach(b=>{const on=b.dataset.tab===k;b.classList.toggle('on',on);b.setAttribute('aria-selected',on)});
+     if(persist)save(sid,k);if(window.lwc&&k==='tra-cuu')setTimeout(()=>{try{window.dispatchEvent(new Event('resize'))}catch(e){}},30)};
+   bar.onclick=e=>{const b=e.target.closest('button');if(b)show(b.dataset.tab)};
+   show(load(sid)||defs[0][0],false);
+   (window.showTab||(window.showTab={}))[sid]=show}
+ if(new URLSearchParams(location.search).get('ma')&&window.showTab['thi-truong'])window.showTab['thi-truong']('tra-cuu',false);}
 document.getElementById('sForm').addEventListener('submit',e=>{e.preventDefault();let v=document.getElementById('sCode').value.trim();if(!v)return;let c=v.split(/[\s–-]/)[0].toUpperCase().replace(/[^A-Z0-9]/g,'');if(SYMS&&!SYMS[c]){const st=t=>(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d');const q=st(v);const hit=Object.entries(SYMS).find(([k,x])=>st(x.n).includes(q));if(hit)c=hit[0]}chart(c);document.getElementById('sCode').blur()});
 
 
