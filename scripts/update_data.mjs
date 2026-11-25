@@ -381,6 +381,31 @@ async function fptsIndices(vn, root, errors, debug, updated) {
 
 }
 
+
+// ---------- bản đồ 20 ngành (nhóm theo cách gọi quen thuộc của nhà đầu tư Việt Nam) ----------
+const SECTOR_MAP = [
+  ['Ngân hàng', 'VCB BID CTG TCB MBB VPB ACB HDB STB SHB VIB TPB LPB MSB OCB EIB SSB NAB BAB ABB VAB BVB KLB SGB PGB NVB'],
+  ['Chứng khoán', 'SSI VND VCI HCM SHS MBS VIX FTS BSI CTS VDS ORS AGR TVS BVS APS EVS DSC TCI SBS IVS PSI HBS'],
+  ['Bất động sản', 'VHM VIC VRE NVL PDR DXG DIG KDH NLG NTL CEO HDC TCH HDG SCR QCG CRE HQC LDG DXS AGG TDH ITC NBB VPI SJS HPX IJC KHG TIG HAR DRH'],
+  ['BĐS KCN', 'KBC IDC SZC BCM VGC PHR SIP LHG D2D TIP NTC SZL ITA'],
+  ['Xây dựng', 'CTD HBC VCG CII FCN LCG HHV C4G HUT DPG HTN VNE SCG CTI TV2 PVX'],
+  ['VLXD', 'HT1 BCC KSB VLB DHA BMP NTP PLC CVT VCS PTB'],
+  ['Thép', 'HPG HSG NKG TLH POM SMC VGS TVN'],
+  ['Dầu khí', 'GAS PLX PVD PVS BSR OIL PVC PVB PVO'],
+  ['Điện nước', 'POW NT2 REE PC1 GEG GEX QTP PPC HND VSH SBA BWE TDM CHP TBC PGV GEE'],
+  ['Hàng không', 'VJC HVN ACV SCS AST NCT SAS SGN'],
+  ['Cảng biển', 'GMD HAH VSC PHP SGP VOS VTO PVT TCL STG CDN DVP SKG VTP'],
+  ['Công nghệ VT', 'FPT CMG ELC ITD VGI CTR FOX SGT ICT ONE TTN HPT'],
+  ['Bán lẻ', 'MWG PNJ FRT DGW PET HAX'],
+  ['Tiêu dùng', 'VNM SAB MSN MCH KDC QNS SBT LSS BHN MML'],
+  ['Nông nghiệp - Cao su', 'DBC HAG BAF PAN DPR GVR TRC HNG LTG'],
+  ['Hóa chất - Phân bón', 'DGC DCM DPM CSV LAS BFC DDV VAF SFG'],
+  ['Thủy sản', 'VHC ANV IDI FMC MPC CMX ACL ABT'],
+  ['Dệt may', 'TCM MSH STK TNG GIL VGT ADS'],
+  ['Dược', 'DHG IMP DBD DCL AMV TRA DVN DMC JVC OPC'],
+  ['Bảo hiểm', 'BVH BMI MIG PVI PGI BIC VNR PTI ABI'],
+].map(([n, c]) => [n, c.split(/\s+/)]);
+
 async function main() {
   const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'data');
   const pxDir = path.join(root, 'px');
@@ -498,6 +523,7 @@ async function main() {
   // 4) trung vị theo ngành + file tổng hợp số liệu quý
   const med = (a) => { const b = a.filter((x) => x != null && Number.isFinite(x)).sort((x, y) => x - y); if (!b.length) return null; const m = b.length >> 1; return b.length % 2 ? b[m] : (b[m - 1] + b[m]) / 2; };
   const grp = {}, finAll = {}, rank = {};
+  const SM_CODES = new Set(SECTOR_MAP.flatMap(([, c]) => c)), SM_DATA = {};
   for (const fn of fs.readdirSync(pxDir)) {
     const d = readJ(path.join(pxDir, fn), null); if (!d || !d.s) continue;
     if (d.fin) finAll[d.s] = d.fin;
@@ -505,6 +531,11 @@ async function main() {
     const nmOf = (f) => { if (!f?.rev || !f?.np) return null; const n = f.np.slice(-4), v = f.rev.slice(-4); if (n.length < 4 || n.some((x) => x == null) || v.some((x) => x == null)) return null; const sv = v.reduce((a, b) => a + b, 0); return sv > 0 ? n.reduce((a, b) => a + b, 0) / sv : null; };
     const rr = { ...d.ratios }; if (rr.nm == null) rr.nm = nmOf(d.fin);
     for (const g of new Set([d.g || 'other', d.ind].filter(Boolean))) (grp[g] ||= []).push(rr);
+    if (SM_CODES.has(d.s) && d.bars?.length) {
+      let cap = null; const mq = String(rr.q || '').match(/Q(\d)\/(\d\d)/);
+      if (rr.cap && mq) { const end = `20${mq[2]}-${['03-31', '06-30', '09-30', '12-31'][mq[1] - 1]}`; let pq = null; for (let i = d.bars.length - 1; i >= 0; i--) if (d.bars[i][0] <= end) { pq = d.bars[i][4]; break; } if (pq) cap = rr.cap / pq * d.bars.at(-1)[4]; }
+      SM_DATA[d.s] = { cap, bars: d.bars, fin: d.fin };
+    }
     // bảng xếp hạng trong ngành: vốn hoá hiện tại = số cp (vốn hoá cuối quý / giá cuối quý) × giá mới nhất
     const rk = d.ind || (d.g !== 'other' ? d.g : null);
     if (rk && d.s.length === 3) {
@@ -515,6 +546,31 @@ async function main() {
       (rank[rk] ||= []).push([d.s, r4(rr.pe), r4(rr.pb), r4(rr.roe), r4(rr.nm), capNow ? Math.round(capNow / 1e9) : null]);
     }
   }
+  // bản đồ 20 ngành: 121 phiên giá đóng cửa gần nhất của từng mã (canh theo ngày của VN-Index), vốn hoá, LNST quý so với cùng kỳ
+  try {
+    const vni = readJ(path.join(pxDir, 'VNINDEX.json'), null);
+    const days = (vni?.bars || []).slice(-121).map((b) => b[0]);
+    if (days.length > 20) {
+      const vclose = (vni.bars || []).slice(-121).map((b) => b[4]);
+      const out = [];
+      for (const [name, codes] of SECTOR_MAP) {
+        const rows = [];
+        for (const c of codes) {
+          const x = SM_DATA[c]; if (!x?.bars?.length) continue;
+          const mp = new Map(x.bars.map((b) => [b[0], b[4]]));
+          let last = null; const cl = days.map((d) => { if (mp.has(d)) last = mp.get(d); return last; });
+          const first = cl.findIndex((v) => v != null); if (first < 0) continue; for (let i = 0; i < first; i++) cl[i] = cl[first];
+          const np = x.fin?.np || [], q = x.fin?.q || [];
+          let yoy = null; if (np.length >= 5 && np.at(-1) != null && np.at(-5) != null && np.at(-5) > 0) yoy = Math.round((np.at(-1) / np.at(-5) - 1) * 1000) / 10;
+          const sgn = np.length >= 5 && np.at(-5) != null && np.at(-1) != null ? (np.at(-5) <= 0 && np.at(-1) > 0 ? 'lai' : np.at(-5) > 0 && np.at(-1) <= 0 ? 'lo' : np.at(-5) <= 0 && np.at(-1) <= 0 ? 'lolo' : null) : null;
+          rows.push([c, x.cap ? Math.round(x.cap / 1e9) : null, yoy, sgn, q.at(-1) || null, cl.map((v) => (v == null ? null : Math.round(v)))]);
+        }
+        if (rows.length) out.push({ n: name, s: rows });
+      }
+      fs.writeFileSync(path.join(root, 'sector-map.json'), JSON.stringify({ updated, days, vni: vclose, sectors: out }));
+      debug.sectorMap = out.map((x) => x.n + ':' + x.s.length).join(', ');
+    }
+  } catch (e) { errors.sectorMap = String(e.message || e).slice(0, 200); }
   fs.writeFileSync(path.join(root, 'rank.json'), JSON.stringify({ updated, cols: ['s', 'pe', 'pb', 'roe', 'nm', 'cap'], groups: rank }));
   // dòng tiền theo ngành: giá trị giao dịch (giá đóng cửa × khối lượng), biến động giá, khối ngoại ròng
   try {

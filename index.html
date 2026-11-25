@@ -698,6 +698,38 @@ section.sec-col{padding-bottom:24px!important}section.sec-col .sec-h{margin-bott
 .btlb img{display:block;width:100%;max-width:640px;margin:0 auto;border-radius:10px}
 .btlb-x{position:fixed;top:12px;right:12px;display:flex;gap:8px;z-index:2}.btlb-x a,.btlb-x button{min-height:40px;padding:0 14px;border-radius:10px;border:1px solid rgba(212,174,94,.45);background:#141215;color:var(--gold2);font:inherit;font-weight:600;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;text-decoration:none}
 .btlb p{max-width:640px;margin:10px auto 0;color:var(--muted);font-size:12.5px;text-align:center}
+
+/* bản đồ 20 ngành */
+.smap{margin:6px 0 30px}
+.sm-card{border-radius:20px;padding:20px 22px}
+.sm-h{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}.sm-h h3{font-size:19px;font-weight:800}
+.sm-seg{display:flex;flex-wrap:wrap;gap:6px}.sm-seg button{background:rgba(255,255,255,.04);border:1px solid var(--line);color:#cfc8d0;border-radius:999px;padding:6px 14px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;min-height:36px}
+.sm-seg button.on{background:var(--gold);border-color:var(--gold);color:#17120a}
+.sm-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.sm-t{border:0;border-radius:12px;padding:12px 14px;text-align:left;color:#f3efe8;font:inherit;cursor:pointer;display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:4px 8px;min-height:72px;transition:transform .15s,box-shadow .15s}
+.sm-t:hover{transform:translateY(-1px);box-shadow:0 0 0 1px rgba(240,213,149,.5)}.sm-t.sel{box-shadow:0 0 0 2px var(--gold)}
+.sm-t span{grid-column:1/-1;font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sm-t b{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}.sm-t small{align-self:end;font-size:11.5px;opacity:.85;white-space:nowrap}
+.sm-note{color:var(--muted);font-size:12.5px;margin-top:12px}
+.sm-cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+.sm-ttl{font-size:14.5px;font-weight:700;margin-bottom:10px}.sm-ttl.up{color:#7fd1a0}.sm-ttl.dn{color:#ef8a7a}
+.sc2{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:12px}
+.sc2-h{display:grid;grid-template-columns:minmax(0,1fr) 110px auto;align-items:center;gap:10px}
+.sc2-h button{background:none;border:0;padding:0;color:var(--ink);font:inherit;font-size:17px;font-weight:800;text-align:left;cursor:pointer}.sc2-h button:hover{color:var(--gold2)}
+.sc2-h em{font-style:normal;font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}
+.sp{display:block;width:100%;height:28px}
+.chs{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 4px}.chs i{font-style:normal;font-size:12px;font-weight:600;border-radius:7px;padding:2px 8px;background:rgba(255,255,255,.05);color:#cfc8d0}
+.chs i.u{background:rgba(34,197,94,.13);color:#7fd1a0}.chs i.d{background:rgba(239,68,68,.13);color:#ef8a7a}.chs i.g{background:rgba(212,174,94,.13);color:var(--gold2)}
+.st2-c{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:10px;align-items:center}.st2-c .lg{grid-row:1/3;width:32px;height:32px;border-radius:8px;font-size:9px}
+.st2{display:grid;grid-template-columns:120px 110px minmax(0,1fr);gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--line);cursor:pointer;background:none;border-left:0;border-right:0;border-bottom:0;width:100%;text-align:left;color:var(--ink);font:inherit}
+.st2:hover{background:rgba(212,174,94,.05)}.st2 strong{display:block;font-size:16px;font-weight:800}.st2 small{color:var(--muted);font-size:12px}
+.st2 .chs{margin:0}
+.sm-det{margin-top:16px;border-top:1px solid var(--line);padding-top:14px}
+.sm-dh{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}.sm-dh h4{font-size:16px;font-weight:800}.sm-dh button{background:none;border:1px solid var(--line);color:#cfc8d0;border-radius:8px;padding:4px 10px;font:inherit;font-size:13px;cursor:pointer;min-height:32px}
+.sm-dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:24px}
+@media(max-width:1000px){.sm-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.sm-cols{grid-template-columns:1fr}.sm-dl{grid-template-columns:1fr}}
+@media(max-width:640px){.sm-card{padding:16px 14px}.sm-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sm-t{min-height:64px;padding:10px 12px}.sm-t b{font-size:17px}
+  .sc2-h{grid-template-columns:minmax(0,1fr) 80px auto}.st2{grid-template-columns:104px 70px minmax(0,1fr);gap:8px}}
 </style>
 <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
 </head>
@@ -861,6 +893,15 @@ section.sec-col{padding-bottom:24px!important}section.sec-col .sec-h{margin-bott
     <div class="label">04<i>/</i><span>Dòng tiền ngành</span></div>
     <h2 class="sec-h rv">Dòng tiền đang chảy vào đâu?</h2>
     <p class="sec-p rv" id="sfSub">Giá trị giao dịch và biến động giá theo từng nhóm ngành, cùng giao dịch khối ngoại toàn thị trường, cập nhật sau mỗi phiên.</p>
+    <div class="smap" id="smap" hidden>
+      <div class="sm-card card">
+        <div class="sm-h"><h3>Bản đồ 20 ngành</h3><div class="sm-seg" id="smSeg" role="tablist"><button type="button" data-w="1">Phiên</button><button type="button" data-w="5" class="on">5 phiên (tuần)</button><button type="button" data-w="20">20 phiên</button><button type="button" data-w="60">60 phiên</button><button type="button" data-w="120">120 phiên</button></div></div>
+        <div class="sm-grid" id="smGrid"></div>
+        <p class="sm-note" id="smNote"></p>
+        <div class="sm-det" id="smDet" hidden></div>
+      </div>
+      <div class="sm-cols"><div><h4 class="sm-ttl up" id="smUpT"></h4><div id="smUp"></div></div><div><h4 class="sm-ttl dn" id="smDnT"></h4><div id="smDn"></div></div></div>
+    </div>
     <div class="ix-box rv" id="ixBox" hidden>
       <div class="ix-main" id="ixMain"></div>
       <div class="ix-sec card"><div class="ix-h"><h3>Chỉ số ngành HOSE</h3><span id="ixPer">% thay đổi 1 phiên</span></div><div id="ixSec"></div><button type="button" class="sf-more ix-more" id="ixMore" hidden></button></div>
@@ -1356,6 +1397,42 @@ fetch('ban-tin/danh-sach.txt',{cache:'no-cache'}).then(r=>r.ok?r.text():'').then
   box.querySelector('.bt-th').onclick=()=>open(it);box.querySelector('.btn-v').onclick=()=>open(it);
   box.querySelectorAll('.bt-old button').forEach(b=>b.onclick=()=>open(L[+b.dataset.i]));
   box.hidden=false;document.getElementById('nhan-dinh').hidden=false}).catch(()=>{});
+
+/* ===== bản đồ 20 ngành (data/sector-map.json) ===== */
+{let SM=null,W=5;const $=id=>document.getElementById(id);
+ const LBL={1:'phiên gần nhất',5:'tuần này (5 phiên)',20:'20 phiên',60:'60 phiên',120:'120 phiên'};
+ const pc=(v,d=1)=>v==null?'–':(v>0?'+':v<0?'−':'')+Math.abs(v).toFixed(d).replace('.',',')+'%';
+ const spark=(a,up)=>{const v=a.filter(x=>x!=null);if(v.length<2)return'';const mn=Math.min(...v),mx=Math.max(...v),r=mx-mn||1;const n=a.length;
+   const pts=a.map((x,i)=>x==null?null:`${(i/(n-1)*100).toFixed(1)},${(26-(x-mn)/r*24).toFixed(1)}`).filter(Boolean).join(' ');
+   return `<svg class="sp" viewBox="0 0 100 28" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="${up?'#22C55E':'#F87171'}" stroke-width="1.6" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></svg>`};
+ const calc=()=>{const L=SM.days.length-1,i0=Math.max(0,L-W);const vr=(SM.vni[L]/SM.vni[i0]-1)*100;
+   const secs=SM.sectors.map(sec=>{const caps=sec.s.map(r=>r[1]).filter(x=>x);const mc=caps.length?Math.min(...caps):1;
+     const st=sec.s.map(r=>{const cl=r[5];const a=cl[i0],b=cl[L];const ret=a&&b?(b/a-1)*100:null;return{c:r[0],cap:r[1]||mc,yoy:r[2],sg:r[3],q:r[4],px:b,ret,ser:cl.slice(i0)}}).filter(x=>x.ret!=null);
+     const tw=st.reduce((a,x)=>a+x.cap,0);if(!tw)return null;const ret=st.reduce((a,x)=>a+x.cap*x.ret,0)/tw;
+     const ser=st[0].ser.map((_,k)=>st.reduce((a,x)=>a+x.cap*(x.ser[k]&&x.ser[0]?x.ser[k]/x.ser[0]:1),0)/tw);
+     return{n:sec.n,ret,up:st.filter(x=>x.ret>0).length,cnt:st.length,st,ser}}).filter(Boolean).sort((a,b)=>b.ret-a.ret);
+   return{secs,vr}};
+ const yoyChip=x=>x.sg==='lai'?`<i class="u">LNST ${x.q||'quý'}: có lãi trở lại</i>`:x.sg==='lo'?`<i class="d">LNST ${x.q||'quý'}: chuyển lỗ</i>`:x.sg==='lolo'?`<i class="d">LNST ${x.q||'quý'}: vẫn lỗ</i>`:x.yoy!=null?`<i class="${x.yoy>=0?'u':'d'}">LNST ${x.q||'quý'} ${pc(x.yoy,0)}</i>`:'';
+ const stRow=(x,n)=>`<button type="button" class="st2" data-s="${x.c}"><div class="st2-c">${logo(x.c)}<strong>${x.c}</strong><small>${fmtP(x.px)}</small></div>${spark(x.ser,x.ret>=0)}<div class="chs"><i class="${x.ret>0?'u':x.ret<0?'d':''}">${pc(x.ret)}</i>${yoyChip(x)}</div></button>`;
+ const card=(s,vr)=>{const rel=s.ret-vr;const pick=[...s.st].sort((a,b)=>s.ret>=0?b.cap*b.ret-a.cap*a.ret:a.cap*a.ret-b.cap*b.ret).slice(0,2);
+   return `<div class="sc2"><div class="sc2-h"><button type="button" data-n="${s.n}">${s.n} ›</button>${spark(s.ser,s.ret>=0)}<em class="${s.ret>=0?'up':'dn'}">${pc(s.ret)}</em></div>
+   <div class="chs"><i>${s.up}/${s.cnt} mã tăng</i><i class="${rel>=0?'g':'d'}">${rel>=0?'Mạnh hơn':'Yếu hơn'} VN-Index ${pc(Math.abs(rel)).replace(/^[+−]/,'')}</i></div>${pick.map(x=>stRow(x,s.n)).join('')}</div>`};
+ const detail=(s)=>{const d=$('smDet');if(!s){d.hidden=true;document.querySelectorAll('.sm-t').forEach(t=>t.classList.remove('sel'));return}
+   d.innerHTML=`<div class="sm-dh"><h4>${s.n} · ${pc(s.ret)} · ${s.up}/${s.cnt} mã tăng</h4><button type="button">Đóng ✕</button></div><div class="sm-dl">${[...s.st].sort((a,b)=>b.ret-a.ret).map(x=>stRow(x,s.n)).join('')}</div>`;
+   d.hidden=false;d.querySelector('.sm-dh button').onclick=()=>detail(null);document.querySelectorAll('.sm-t').forEach(t=>t.classList.toggle('sel',t.dataset.n===s.n))};
+ let CUR=null;
+ const draw=()=>{if(!SM)return;CUR=calc();const {secs,vr}=CUR;const mx=Math.max(1,...secs.map(s=>Math.abs(s.ret)));
+   $('smGrid').innerHTML=secs.map(s=>{const a=(0.16+Math.min(Math.abs(s.ret)/mx,1)*0.62).toFixed(2);const bg=Math.abs(s.ret)<0.05?'rgba(255,255,255,.06)':s.ret>0?`rgba(22,163,74,${a})`:`rgba(220,38,38,${a})`;
+     return `<button type="button" class="sm-t" data-n="${s.n}" style="background:${bg}"><span>${s.n}</span><b>${pc(s.ret)}</b><small>${s.up}/${s.cnt} mã tăng</small></button>`}).join('');
+   const dd=SM.days.at(-1).split('-').reverse().join('/');
+   $('smNote').textContent=`Tăng/giảm bình quân theo vốn hoá các mã trong ngành, ${LBL[W]} · VN-Index ${pc(vr)} · dữ liệu đến ${dd}. Bấm vào ngành để xem từng mã.`;
+   $('smUpT').textContent=`▲ Ngành giữ sức mạnh · ${LBL[W]}`;$('smDnT').textContent=`▼ Ngành thiệt hại nhiều nhất · ${LBL[W]}`;
+   $('smUp').innerHTML=secs.slice(0,3).map(s=>card(s,vr)).join('');$('smDn').innerHTML=secs.slice(-3).reverse().map(s=>card(s,vr)).join('');
+   const open=$('smDet').hidden?null:secs.find(s=>$('smDet').dataset.n===s.n);if(open)detail(open);else detail(null)};
+ $('smSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;W=+b.dataset.w;$('smSeg').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));draw()};
+ $('smap').addEventListener('click',e=>{const st=e.target.closest('.st2');if(st){chart(st.dataset.s);document.getElementById('thi-truong').scrollIntoView({behavior:'smooth'});return}
+   const t=e.target.closest('[data-n]');if(t&&CUR){const s=CUR.secs.find(x=>x.n===t.dataset.n);if(s){$('smDet').dataset.n=s.n;detail(s);if(!t.classList.contains('sm-t'))$('smDet').scrollIntoView({behavior:'smooth',block:'nearest'})}}});
+ fetch('data/sector-map.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.sectors||!j.sectors.length)return;SM=j;draw();$('smap').hidden=false}).catch(()=>{});}
 document.getElementById('sForm').addEventListener('submit',e=>{e.preventDefault();let v=document.getElementById('sCode').value.trim();if(!v)return;let c=v.split(/[\s–-]/)[0].toUpperCase().replace(/[^A-Z0-9]/g,'');if(SYMS&&!SYMS[c]){const st=t=>(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d');const q=st(v);const hit=Object.entries(SYMS).find(([k,x])=>st(x.n).includes(q));if(hit)c=hit[0]}chart(c);document.getElementById('sCode').blur()});
 
 
