@@ -3,6 +3,13 @@
 # Ảnh: tên file ảnh nằm trong thư mục ban-tin
 # Dòng bắt đầu bằng dấu # là ghi chú, không hiện lên trang.
 
+Ngày: 26/11/2026
+Ảnh: 2026-11-26.png
+Tiêu đề: VN-Index mất 57,77 điểm về 1.629,68; VIC lấy đi 24,67 điểm
+- VN-Index giảm 57,77 điểm (−3,42%) về 1.629,68 điểm, đỏ suốt phiên; VIC giảm 6,28%, lấy đi 24,67 điểm
+- Khớp lệnh HOSE 13.479 tỷ, cao hơn phiên trước 60%; HOSE 47 mã tăng, 291 mã giảm, cả 19 ngành đều giảm
+- Khối ngoại bán ròng 142,1 tỷ toàn thị trường, nhiều nhất ở VIC và TCB; mua ròng CTD, VNM. P/E VN-Index 10,61 lần, thấp nhất 1 năm
+---
 Ngày: 25/11/2026
 Ảnh: 2026-11-25.png
 Tiêu đề: VN-Index giảm 9,69 điểm; khối ngoại bán ròng 5.675,9 tỷ, riêng VIC 4.705,5 tỷ

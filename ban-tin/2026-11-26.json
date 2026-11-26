@@ -1,0 +1,275 @@
+{
+ "ngay": "26/11/2026",
+ "thu": "Thứ Năm",
+ "tieu_de": "VN-Index mất **57,77 điểm**, VIC lấy đi 24,67 điểm",
+ "phu_de": "Lực bán lan rộng toàn thị trường, thanh khoản khớp lệnh tăng 60% so với phiên trước",
+ "diem_nhan": [
+  "VN-Index giảm --57,77 điểm (−3,42%)-- về **1.629,68**, đỏ suốt phiên; VIC giảm 6,28%, lấy đi --24,67 điểm--, hơn 40% mức giảm của chỉ số",
+  "HOSE --291 mã giảm--, chỉ ++47 mã tăng++; cả 19 ngành đều giảm. Khớp lệnh HOSE **13.479 tỷ**, cao hơn phiên trước ++60%++",
+  "Khối ngoại bán ròng nhẹ --142,1 tỷ-- toàn thị trường. P/E VN-Index **10,61 lần**, thấp nhất 1 năm"
+ ],
+ "chi_so": [
+  [
+   "VN-Index",
+   "1.629,68",
+   "-57,77 (-3,42%)",
+   "13.479 tỷ"
+  ],
+  [
+   "HNX-Index",
+   "226,57",
+   "-0,89 (-0,39%)",
+   "830 tỷ"
+  ],
+  [
+   "UPCoM-Index",
+   "118,44",
+   "-1,38 (-1,15%)",
+   "322 tỷ"
+  ]
+ ],
+ "chi_so_cot4": "GT KHỚP LỆNH",
+ "chi_so_ghi_chu": "KL khớp HOSE **691,6 triệu cp**, bằng 127% TB20; phiên trước khớp 8.446 tỷ. P/E VN-Index **10,61 lần** (25/11), thấp nhất 1 năm",
+ "do_rong": {
+  "san": "HOSE",
+  "tang": 47,
+  "dung": 34,
+  "giam": 291,
+  "ghi_chu": "HNX 35 tăng · 41 đứng · 111 giảm; UPCoM 68 tăng · 74 đứng · 158 giảm"
+ },
+ "dong_tien": [
+  "**Sáng:** khớp lệnh HOSE 6.137 tỷ, gần gấp đôi sáng phiên trước",
+  "**Chiều:** thêm 7.342 tỷ (ATC 1.575 tỷ), chỉ số có lúc xuống 1.622,08",
+  "**Cả ngày:** KL khớp HOSE bằng 127% trung bình 20 phiên"
+ ],
+ "khoi_ngoai": {
+  "tom_tat": "HOSE: mua **1.996,8 tỷ**, bán **2.183,7 tỷ**, bán ròng --186,9 tỷ--. Toàn thị trường bán ròng --142,1 tỷ-- (HNX +45,5 tỷ, UPCoM -0,7 tỷ). 15/20 phiên gần nhất bán ròng.",
+  "mua": [
+   [
+    "CTD",
+    "+56,9 tỷ"
+   ],
+   [
+    "VNM",
+    "+56,0 tỷ"
+   ],
+   [
+    "FUEVFVND",
+    "+52,1 tỷ"
+   ],
+   [
+    "VPI",
+    "+48,4 tỷ"
+   ],
+   [
+    "MSN",
+    "+43,6 tỷ"
+   ]
+  ],
+  "ban": [
+   [
+    "VIC",
+    "-190,7 tỷ"
+   ],
+   [
+    "TCB",
+    "-80,5 tỷ"
+   ],
+   [
+    "VPL",
+    "-77,0 tỷ"
+   ],
+   [
+    "VHM",
+    "-45,9 tỷ"
+   ],
+   [
+    "HPG",
+    "-44,9 tỷ"
+   ]
+  ]
+ },
+ "nganh": {
+  "manh": [
+   [
+    "Y tế",
+    "-0,28%"
+   ],
+   [
+    "Thực phẩm & Đồ uống",
+    "-0,28%"
+   ],
+   [
+    "Xây dựng & Vật liệu",
+    "-0,37%"
+   ]
+  ],
+  "yeu": [
+   [
+    "Bất động sản",
+    "-5,29%"
+   ],
+   [
+    "Hàng hóa & DV công nghiệp",
+    "-3,76%"
+   ],
+   [
+    "Du lịch & Giải trí",
+    "-3,51%"
+   ]
+  ]
+ },
+ "co_phieu": [
+  [
+   "KÉO",
+   "++MCH +0,53++ · ++MSB +0,11++ · ++KLB +0,08++ · ++VNM +0,08++ điểm · KLB ++5,05%++, NAF ++2,66%++, MCH ++1,54%++"
+  ],
+  [
+   "GHÌ",
+   "--VIC -24,67-- · --VHM -3,57-- · --TCB -2,30-- · --VCB -1,82-- điểm · VIC --−6,28%--, TCB --−5,07%--; giảm sàn GMD, VSC, SZC, DGW, HHP, NVL"
+  ],
+  [
+   "HNX/UPCOM",
+   "THD ++9,92%++; TNG --−6,63%--, CEO --−5,45%--, SHS --−3,88%--; UPCoM VCP --−11,78%--, ACV --−4,61%--"
+  ]
+ ],
+ "su_kien": [
+  [
+   "CỔ TỨC",
+   "GDKHQ 27/11: FPT **1.000đ**/cp, ABI 1.500đ, PDN 1.000đ; AMY tạm ứng **20%** tiền (GDKHQ 8/12)"
+  ],
+  [
+   "NHÂN SỰ",
+   "SSB bổ nhiệm ông Lê Văn Tần làm Tổng giám đốc"
+  ],
+  [
+   "NỘI BỘ",
+   "Thành viên HĐQT VNS đăng ký mua **4 triệu** cp từ 1/12"
+  ],
+  [
+   "PNJ",
+   "Vietcap hạ **68%** giá mục tiêu, dự báo lỗ ròng 6.272 tỷ năm 2026"
+  ]
+ ],
+ "carousel": {
+  "tieu_de": "VN-Index mất **57,77 điểm**",
+  "mo_ta": "VIC lấy đi **24,67 điểm**, HOSE 291 mã giảm",
+  "gt_ghi_chu": "Khớp lệnh HOSE, cao hơn phiên trước 60%",
+  "kn_rong": "-186,9 tỷ",
+  "kn_ghi_chu": "Mua 1.996,8 · Bán 2.183,7 tỷ",
+  "keo": [
+   [
+    "MCH",
+    "+0,53"
+   ],
+   [
+    "MSB",
+    "+0,11"
+   ],
+   [
+    "KLB",
+    "+0,08"
+   ],
+   [
+    "VNM",
+    "+0,08"
+   ]
+  ],
+  "de": [
+   [
+    "VIC",
+    "-24,67"
+   ],
+   [
+    "VHM",
+    "-3,57"
+   ],
+   [
+    "TCB",
+    "-2,30"
+   ],
+   [
+    "VCB",
+    "-1,82"
+   ]
+  ],
+  "tang": [
+   [
+    "KLB",
+    "+5,05%"
+   ],
+   [
+    "NAF",
+    "+2,66%"
+   ],
+   [
+    "MCH",
+    "+1,54%"
+   ],
+   [
+    "MSB",
+    "+0,92%"
+   ],
+   [
+    "VNM",
+    "+0,38%"
+   ],
+   [
+    "VCI",
+    "+0,27%"
+   ]
+  ],
+  "giam": [
+   [
+    "GMD",
+    "-6,95%"
+   ],
+   [
+    "VSC",
+    "-6,95%"
+   ],
+   [
+    "SZC",
+    "-6,95%"
+   ],
+   [
+    "DGW",
+    "-6,94%"
+   ],
+   [
+    "NVL",
+    "-6,84%"
+   ],
+   [
+    "VIC",
+    "-6,28%"
+   ]
+  ],
+  "su_kien": [
+   [
+    "VIC",
+    "Giảm **6,28%**, lấy đi 24,67 điểm"
+   ],
+   [
+    "CỔ TỨC",
+    "FPT **1.000đ**/cp, GDKHQ 27/11"
+   ],
+   [
+    "CỔ TỨC",
+    "AMY tạm ứng **20%** tiền, GDKHQ 8/12"
+   ],
+   [
+    "NHÂN SỰ",
+    "SSB có Tổng giám đốc mới"
+   ],
+   [
+    "NỘI BỘ",
+    "Lãnh đạo VNS đăng ký mua **4 triệu** cp"
+   ],
+   [
+    "PNJ",
+    "Vietcap hạ **68%** giá mục tiêu"
+   ]
+  ]
+ }
+}
