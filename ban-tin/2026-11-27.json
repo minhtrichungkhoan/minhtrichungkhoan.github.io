@@ -1,0 +1,63 @@
+{
+ "ngay": "27/11/2026",
+ "thu": "Thứ Sáu",
+ "tieu_de": "VN-Index hồi **24,22 điểm**, khối ngoại mua ròng 620 tỷ",
+ "phu_de": "Dầu khí dẫn sóng với nhiều mã tăng trần, cả 19 ngành đều tăng; thanh khoản giảm so với phiên trước",
+ "diem_nhan": [
+  "VN-Index tăng ++24,22 điểm (+1,49%)++ lên **1.653,90**, lấy lại hơn 40% mức mất phiên trước; VIC góp **7,93 điểm**, GAS và BSR góp thêm **3,83 điểm**",
+  "HOSE ++217 mã tăng++, --93 mã giảm--; cả 19 ngành tăng, dầu khí dẫn đầu ++6,80%++. Khớp lệnh HOSE **9.195 tỷ**, thấp hơn phiên trước --32%--",
+  "Khối ngoại mua ròng ++620,1 tỷ++ toàn thị trường, mạnh nhất FPT (**181,6 tỷ**); bán ròng nhiều nhất GMD. P/E VN-Index **10,24 lần**, thấp nhất 1 năm"
+ ],
+ "chi_so": [
+  ["VN-Index", "1.653,90", "+24,22 (+1,49%)", "9.195 tỷ"],
+  ["HNX-Index", "228,11", "+1,54 (+0,68%)", "539 tỷ"],
+  ["UPCoM-Index", "118,22", "-0,22 (-0,19%)", "223 tỷ"]
+ ],
+ "chi_so_cot4": "GT KHỚP LỆNH",
+ "chi_so_ghi_chu": "KL khớp HOSE **461,0 triệu cp**, bằng 83% TB20; phiên trước khớp 13.479 tỷ. P/E VN-Index **10,24 lần** (26/11), thấp nhất 1 năm",
+ "do_rong": {"san": "HOSE", "tang": 217, "dung": 59, "giam": 93, "ghi_chu": "HNX 69 tăng · 60 đứng · 59 giảm; UPCoM 155 tăng · 92 đứng · 111 giảm"},
+ "dong_tien": [
+  "**Sáng:** khớp lệnh HOSE 4.179 tỷ, chỉ số có lúc lên 1.662,83",
+  "**Chiều:** thêm 5.016 tỷ (ATC 1.031 tỷ), nhóm dầu khí bứt lên, nhiều mã tăng trần",
+  "**Cả ngày:** KL khớp HOSE bằng 83% trung bình 20 phiên"
+ ],
+ "khoi_ngoai": {
+  "tom_tat": "HOSE: mua **1.926,6 tỷ**, bán **1.364,0 tỷ**, mua ròng ++562,6 tỷ++. Toàn thị trường mua ròng ++620,1 tỷ++ (HNX +62,7 tỷ, UPCoM -5,2 tỷ). 14/20 phiên gần nhất bán ròng.",
+  "mua": [["FPT", "+181,6 tỷ"], ["MBB", "+78,8 tỷ"], ["BSR", "+56,1 tỷ"], ["HPG", "+54,6 tỷ"], ["VIC", "+43,8 tỷ"]],
+  "ban": [["GMD", "-150,4 tỷ"], ["FUEVFVND", "-29,8 tỷ"], ["NLG", "-24,0 tỷ"], ["GEX", "-23,6 tỷ"], ["HDB", "-15,3 tỷ"]]
+ },
+ "nganh": {
+  "manh": [["Dầu khí", "+6,80%"], ["Hóa chất", "+3,06%"], ["Dịch vụ tiện ích", "+2,34%"]],
+  "yeu": [["Y tế", "+0,12%"], ["Xây dựng & Vật liệu", "+0,19%"], ["Công nghệ", "+0,36%"]]
+ },
+ "co_phieu": [
+  ["KÉO", "++VIC +7,93++ · ++GAS +2,23++ · ++BSR +1,60++ · ++TCB +1,09++ điểm · KLB trần ++6,99%++, BSR ++6,87%++, PVD ++6,77%++, PVT ++6,70%++, GAS ++6,62%++"],
+  ["GHÌ", "--PGV -0,16-- · --VNM -0,09-- · --SAB -0,07-- · --VCI -0,06-- điểm · CII --−1,56%--, HDG --−1,56%--, VCI --−1,35%--"],
+  ["HNX/UPCOM", "PVS tăng trần ++10%++ (GTGD 142 tỷ), MST ++5,19%++; UPCoM OIL ++6,19%++, VCP --−6,85%--"]
+ ],
+ "su_kien": [
+  ["CỔ TỨC", "GDKHQ 27/11: FPT **1.000đ**/cp, ABI 1.500đ, PDN 1.000đ, VPX cổ phiếu 100:45; GDKHQ 30/11: BQP 100:7, VLP 150đ"],
+  ["TRÁI PHIẾU", "CII huy động gần **5.218 tỷ**, chuyển hơn 1.200 tỷ sang hợp tác góp vốn"],
+  ["CÔNG NGHỆ", "FPT cùng SkyDrive đề xuất thử nghiệm taxi bay tại Quảng Ninh từ giữa 2027"],
+  ["THỊ TRƯỜNG", "Thủ tướng đặt mục tiêu vốn hóa cổ phiếu đạt **120% GDP** vào năm 2030"]
+ ],
+ "carousel": {
+  "tieu_de": "Ngoại mua ròng **620 tỷ**, dầu khí bùng nổ",
+  "mo_ta": "VN-Index tăng **24,22 điểm**, cả 19 ngành đều tăng",
+  "gt_ghi_chu": "Khớp lệnh HOSE, thấp hơn phiên trước 32%",
+  "kn_rong": "+562,6 tỷ",
+  "kn_ghi_chu": "Mua 1.926,6 · Bán 1.364,0 tỷ",
+  "keo": [["VIC", "+7,93"], ["GAS", "+2,23"], ["BSR", "+1,60"], ["TCB", "+1,09"]],
+  "de": [["PGV", "-0,16"], ["VNM", "-0,09"], ["SAB", "-0,07"], ["VCI", "-0,06"]],
+  "tang": [["KLB", "+6,99%"], ["BSR", "+6,87%"], ["PVP", "+6,81%"], ["PVD", "+6,77%"], ["PVT", "+6,70%"], ["GAS", "+6,62%"]],
+  "giam": [["CII", "-1,56%"], ["HDG", "-1,56%"], ["EVF", "-1,40%"], ["VCI", "-1,35%"], ["HHP", "-0,98%"], ["CTS", "-0,92%"]],
+  "su_kien": [
+   ["FPT", "Ngoại mua ròng **181,6 tỷ**"],
+   ["DẦU KHÍ", "BSR, PVD, PVT, GAS tăng **6–7%**"],
+   ["HNX", "PVS tăng trần **10%**"],
+   ["TRÁI PHIẾU", "CII huy động gần **5.218 tỷ**"],
+   ["CỔ TỨC", "FPT **1.000đ**/cp, GDKHQ 27/11"],
+   ["THỊ TRƯỜNG", "Mục tiêu vốn hóa **120% GDP** năm 2030"]
+  ]
+ }
+}

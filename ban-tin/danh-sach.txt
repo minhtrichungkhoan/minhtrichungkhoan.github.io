@@ -3,6 +3,13 @@
 # Ảnh: tên file ảnh nằm trong thư mục ban-tin
 # Dòng bắt đầu bằng dấu # là ghi chú, không hiện lên trang.
 
+Ngày: 27/11/2026
+Ảnh: 2026-11-27.png
+Tiêu đề: VN-Index hồi 24,22 điểm lên 1.653,90; khối ngoại mua ròng 620,1 tỷ
+- VN-Index tăng 24,22 điểm (+1,49%) lên 1.653,90 điểm; VIC góp 7,93 điểm, nhóm dầu khí tăng mạnh với BSR, PVD, PVT, GAS
+- Khớp lệnh HOSE 9.195 tỷ, thấp hơn phiên trước 32%; HOSE 217 mã tăng, 93 mã giảm, cả 19 ngành đều tăng
+- Khối ngoại mua ròng 620,1 tỷ toàn thị trường, mạnh nhất FPT (181,6 tỷ); bán ròng nhiều nhất GMD
+---
 Ngày: 26/11/2026
 Ảnh: 2026-11-26.png
 Tiêu đề: VN-Index mất 57,77 điểm về 1.629,68; VIC lấy đi 24,67 điểm
