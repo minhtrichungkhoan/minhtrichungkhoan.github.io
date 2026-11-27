@@ -12,6 +12,77 @@
 # ---
 
 Ngày: 27/11/2026
+Tiêu đề: Thị trường · VN-Index hồi 24,22 điểm (+1,49%) lên 1.653,90, cả 19 ngành đều tăng
+Nội dung: Phiên 27/11, VN-Index lấy lại hơn 40% mức mất phiên trước, có lúc lên 1.662,83 điểm.
+- HOSE 217 mã tăng, 93 mã giảm; khớp lệnh 9.195 tỷ đồng, thấp hơn phiên trước 32%
+- VIC góp 7,93 điểm, GAS 2,23 điểm, BSR 1,60 điểm, TCB 1,09 điểm
+- P/E VN-Index 10,24 lần (26/11), thấp nhất 1 năm
+Mã: VIC, GAS, BSR, TCB
+---
+Ngày: 27/11/2026
+Tiêu đề: Khối ngoại · Mua ròng 620,1 tỷ đồng phiên 27/11, gom mạnh FPT 181,6 tỷ
+Nội dung: Khối ngoại chấm dứt chuỗi bán ròng: HOSE mua ròng 562,6 tỷ (mua 1.926,6 tỷ, bán 1.364,0 tỷ), HNX mua ròng 62,7 tỷ, UPCoM bán ròng 5,2 tỷ.
+- Mua ròng nhiều nhất: FPT 181,6 tỷ, MBB 78,8 tỷ, BSR 56,1 tỷ, HPG 54,6 tỷ, VIC 43,8 tỷ
+- Bán ròng nhiều nhất: GMD 150,4 tỷ, FUEVFVND 29,8 tỷ, NLG 24,0 tỷ, GEX 23,6 tỷ
+- Tính 20 phiên gần nhất vẫn có 14 phiên bán ròng, tổng −11.348 tỷ đồng
+Mã: FPT, MBB, BSR, HPG, GMD
+---
+Ngày: 27/11/2026
+Tiêu đề: Ngành dầu khí · Tăng 6,80%, dẫn đầu thị trường với hàng loạt mã tăng mạnh
+Nội dung: Dầu khí là ngành tăng mạnh nhất phiên 27/11, tiếp theo là hóa chất (+3,06%) và dịch vụ tiện ích (+2,34%).
+- HOSE: BSR +6,87%, PVP +6,81%, PVD +6,77%, PVT +6,70%, GAS +6,62%
+- HNX: PVS tăng trần 10%, giá trị giao dịch 142 tỷ đồng; UPCoM: OIL +6,19%
+Mã: BSR, PVD, PVT, GAS, PVS, OIL
+---
+Ngày: 27/11/2026
+Tiêu đề: KAI · Chứng khoán Kafi chào bán 125 triệu cổ phiếu, dự kiến thu 1.875 tỷ đồng
+Nội dung: Kafi chào bán ra công chúng 125 triệu cổ phiếu giá 15.000 đồng, dùng cho cho vay ký quỹ và tự doanh; vốn điều lệ dự kiến tăng từ 7.500 lên 8.750 tỷ đồng.
+- 9 tháng 2026: doanh thu hoạt động khoảng 3.005 tỷ (+63%), lợi nhuận trước thuế khoảng 541 tỷ (+58%)
+- Dư nợ ký quỹ cuối quý III khoảng 12.284 tỷ đồng, tăng 15% từ đầu năm
+Mã: KAI
+---
+Ngày: 27/11/2026
+Tiêu đề: CII · Đổi phương án dùng 5.218 tỷ đồng vừa huy động từ trái phiếu chuyển đổi
+Nội dung: CII thu khoảng 5.218 tỷ đồng từ 3.160 nhà đầu tư (77,65% lượng chào bán) và phân bổ lại nguồn vốn.
+- 4.000 tỷ cho cao tốc TP.HCM – Trung Lương – Mỹ Thuận (trước đây dự kiến dùng toàn bộ); 300 tỷ cho hợp tác Khu Bắc Thủ Thiêm; 500 tỷ góp vào CII PPP; khoảng 418 tỷ vào CII Invest
+- Lãi suất 0% trong 12 kỳ đầu, sau đó 14,5%/năm; ĐHĐCĐ bất thường ngày 7/12/2026
+- Cổ phiếu CII giảm 1,56% phiên 27/11
+Mã: CII
+---
+Ngày: 27/11/2026
+Tiêu đề: DCL · Giảm sàn phiên thứ 7 liên tiếp, công ty giải trình do thị trường và margin
+Nội dung: Dược Cửu Long giảm sàn phiên thứ 7, giá giảm gần 40% so với ngày 17/11; sáng 27/11 dư bán khoảng 14,7 triệu cổ phiếu, không có bên mua.
+- Công ty cho rằng do thị trường bán tháo và các công ty chứng khoán điều chỉnh tỷ lệ cho vay ký quỹ với DCL; hoạt động kinh doanh vẫn bình thường
+- Quý III/2026 doanh thu hơn 339 tỷ (+19%), lỗ ròng hơn 18,5 tỷ đồng
+Mã: DCL
+---
+Ngày: 27/11/2026
+Tiêu đề: HSL · Sau 5 phiên giảm sàn, giá còn 4.860 đồng, công ty nói do cung cầu
+Nội dung: HSL giảm sàn 5 phiên từ 19/11 đến 26/11 và tiếp tục giảm sáng 27/11, giảm 31% từ đầu năm; công ty giải trình giá biến động do cung cầu, kinh doanh bình thường.
+- Bị Cục Thuế Hà Nội phạt và truy thu tổng 271,5 triệu đồng
+- 9 tháng 2026: doanh thu 2,3 tỷ (−95%), lỗ ròng gần 2 tỷ đồng
+Mã: HSL
+---
+Ngày: 27/11/2026
+Tiêu đề: Công nghệ · FPT cùng SkyDrive đề xuất thử nghiệm taxi bay tại Quảng Ninh từ giữa năm 2027
+Nội dung: FPT và SkyDrive (Nhật Bản) đề xuất thử nghiệm dịch vụ taxi bay tại Quảng Ninh từ giữa năm 2027. Cùng ngày, khối ngoại mua ròng FPT 181,6 tỷ đồng, mạnh nhất thị trường.
+Mã: FPT
+---
+Ngày: 27/11/2026
+Tiêu đề: Chính sách · Mục tiêu đạt chuẩn thị trường mới nổi của MSCI vào năm 2030
+Nội dung: Sau khi được FTSE Russell nâng hạng (hiệu lực 21/9/2026), thị trường chứng khoán Việt Nam đặt mục tiêu đáp ứng chuẩn thị trường mới nổi của MSCI vào năm 2030.
+---
+Ngày: 27/11/2026
+Tiêu đề: Hạ tầng · Hà Nội tính phát hành 121.700 tỷ đồng trái phiếu đầu tư 5 tuyến metro
+Nội dung: Hà Nội dự kiến phát hành khoảng 121.700 tỷ đồng trái phiếu, kỳ hạn 5–20 năm, để đầu tư 5 tuyến đường sắt đô thị số 1, 2, 8, 10 và 14.
+---
+Ngày: 27/11/2026
+Tiêu đề: Quốc tế · Lạm phát PCE Mỹ 3,8%, thị trường gần như chắc chắn Fed tăng lãi suất tháng 12
+Nội dung: Lạm phát PCE tháng 10 của Mỹ là 3,8% so với cùng kỳ, gần gấp đôi mục tiêu 2%; GDP quý III được điều chỉnh lên 4,3%.
+- Fed đã tăng 0,25 điểm % hồi tháng 9 lên 3,75–4%, lần tăng đầu tiên sau hơn 3 năm, và giữ nguyên trong tháng 10
+- Đề xuất thuế quan mới của Mỹ với nhiều đối tác có thể khiến lạm phát neo cao hơn
+---
+Ngày: 27/11/2026
 Tiêu đề: Vĩ mô · Mỹ đề xuất thuế bổ sung tối đa 35% với hàng Việt Nam theo điều tra Mục 301, chưa có hiệu lực
 Nội dung: USTR công bố kết luận sơ bộ điều tra Mục 301 về dư thừa công suất với 14 trong 16 nền kinh tế được điều tra, trong đó có Việt Nam. Đề xuất công bố tối 25/11 (giờ Việt Nam) và chưa có hiệu lực.
 - Mức thuế bổ sung tối đa đề xuất với Việt Nam là 35%, có thể giảm còn 20% nếu hai bên đạt Hiệp định thương mại đối ứng
