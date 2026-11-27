@@ -759,6 +759,22 @@ section.sec-col{padding-bottom:24px!important}section.sec-col .sec-h{margin-bott
 .sm-card::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:3;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20560%20120%22%3E%3Cg%20transform%3D%22translate%288%2C12%29%20scale%28.1875%29%22%3E%3Ccircle%20cx%3D%22256%22%20cy%3D%22256%22%20r%3D%22236%22%20fill%3D%22%23D4AE5E%22/%3E%3Crect%20x%3D%22138%22%20y%3D%22150%22%20width%3D%22236%22%20height%3D%2262%22%20rx%3D%2216%22%20fill%3D%22%230A090B%22/%3E%3Crect%20x%3D%22225%22%20y%3D%22150%22%20width%3D%2262%22%20height%3D%22220%22%20rx%3D%2216%22%20fill%3D%22%230A090B%22/%3E%3C/g%3E%3Ctext%20x%3D%22122%22%20y%3D%2264%22%20font-family%3D%22Inter%2CArial%2Csans-serif%22%20font-size%3D%2246%22%20font-weight%3D%22800%22%20fill%3D%22%23F3EFE8%22%20letter-spacing%3D%221%22%3EMINH%20TR%C3%8D%3C/text%3E%3Ctext%20x%3D%22124%22%20y%3D%22100%22%20font-family%3D%22Inter%2CArial%2Csans-serif%22%20font-size%3D%2222%22%20font-weight%3D%22600%22%20fill%3D%22%23D4AE5E%22%20letter-spacing%3D%226%22%3ECH%E1%BB%A8NG%20KHO%C3%81N%3C/text%3E%3C/svg%3E") center 42%/min(40%,340px) no-repeat;opacity:.13}
 .sm-cols::after{content:"";position:absolute;left:50%;top:50%;width:min(30%,300px);aspect-ratio:560/120;transform:translate(-50%,-50%);pointer-events:none;z-index:3;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20560%20120%22%3E%3Cg%20transform%3D%22translate%288%2C12%29%20scale%28.1875%29%22%3E%3Ccircle%20cx%3D%22256%22%20cy%3D%22256%22%20r%3D%22236%22%20fill%3D%22%23D4AE5E%22/%3E%3Crect%20x%3D%22138%22%20y%3D%22150%22%20width%3D%22236%22%20height%3D%2262%22%20rx%3D%2216%22%20fill%3D%22%230A090B%22/%3E%3Crect%20x%3D%22225%22%20y%3D%22150%22%20width%3D%2262%22%20height%3D%22220%22%20rx%3D%2216%22%20fill%3D%22%230A090B%22/%3E%3C/g%3E%3Ctext%20x%3D%22122%22%20y%3D%2264%22%20font-family%3D%22Inter%2CArial%2Csans-serif%22%20font-size%3D%2246%22%20font-weight%3D%22800%22%20fill%3D%22%23F3EFE8%22%20letter-spacing%3D%221%22%3EMINH%20TR%C3%8D%3C/text%3E%3Ctext%20x%3D%22124%22%20y%3D%22100%22%20font-family%3D%22Inter%2CArial%2Csans-serif%22%20font-size%3D%2222%22%20font-weight%3D%22600%22%20fill%3D%22%23D4AE5E%22%20letter-spacing%3D%226%22%3ECH%E1%BB%A8NG%20KHO%C3%81N%3C/text%3E%3C/svg%3E") center/contain no-repeat;opacity:.12}
 @media(max-width:1000px){.sm-cols::after{width:min(60%,300px)}}
+
+/* mục Về tôi & Hoạt động gộp */
+.about-t{margin-top:4px}.ab-p{color:#cfc8d0;line-height:1.7;margin:0 0 18px;max-width:62ch}
+.hd-p .ab-p{margin-bottom:16px}
+/* gọn trên điện thoại */
+@media(max-width:560px){
+  #lien-he .phone{font-size:34px;margin:6px 0 14px}
+  #lien-he .btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}#lien-he .btns .btn-tt{grid-column:1/-1}
+  .ct-steps{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important;margin-top:18px}
+  .ct-steps .step{padding:12px 10px!important}.ct-steps .step p{display:none}.ct-steps .step h3{font-size:13.5px;margin:4px 0 0}.ct-steps .step b{font-size:14px}
+  footer .wrap>p:nth-child(2){display:none}footer p{font-size:12px;line-height:1.55;margin:4px 0}footer{padding:22px 0 90px!important}
+  .about-t .frame{max-height:260px}.about-t .frame img{height:260px;object-fit:cover}
+}
+
+@media(max-width:420px){nav .brand{white-space:nowrap;font-size:16px}.nav-gn{white-space:nowrap;padding:5px 10px!important;font-size:13px;gap:6px}.nav-r{gap:10px!important}nav .dd-btn{white-space:nowrap;font-size:13px}}
+@media(max-width:560px){.facts .fact{padding:12px 14px}.facts .fact span{font-size:12.5px}}
 </style>
 <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
 </head>
@@ -817,15 +833,6 @@ section.sec-col{padding-bottom:24px!important}section.sec-col .sec-h{margin-bott
   </div>
 </header>
 
-<div class="stats">
-  <div class="wrap">
-    <div class="grid">
-      <div class="stat rv"><b data-count="2016" data-from="2000">2016</b><span data-i="s1">Năm bắt đầu hành nghề</span></div>
-      <div class="stat rv"><b data-count="10" data-suffix="+">10+</b><span data-i="s2">Năm kinh nghiệm trên thị trường</span></div>
-      <div class="stat rv"><b data-count="2">2</b><span data-i="s3">Chứng chỉ hành nghề: Môi giới & Quản lý quỹ</span></div>
-    </div>
-  </div>
-</div>
 
 
 <section class="nd-wrap" id="nhan-dinh" hidden>
@@ -850,36 +857,46 @@ section.sec-col{padding-bottom:24px!important}section.sec-col .sec-h{margin-bott
   </div>
 </section>
 
-<div class="ticker" id="tapeBox" hidden><div class="track-row" id="tape"></div></div>
+<div class="ticker" id="tapeBox" hidden style="display:none!important"><div class="track-row" id="tape"></div></div>
 
-<section class="band" id="ve-toi" data-n="01">
-  <div class="wrap about">
-    <div class="rv frame"><img alt="Lê Minh Trí phát biểu tại hội thảo FPTS" id="aboutImg" src="img/micro.jpg" style="object-position:62% 30%" loading="lazy"></div>
+<section class="band" id="goc-nhin" data-n="01">
+  <div class="wrap tt-wrap">
     <div>
-      <div class="label">01<i>/</i><span data-i="aLabel">Về tôi</span></div>
-      <h2 class="sec-h rv" data-i="aH">Hơn 10 năm đồng hành cùng nhà đầu tư</h2>
-      <p class="sec-p" style="margin-bottom:0" data-i="aP">Tôi làm việc trong lĩnh vực chứng khoán từ năm 2016, hiện đang công tác tại Công ty Cổ phần Chứng khoán FPT (FPTS). Qua nhiều chu kỳ tăng giảm của thị trường, tôi luôn đặt sự minh bạch và quản trị rủi ro lên hàng đầu khi tư vấn cho khách hàng.</p>
-      <div class="rv facts">
-        <div class="fact"><div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg></div><div><b>FPTS · Từ 2016</b><span>Công ty Cổ phần Chứng khoán FPT</span></div></div>
-        <div class="fact"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="6"/><path d="M8.5 14 7 22l5-3 5 3-1.5-8"/></svg></div><div><b>CCHN Quản lý quỹ số 002059/QLQ</b><span>Cùng chứng chỉ hành nghề Môi giới chứng khoán, do UBCKNN cấp</span></div></div>
-        <a data-goatcounter-click="tiktok" class="fact" href="https://www.tiktok.com/@minhtrifpts" target="_blank" rel="noopener"><div class="ic"><svg><use href="#i-note"/></svg></div><div><b>TikTok @minhtrifpts</b><span data-i="f4s">Theo dõi video chia sẻ về thị trường chứng khoán</span></div></a>
+      <div class="label">01<i>/</i><span>Góc nhìn thị trường</span></div>
+      <h2 class="sec-h rv">Cập nhật thị trường mỗi ngày</h2>
+      <p class="sec-p rv" style="margin-bottom:0">Video ngắn về diễn biến thị trường, cách đọc báo cáo tài chính và kinh nghiệm đầu tư, dễ hiểu cho cả người mới.</p>
+      <div class="tt-list rv">
+        <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></div><div><b>Nhận định thị trường</b><span>Diễn biến VN-Index, dòng tiền, nhóm ngành nổi bật</span></div></div>
+        <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div><div><b>Đọc báo cáo tài chính</b><span>Phân tích số liệu ngân hàng, chứng khoán theo quý</span></div></div>
+        <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div><div><b>Kiến thức đầu tư</b><span>Quản trị rủi ro, xây dựng danh mục cho người mới</span></div></div>
       </div>
+      <div class="btns rv" style="margin-top:24px"><a data-goatcounter-click="tiktok" class="btn btn-tt" href="https://www.tiktok.com/@minhtrifpts" target="_blank" rel="noopener"><svg><use href="#i-note"/></svg>Theo dõi @minhtrifpts</a></div>
+    </div>
+    <div class="fbv-wrap rv">
+      <div class="fbv-phone"><div class="fbv-scr" id="fbvBox" data-ph="Đang tải video…">
+        <div class="fb-video" data-href="https://www.facebook.com/reel/1412928503881535" data-width="300" data-autoplay="true" data-allowfullscreen="true" data-show-text="false" data-show-captions="true"></div>
+      </div></div>
+      <button type="button" class="fbv-snd" id="fbvSnd" hidden>🔇 Bật tiếng</button>
     </div>
   </div>
 </section>
 
-
-
-
-
-
-
-
-<section class="band" id="hoat-dong" data-n="02" style="padding-top:0">
+<section class="band" id="hoat-dong" data-n="02">
   <div class="wrap">
-    <div class="label">02<i>/</i><span>Hoạt động &amp; dấu ấn</span></div>
-    <h2 class="sec-h rv">Chia sẻ kiến thức, đồng hành cùng nhà đầu tư</h2>
-    <p class="sec-p rv">Diễn giả các buổi livestream, hội thảo của FPTS và các chương trình hướng nghiệp cho sinh viên.</p>
+    <div class="label">02<i>/</i><span>Về tôi &amp; Hoạt động</span></div>
+    <h2 class="sec-h rv">Hơn 10 năm đồng hành cùng nhà đầu tư</h2>
+    <div class="about about-t" data-tab-about="1">
+      <div class="rv frame"><img alt="Lê Minh Trí phát biểu tại hội thảo FPTS" id="aboutImg" src="img/micro.jpg" style="object-position:62% 30%" loading="lazy"></div>
+      <div>
+        <p class="ab-p">Tôi làm việc trong lĩnh vực chứng khoán từ năm 2016, hiện đang công tác tại Công ty Cổ phần Chứng khoán FPT (FPTS). Qua nhiều chu kỳ tăng giảm của thị trường, tôi luôn đặt sự minh bạch và quản trị rủi ro lên hàng đầu khi tư vấn cho khách hàng.</p>
+        <div class="rv facts">
+        <div class="fact"><div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg></div><div><b>FPTS · Từ 2016</b><span>Công ty Cổ phần Chứng khoán FPT</span></div></div>
+        <div class="fact"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="6"/><path d="M8.5 14 7 22l5-3 5 3-1.5-8"/></svg></div><div><b>CCHN Quản lý quỹ số 002059/QLQ</b><span>Cùng chứng chỉ hành nghề Môi giới chứng khoán, do UBCKNN cấp</span></div></div>
+        <a data-goatcounter-click="tiktok" class="fact" href="https://www.tiktok.com/@minhtrifpts" target="_blank" rel="noopener"><div class="ic"><svg><use href="#i-note"/></svg></div><div><b>TikTok @minhtrifpts</b><span data-i="f4s">Theo dõi video chia sẻ về thị trường chứng khoán</span></div></a>
+      </div>
+      </div>
+    </div>
+    <div class="hd-p"><p class="ab-p">Diễn giả các buổi livestream, hội thảo của FPTS và các chương trình hướng nghiệp cho sinh viên.</p>
     <div class="gal rv">
       <figure class="gi g-a" data-full="img/livestream.jpg"><img src="img/livestream.jpg" alt="Livestream FPTS: Bất động sản công nghiệp" loading="lazy" style="object-position:96% 40%"><span class="tag">Livestream</span><figcaption><b>Diễn giả livestream FPTS</b><span>“Bất động sản công nghiệp – Tái định vị góc nhìn từ quỹ đất đến năng lực dòng tiền”</span></figcaption></figure>
       <figure class="gi g-b" data-full="img/mentor.jpg"><img src="img/mentor.jpg" alt="Chia sẻ kiến thức đầu tư với sinh viên" loading="lazy" style="object-position:30% 40%"><figcaption><b>Chia sẻ kiến thức với sinh viên</b><span>Trao đổi về thị trường chứng khoán và nghề tư vấn đầu tư</span></figcaption></figure>
@@ -888,38 +905,28 @@ section.sec-col{padding-bottom:24px!important}section.sec-col .sec-h{margin-bott
       <figure class="gi g-e" data-full="img/hoithao.jpg"><img src="img/hoithao.jpg" alt="Hội thảo FPTS cùng sinh viên" loading="lazy" style="object-position:50% 70%"><figcaption><b>Hội thảo FPTS tại trường đại học</b><span>Cùng hàng trăm sinh viên tìm hiểu thị trường chứng khoán</span></figcaption></figure>
       <figure class="gi g-f" data-full="img/jobfair.jpg"><img src="img/jobfair.jpg" alt="HUTECH Alumni Job Fair 2025" loading="lazy" style="object-position:50% 60%"><figcaption><b>HUTECH Alumni Job Fair 2025</b><span>Doanh nghiệp đồng hành ngày hội tuyển dụng · 20/3/2025</span></figcaption></figure>
     </div>
-  </div>
-</section>
-
-<section class="band" id="bao-cao-nganh" data-n="03" style="padding-top:0">
-  <div class="wrap">
-    <div class="label">03<i>/</i><span data-i="rpLabel">Báo cáo ngành</span></div>
-    <h2 class="sec-h rv" data-i="rpH">Dữ liệu ngành do tôi tổng hợp</h2>
-    <p class="sec-p rv" data-i="rpP">Số liệu kinh doanh của các ngân hàng và công ty chứng khoán niêm yết, cập nhật theo từng quý.</p>
-    <div class="reports rv">
-      <a class="rp-main" href="/ngan-hang/">
-        <svg class="bg" viewBox="0 0 300 160" preserveAspectRatio="none" aria-hidden="true"><path d="M0 140 L40 120 L80 128 L120 90 L160 98 L200 60 L240 70 L300 20" fill="none" stroke="#17120a" stroke-width="4"/><g fill="#17120a"><rect x="30" y="125" width="14" height="35"/><rect x="70" y="118" width="14" height="42"/><rect x="110" y="95" width="14" height="65"/><rect x="150" y="100" width="14" height="60"/><rect x="190" y="70" width="14" height="90"/><rect x="230" y="78" width="14" height="82"/><rect x="270" y="40" width="14" height="120"/></g></svg>
-        <div>
-          <div class="k"><b data-i="rpNew">Mới nhất</b><span>Q3/2026</span></div>
-          <h3 data-i="rpT">Dữ liệu ngành Q3/2026</h3>
-          <p data-i="rP">Số liệu ngành do Lê Minh Trí tổng hợp.</p>
-          <div class="tags" style="margin-top:14px"><span data-i="t2a">Ngân hàng</span><span data-i="t2b">Chứng khoán</span></div>
-        </div>
-        <span class="go"><span data-i="rBtn">Xem báo cáo</span><svg><use href="#i-arrow"/></svg></span>
-      </a>
-      <div class="rp-side">
-        <a class="rp-item card" href="/ngan-hang/"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 10h18M5 10v8M19 10v8M9 10v8M15 10v8M3 20h18M12 3l9 5H3z"/></svg></div><div><b data-i="rpI1">Ngân hàng</b><span data-i="rpI1s">Số liệu ngành ngân hàng Q3/2026</span></div></a>
-        <a class="rp-item card" href="/chung-khoan/"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></div><div><b data-i="rpI2">Chứng khoán</b><span data-i="rpI2s">Số liệu ngành chứng khoán Q3/2026</span></div></a>
-        <div class="rp-item card soon"><div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg></div><div><b data-i="rpI3">Q4/2026</b><span data-i="rpI3s">Sẽ cập nhật khi doanh nghiệp công bố BCTC</span></div></div>
-      </div>
     </div>
   </div>
 </section>
 
 
-<section class="band" id="dong-tien" data-n="04" hidden>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section class="band" id="dong-tien" data-n="03" hidden>
   <div class="wrap">
-    <div class="label">04<i>/</i><span>Dòng tiền ngành</span></div>
+    <div class="label">03<i>/</i><span>Dòng tiền ngành</span></div>
     <h2 class="sec-h rv">Dòng tiền đang chảy vào đâu?</h2>
     <p class="sec-p rv" id="sfSub">Giá trị giao dịch và biến động giá theo từng nhóm ngành, cùng giao dịch khối ngoại toàn thị trường, cập nhật sau mỗi phiên.</p>
     <div class="smap" id="smap" hidden>
@@ -947,9 +954,9 @@ section.sec-col{padding-bottom:24px!important}section.sec-col .sec-h{margin-bott
   </div>
 </section>
 
-<section class="band" id="thi-truong" data-n="05">
+<section class="band" id="thi-truong" data-n="04">
   <div class="wrap">
-    <div class="label">05<i>/</i><span data-i="mLabel">Tra cứu cổ phiếu</span></div>
+    <div class="label">04<i>/</i><span data-i="mLabel">Tra cứu cổ phiếu</span></div>
     <h2 class="sec-h rv" data-i="mH">Nhập mã, xem ngay giá và định giá</h2>
     <p class="sec-p" data-i="mP">Gần 1.600 mã trên HOSE, HNX, UPCoM: đồ thị giá từ khi niêm yết, chỉ số tài chính, định giá và kết quả kinh doanh quý.</p>
     <div class="term-bar rv"><i></i><i></i><i></i><span data-i="termT">Bảng tra cứu cổ phiếu</span><em data-i="termL">Trực tuyến</em></div>
@@ -997,24 +1004,29 @@ section.sec-col{padding-bottom:24px!important}section.sec-col .sec-h{margin-bott
 </section>
 
 
-<section class="band" id="goc-nhin" data-n="06">
-  <div class="wrap tt-wrap">
-    <div>
-      <div class="label">06<i>/</i><span>Góc nhìn thị trường</span></div>
-      <h2 class="sec-h rv">Cập nhật thị trường mỗi ngày</h2>
-      <p class="sec-p rv" style="margin-bottom:0">Video ngắn về diễn biến thị trường, cách đọc báo cáo tài chính và kinh nghiệm đầu tư, dễ hiểu cho cả người mới.</p>
-      <div class="tt-list rv">
-        <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></div><div><b>Nhận định thị trường</b><span>Diễn biến VN-Index, dòng tiền, nhóm ngành nổi bật</span></div></div>
-        <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div><div><b>Đọc báo cáo tài chính</b><span>Phân tích số liệu ngân hàng, chứng khoán theo quý</span></div></div>
-        <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div><div><b>Kiến thức đầu tư</b><span>Quản trị rủi ro, xây dựng danh mục cho người mới</span></div></div>
+
+
+<section class="band" id="bao-cao-nganh" data-n="05">
+  <div class="wrap">
+    <div class="label">05<i>/</i><span data-i="rpLabel">Báo cáo ngành</span></div>
+    <h2 class="sec-h rv" data-i="rpH">Dữ liệu ngành do tôi tổng hợp</h2>
+    <p class="sec-p rv" data-i="rpP">Số liệu kinh doanh của các ngân hàng và công ty chứng khoán niêm yết, cập nhật theo từng quý.</p>
+    <div class="reports rv">
+      <a class="rp-main" href="/ngan-hang/">
+        <svg class="bg" viewBox="0 0 300 160" preserveAspectRatio="none" aria-hidden="true"><path d="M0 140 L40 120 L80 128 L120 90 L160 98 L200 60 L240 70 L300 20" fill="none" stroke="#17120a" stroke-width="4"/><g fill="#17120a"><rect x="30" y="125" width="14" height="35"/><rect x="70" y="118" width="14" height="42"/><rect x="110" y="95" width="14" height="65"/><rect x="150" y="100" width="14" height="60"/><rect x="190" y="70" width="14" height="90"/><rect x="230" y="78" width="14" height="82"/><rect x="270" y="40" width="14" height="120"/></g></svg>
+        <div>
+          <div class="k"><b data-i="rpNew">Mới nhất</b><span>Q3/2026</span></div>
+          <h3 data-i="rpT">Dữ liệu ngành Q3/2026</h3>
+          <p data-i="rP">Số liệu ngành do Lê Minh Trí tổng hợp.</p>
+          <div class="tags" style="margin-top:14px"><span data-i="t2a">Ngân hàng</span><span data-i="t2b">Chứng khoán</span></div>
+        </div>
+        <span class="go"><span data-i="rBtn">Xem báo cáo</span><svg><use href="#i-arrow"/></svg></span>
+      </a>
+      <div class="rp-side">
+        <a class="rp-item card" href="/ngan-hang/"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 10h18M5 10v8M19 10v8M9 10v8M15 10v8M3 20h18M12 3l9 5H3z"/></svg></div><div><b data-i="rpI1">Ngân hàng</b><span data-i="rpI1s">Số liệu ngành ngân hàng Q3/2026</span></div></a>
+        <a class="rp-item card" href="/chung-khoan/"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></div><div><b data-i="rpI2">Chứng khoán</b><span data-i="rpI2s">Số liệu ngành chứng khoán Q3/2026</span></div></a>
+        <div class="rp-item card soon"><div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg></div><div><b data-i="rpI3">Q4/2026</b><span data-i="rpI3s">Sẽ cập nhật khi doanh nghiệp công bố BCTC</span></div></div>
       </div>
-      <div class="btns rv" style="margin-top:24px"><a data-goatcounter-click="tiktok" class="btn btn-tt" href="https://www.tiktok.com/@minhtrifpts" target="_blank" rel="noopener"><svg><use href="#i-note"/></svg>Theo dõi @minhtrifpts</a></div>
-    </div>
-    <div class="fbv-wrap rv">
-      <div class="fbv-phone"><div class="fbv-scr" id="fbvBox" data-ph="Đang tải video…">
-        <div class="fb-video" data-href="https://www.facebook.com/reel/1412928503881535" data-width="300" data-autoplay="true" data-allowfullscreen="true" data-show-text="false" data-show-captions="true"></div>
-      </div></div>
-      <button type="button" class="fbv-snd" id="fbvSnd" hidden>🔇 Bật tiếng</button>
     </div>
   </div>
 </section>
@@ -1376,7 +1388,7 @@ fetch('tin-noi-bat.txt',{cache:'no-cache'}).then(r=>r.ok?r.text():'').then(t=>{
   document.getElementById('tnList').innerHTML=items.map(it=>`<article class="tn${it.age===0?' new':''}" tabindex="0" role="button" aria-expanded="false"><div class="tn-m">${it.age===0?'<b>MỚI</b>':''}<span>${esc(it.d)}</span><em class="tn-x">Xem chi tiết ▾</em></div>${it.t?`<h3>${esc(it.t).replace(/([+\-−]\s?\d+(?:[.,]\d+)?%)/g,m=>`<span class="${/^[-−]/.test(m)?'dn':'up'}">${m}</span>`)}</h3>`:''}<div class="tn-b">${it.body.length?`<p>${it.body.map(esc).join('<br>')}</p>`:''}${it.li.length?`<ul>${it.li.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}</div>
     ${it.zalo?`<a class="tn-z" data-goatcounter-click="zalo-tin-noi-bat" href="https://zalo.me/0833703936" target="_blank" rel="noopener">${esc(it.zalo)} ↗</a>`:''}${(it.codes&&it.codes.length)||it.src?`<div class="tn-f">${(it.codes||[]).map(c=>`<a class="c" href="?ma=${c}#thi-truong" data-s="${c}">${logo(c)}${c}</a>`).join('')}${it.src?`<p class="src">Nguồn: ${srcH(it.src)}</p>`:''}</div>`:''}</article>`).join('');
   document.getElementById('tnCnt').textContent=`${items.length} tin trong 4 ngày gần nhất`;
-  {const N=10,L=document.getElementById('tnList'),mb=document.getElementById('tnMore'),cards=[...L.children];let all=false;
+  {const N=4,L=document.getElementById('tnList'),mb=document.getElementById('tnMore'),cards=[...L.children];let all=false;
    const show=()=>{cards.forEach((c,i)=>c.classList.toggle('more-h',!all&&i>=N));mb.hidden=cards.length<=N;mb.innerHTML=all?'Ẩn bớt ▴':`Xem thêm ${cards.length-N} tin ▾`};
    mb.onclick=()=>{all=!all;show();if(!all)document.getElementById('tin-noi-bat').scrollIntoView({behavior:'smooth'})};show();
    const tg=document.getElementById('tnTg'),bd=document.getElementById('tnBody');
@@ -1402,7 +1414,7 @@ fetch('tin-noi-bat.txt',{cache:'no-cache'}).then(r=>r.ok?r.text():'').then(t=>{
    b.onclick=()=>set(id,!sec.classList.contains('sec-col'));const h=sec.querySelector('.sec-h');if(h){h.classList.add('sec-hc');h.onclick=()=>set(id,!sec.classList.contains('sec-col'))}
    set(id,!!S[id],false)}
  if(new URLSearchParams(location.search).get('ma'))set('thi-truong',false,false);
- document.addEventListener('click',e=>{const a=e.target.closest('a[href*="#"]');if(!a)return;const id=(a.getAttribute('href').split('#')[1]||'');if(IDS.includes(id))window.expandSec(id)});}
+ document.addEventListener('click',e=>{const a=e.target.closest('a[href*="#"]');if(!a)return;if(a.closest('nav')&&a.getAttribute('href')==='#hoat-dong'&&window.showTab&&window.showTab['hoat-dong'])window.showTab['hoat-dong']('hoat-dong-dau-an');const id=(a.getAttribute('href').split('#')[1]||'');if(IDS.includes(id))window.expandSec(id)});}
 
 /* bản tin thị trường: đọc ban-tin/danh-sach.txt */
 fetch('ban-tin/danh-sach.txt',{cache:'no-cache'}).then(r=>r.ok?r.text():'').then(t=>{
@@ -1463,7 +1475,7 @@ fetch('ban-tin/danh-sach.txt',{cache:'no-cache'}).then(r=>r.ok?r.text():'').then
  fetch('data/sector-map.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.sectors||!j.sectors.length)return;SM=j;draw();$('smap').hidden=false}).catch(()=>{});}
 
 /* ===== tab con: gom các khối trong mục 04 và 05 ===== */
-{const TABS={'dong-tien':[['ban-do','Bản đồ ngành','#smap'],['chi-so','Chỉ số','#ixBox'],['dong-tien-nganh','Dòng tiền ngành',null]],
+{const TABS={'hoat-dong':[['ve-toi','Về tôi',null],['hoat-dong-dau-an','Hoạt động & dấu ấn','.hd-p']],'dong-tien':[['ban-do','Bản đồ ngành','#smap'],['chi-so','Chỉ số','#ixBox'],['dong-tien-nganh','Dòng tiền ngành',null]],
   'thi-truong':[['tra-cuu','Tra cứu mã',null],['bo-loc','Bộ lọc cổ phiếu','#screener']]};
  const KEEP=el=>el.classList.contains('label')||el.classList.contains('sec-h')||el.classList.contains('sec-p')||el.classList.contains('disc-b');
  const save=(k,v)=>{try{localStorage.setItem('tab-'+k,v)}catch(e){}},load=k=>{try{return localStorage.getItem('tab-'+k)}catch(e){return null}};
