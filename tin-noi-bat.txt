@@ -12,6 +12,39 @@
 # ---
 
 Ngày: 28/11/2026
+Tiêu đề: Vĩ mô · Moody's nâng xếp hạng tín nhiệm Việt Nam lên Ba1, sát ngưỡng đầu tư
+Nội dung: Ngày 27/11/2026, Moody's nâng xếp hạng tín nhiệm dài hạn của Việt Nam từ Ba2 lên Ba1, triển vọng Ổn định. Tin tích cực cho dòng vốn ngoại.
+- Trần nội tệ nâng từ Baa2 lên Baa1, trần ngoại tệ từ Ba1 lên Baa3
+- Moody's dẫn tăng trưởng GDP 9 tháng 2026 đạt 9%, vốn FDI đăng ký 10 tháng tăng 74%
+- Trước đó, ngày 8/10/2026, R&I đã nâng Việt Nam lên hạng đầu tư
+---
+Ngày: 28/11/2026
+Tiêu đề: Khối ngoại · Tuần 23–27/11 bán ròng 5.710 tỷ trên HOSE, riêng VIC 4.841 tỷ
+Nội dung: Từ đầu năm 2026, khối ngoại đã bán ròng khoảng 132.900 tỷ đồng trên HOSE.
+- Mua ròng nhiều nhất tuần: FPT khoảng 223 tỷ, POW 172 tỷ, VNM 106 tỷ
+- Giá trị giao dịch HOSE cả tuần 56.094,89 tỷ đồng (khoảng 14.024 tỷ/phiên), khối lượng giảm 22,5%
+- Cổ phiếu tăng mạnh trong tuần trên HOSE: KLB +20,1%, TNC khoảng +20%, TNI +11,48%
+Mã: VIC, FPT, POW, VNM
+---
+Ngày: 28/11/2026
+Tiêu đề: Nhận định · VN-Index tuần 30/11–4/12 có thể giằng co trong vùng 1.600–1.670 điểm
+Nội dung: Pinetree khuyến nghị giữ vị thế, chưa mua mới; chỉ xem xét lại khi VN-Index lấy lại 1.670 và đóng cửa trên 1.700 điểm với thanh khoản trên trung bình 20 phiên. Hiện chỉ 19% cổ phiếu nằm trên MA20.
+- VIX: mất mốc 1.600 điểm, chỉ số có thể lùi về 1.500–1.550
+- BSC dự báo vùng 1.640–1.660; SHS thấy hỗ trợ quanh 1.600, kháng cự 1.680–1.700
+---
+Ngày: 28/11/2026
+Tiêu đề: Chính sách · Quốc hội đặt mục tiêu tăng trưởng từ 10% trở lên năm 2027, giao làm khung thử nghiệm cho chứng khoán
+Nội dung: Nghị quyết 47/2026/QH16 về kế hoạch kinh tế – xã hội 2027 đặt mục tiêu tăng trưởng từ 10% trở lên, giữ ổn định vĩ mô và kiểm soát lạm phát.
+- Nghị quyết 55/2026/QH16 yêu cầu chấm điểm, công khai tiến độ giải ngân đầu tư công, điều chuyển vốn từ dự án chậm
+- Yêu cầu xây dựng khung pháp lý cơ chế thử nghiệm có kiểm soát (sandbox) trong lĩnh vực chứng khoán
+- Giải ngân đầu tư công đến 19/11 đạt 77,3% kế hoạch
+---
+Ngày: 28/11/2026
+Tiêu đề: Chính sách · Miễn thuế nhập khẩu hàng thương mại điện tử từ 1 triệu đồng trở xuống từ 1/3/2027
+Nội dung: Nghị định 417/2026/NĐ-CP ngày 20/11 miễn thuế nhập khẩu cho hàng gửi qua thương mại điện tử trị giá từ 1 triệu đồng trở xuống, giới hạn 48 triệu đồng/người mua/năm, hiệu lực từ 1/3/2027.
+- Chỉ thị 40/CT-TTg (21/11) yêu cầu kích cầu tiêu dùng đến Tết 2027, đẩy nhanh giải ngân vốn
+---
+Ngày: 28/11/2026
 Tiêu đề: Thị trường · VN-Index mất 34,89 điểm (−2,07%) trong tuần 23–27/11, khối ngoại bán ròng 5.600 tỷ
 Nội dung: Dù hồi 1,49% phiên cuối tuần lên 1.653,9 điểm, VN-Index vẫn giảm 34,89 điểm cả tuần; HNX-Index giảm 6,48 điểm (−2,76%) về 228,11 điểm.
 - Khối ngoại bán ròng khoảng 5.600 tỷ đồng trong tuần, riêng HOSE khoảng 5.700 tỷ; HNX mua ròng gần 100 tỷ
